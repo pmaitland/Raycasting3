@@ -9,13 +9,13 @@ public class PlayerBehaviour : MonoBehaviour
 	public float moveSpeed = 2.0f;
 	public float gravity = 10.0f;
 
-	void Start () 
+	void Start() 
 	{
 		controller = GetComponent<CharacterController>();
 		Cursor.lockState = CursorLockMode.Locked;
 	}
 	
-	void Update ()
+	void Update()
 	{
 	    float y = Input.GetAxis("Mouse X") * turnSpeed;
 	    transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + y, 0);
