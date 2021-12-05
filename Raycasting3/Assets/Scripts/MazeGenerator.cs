@@ -6,6 +6,7 @@ public class MazeGenerator : MonoBehaviour
 {
     public int width = 20;
     public int height = 20;
+    public Material material;
     public GameObject floorPrefab;
     public GameObject ceilingPrefab;
     public GameObject northWallPrefab;
@@ -46,11 +47,13 @@ public class MazeGenerator : MonoBehaviour
 
     private void CreateFloor(int x, int y) {
         GameObject floor = Instantiate(floorPrefab, new Vector3(x, 0, y), floorPrefab.transform.rotation);
+        floor.GetComponent<MeshRenderer>().material = material;
         floor.transform.parent = floorParent.transform;
     }
 
     private void CreateCeiling(int x, int y) {
         GameObject ceiling = Instantiate(ceilingPrefab, new Vector3(x, 0, y) + ceilingPrefab.transform.position, ceilingPrefab.transform.rotation);
+        ceiling.GetComponent<MeshRenderer>().material = material;
         ceiling.transform.parent = ceilingParent.transform;
     }
 
@@ -72,6 +75,7 @@ public class MazeGenerator : MonoBehaviour
 
     private void CreateWall(GameObject prefab, Vector3 position) {
         GameObject wall = Instantiate(prefab, position, prefab.transform.rotation);
+        wall.GetComponent<MeshRenderer>().material = material;
         wall.transform.parent = wallParent.transform;
     }
 

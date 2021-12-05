@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1668073589217075415}
   - component: {fileID: 1668073589217075400}
   m_Layer: 0
-  m_Name: Brick North
+  m_Name: Wall - North
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8f56b2254c1f37123b2238a6ee227ba3, type: 2}
+  - {fileID: 2100000, guid: 05cc9d73e8ecf168d8235b10c3e9a38a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
