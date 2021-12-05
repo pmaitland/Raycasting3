@@ -4,31 +4,24 @@ using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
+	private CharacterController controller;
     public float turnSpeed = 4.0f;
 	public float moveSpeed = 2.0f;
+	public float gravity = 10.0f;
 
 	void Start () 
 	{
+		controller = GetComponent<CharacterController>();
 		Cursor.lockState = CursorLockMode.Locked;
 	}
 	
 	void Update ()
 	{
-	    MouseAiming();
-	    KeyboardMovement();
-	}
-	
-	void MouseAiming ()
-	{
 	    float y = Input.GetAxis("Mouse X") * turnSpeed;
 	    transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + y, 0);
-	}
-	
-	void KeyboardMovement ()
-	{
-	    Vector3 dir = new Vector3(0, 0, 0);
-	    dir.x = Input.GetAxis("Horizontal");
-	    dir.z = Input.GetAxis("Vertical");
-	    transform.Translate(dir * moveSpeed * Time.deltaTime);
+
+	    float horizontal = Input.GetAxis("Horizontal") * moveSpeed;
+		float vertical = Input.GetAxis("Vertical") * moveSpeed;
+        controller.Move(transform.rotation * (Vector3.right * horizontal + Vector3.forward * vertical + Vector3.down * gravity) * Time.deltaTime);
 	}
 }
