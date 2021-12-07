@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
 {
-    public int width = 20;
-    public int height = 20;
+    [Range(3, 49)]
+    public int width = 21;
+    [Range(3, 49)]
+    public int height = 21;
     public Material material;
     public GameObject floorPrefab;
     public GameObject ceilingPrefab;
@@ -17,6 +19,12 @@ public class MazeGenerator : MonoBehaviour
     private GameObject floorParent;
     private GameObject ceilingParent;
     private GameObject wallParent;
+
+    void OnValidate()
+    {
+        if (width % 2 == 0) width -= 1;
+        if (height % 2 == 0) height -= 1;
+    }
 
     void Start()
     {
@@ -32,12 +40,12 @@ public class MazeGenerator : MonoBehaviour
 
     private void GenerateMaze()
     {
-        List<List<int>> grid = new List<List<int>>();
+        List<List<string>> grid = new List<List<string>>();
 
         for (int i = 0; i < width; i++) {
-            grid.Add(new List<int>());
+            grid.Add(new List<string>());
             for (int j = 0; j < height; j++) {
-                grid[i].Add(1);
+                grid[i].Add("w");
             }
         }
 
@@ -50,12 +58,15 @@ public class MazeGenerator : MonoBehaviour
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (grid[i][j]) {
-                    case 0:
+                    case "w":
+                        if (i > 0          && grid[i - 1][j] != "w") CreateWestWall(i, j);
+                        if (i < width - 1  && grid[i + 1][j] != "w") CreateEastWall(i, j);
+                        if (j > 0          && grid[i][j - 1] != "w") CreateSouthWall(i, j);
+                        if (j < height - 1 && grid[i][j + 1] != "w") CreateNorthWall(i, j);
+                        break;
+                    case "p":
                         CreateFloor(i, j);
                         CreateCeiling(i, j);
-                        break;
-                    case 1:
-                        CreateWalls(i, j);
                         break;
                     default:
                         break;
@@ -64,34 +75,34 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
-    private void MazeDepthFirstSearch(List<List<int>> grid, List<int> currentCell)
+    private void MazeDepthFirstSearch(List<List<string>> grid, List<int> currentCell)
     {
-        grid[currentCell[0]][currentCell[1]] = 0;
+        grid[currentCell[0]][currentCell[1]] = "p";
 
         List<List<int>> neighbours = new List<List<int>>();
         List<int> neighbour;
-        if (currentCell[0] >= 2 && grid[currentCell[0] - 2][currentCell[1]] == 1) {
+        if (currentCell[0] >= 2 && grid[currentCell[0] - 2][currentCell[1]] == "w") {
             neighbour = new List<int>();
             neighbour.Add(currentCell[0] - 2);
             neighbour.Add(currentCell[1]);
             neighbour.Add(0);
             neighbours.Add(neighbour);
         }
-        if (currentCell[0] <= (width - 1) - 2 && grid[currentCell[0] + 2][currentCell[1]] == 1) {
+        if (currentCell[0] <= (width - 1) - 2 && grid[currentCell[0] + 2][currentCell[1]] == "w") {
             neighbour = new List<int>();
             neighbour.Add(currentCell[0] + 2);
             neighbour.Add(currentCell[1]);
             neighbour.Add(1);
             neighbours.Add(neighbour);
         }
-        if (currentCell[1] >= 2 && grid[currentCell[0]][currentCell[1] - 2] == 1) {
+        if (currentCell[1] >= 2 && grid[currentCell[0]][currentCell[1] - 2] == "w") {
             neighbour = new List<int>();
             neighbour.Add(currentCell[0]);
             neighbour.Add(currentCell[1] - 2);
             neighbour.Add(2);
             neighbours.Add(neighbour);
         }
-        if (currentCell[1] <= (height - 1) - 2 && grid[currentCell[0]][currentCell[1] + 2] == 1) {
+        if (currentCell[1] <= (height - 1) - 2 && grid[currentCell[0]][currentCell[1] + 2] == "w") {
             neighbour = new List<int>();
             neighbour.Add(currentCell[0]);
             neighbour.Add(currentCell[1] + 2);
@@ -101,12 +112,12 @@ public class MazeGenerator : MonoBehaviour
 
         while (neighbours.Count != 0) {
             List<int> chosenNeighbour = neighbours[Random.Range(0, neighbours.Count)];
-            if (grid[chosenNeighbour[0]][chosenNeighbour[1]] == 1) {
-                grid[chosenNeighbour[0]][chosenNeighbour[1]] = 0;
-                if (chosenNeighbour[2] == 0) grid[currentCell[0] - 1][currentCell[1]] = 0;
-                if (chosenNeighbour[2] == 1) grid[currentCell[0] + 1][currentCell[1]] = 0;
-                if (chosenNeighbour[2] == 2) grid[currentCell[0]][currentCell[1] - 1] = 0;
-                if (chosenNeighbour[2] == 3) grid[currentCell[0]][currentCell[1] + 1] = 0;
+            if (grid[chosenNeighbour[0]][chosenNeighbour[1]] == "w") {
+                grid[chosenNeighbour[0]][chosenNeighbour[1]] = "p";
+                if (chosenNeighbour[2] == 0) grid[currentCell[0] - 1][currentCell[1]] = "p";
+                if (chosenNeighbour[2] == 1) grid[currentCell[0] + 1][currentCell[1]] = "p";
+                if (chosenNeighbour[2] == 2) grid[currentCell[0]][currentCell[1] - 1] = "p";
+                if (chosenNeighbour[2] == 3) grid[currentCell[0]][currentCell[1] + 1] = "p";
                 MazeDepthFirstSearch(grid, chosenNeighbour);
             }
             neighbours.Remove(chosenNeighbour);
