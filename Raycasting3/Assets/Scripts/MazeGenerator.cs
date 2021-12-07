@@ -8,6 +8,8 @@ public class MazeGenerator : MonoBehaviour
     public int width = 21;
     [Range(3, 49)]
     public int height = 21;
+    [Range(0, 50)]
+    public int roomCount = 6;
     public Material material;
     public GameObject floorPrefab;
     public GameObject ceilingPrefab;
@@ -52,22 +54,55 @@ public class MazeGenerator : MonoBehaviour
         List<int> currentCell = new List<int>();
         currentCell.Add(Random.Range(1, (int) ((width - 1) / 2)) * 2 - 1);
         currentCell.Add(Random.Range(1, (int) ((height - 1) / 2)) * 2 - 1);
-
         MazeDepthFirstSearch(grid, currentCell);
+
+        int minRoomWidth  = 2; int maxRoomWidth  = 5;
+        int minRoomHeight = 2; int maxRoomHeight = 5;
+        for (int i = 0; i < roomCount; i++) {
+            int roomWidth  = Random.Range(minRoomWidth, maxRoomWidth);
+            int roomHeight = Random.Range(minRoomHeight, maxRoomHeight);
+            int roomX = Random.Range(1, width  - 1 - roomWidth);
+            int roomY = Random.Range(1, height - 1 - roomHeight);
+            for (int x = roomX; x < roomX + roomWidth; x++) {
+                for (int y = roomY; y < roomY + roomHeight; y++) {
+                    grid[x][y] = "r";
+                }
+            }
+        }
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (grid[i][j]) {
                     case "w":
-                        if (i > 0          && grid[i - 1][j] != "w") CreateWestWall(i, j);
-                        if (i < width - 1  && grid[i + 1][j] != "w") CreateEastWall(i, j);
-                        if (j > 0          && grid[i][j - 1] != "w") CreateSouthWall(i, j);
-                        if (j < height - 1 && grid[i][j + 1] != "w") CreateNorthWall(i, j);
+                        if (i > 0) {
+                            if (grid[i - 1][j] != "w") CreateWestWall(i, j, 0);
+                            if (grid[i - 1][j] == "r") CreateWestWall(i, j, 1);
+                        }
+                        if (i < width - 1) {
+                            if (grid[i + 1][j] != "w") CreateEastWall(i, j, 0);
+                            if (grid[i + 1][j] == "r") CreateEastWall(i, j, 1);
+                        }
+                        if (j > 0) {
+                            if (grid[i][j - 1] != "w") CreateSouthWall(i, j, 0);
+                            if (grid[i][j - 1] == "r") CreateSouthWall(i, j, 1);
+                        }
+                        if (j < height - 1) {
+                            if (grid[i][j + 1] != "w") CreateNorthWall(i, j, 0);
+                            if (grid[i][j + 1] == "r") CreateNorthWall(i, j, 1);
+                        }
                         break;
                     case "p":
                         CreateFloor(i, j);
-                        CreateCeiling(i, j);
+                        CreateCeiling(i, j, 0);
+                        if (i > 0          && grid[i - 1][j] == "r") CreateWestWall(i, j, 1);
+                        if (i < width - 1  && grid[i + 1][j] == "r") CreateEastWall(i, j, 1);
+                        if (j > 0          && grid[i][j - 1] == "r") CreateSouthWall(i, j, 1);
+                        if (j < height - 1 && grid[i][j + 1] == "r") CreateNorthWall(i, j, 1);
                         break;
+                    case "r":
+                        CreateFloor(i, j);
+                        CreateCeiling(i, j, 1);
+                        break; 
                     default:
                         break;
                 }
@@ -130,38 +165,38 @@ public class MazeGenerator : MonoBehaviour
         floor.transform.parent = floorParent.transform;
     }
 
-    private void CreateCeiling(int x, int y)
+    private void CreateCeiling(int x, int y, int level)
     {
-        GameObject ceiling = CreateMazePiece(ceilingPrefab, new Vector3(x, 0, y) + ceilingPrefab.transform.position);
+        GameObject ceiling = CreateMazePiece(ceilingPrefab, new Vector3(x, level, y) + ceilingPrefab.transform.position);
         ceiling.transform.parent = ceilingParent.transform;
     }
 
-    private void CreateWalls(int x, int y)
+    private void CreateWalls(int x, int y, int level)
     {
-        CreateNorthWall(x, y);
-        CreateEastWall(x, y);
-        CreateSouthWall(x, y);
-        CreateWestWall(x, y);
+        CreateNorthWall(x, y, level);
+        CreateEastWall(x, y, level);
+        CreateSouthWall(x, y, level);
+        CreateWestWall(x, y, level);
     }
 
-    private void CreateNorthWall(int x, int y)
+    private void CreateNorthWall(int x, int y, int level)
     {
-        CreateWall(northWallPrefab, new Vector3(x, 0, y) + new Vector3(0, northWallPrefab.transform.position.y, northWallPrefab.transform.position.z));
+        CreateWall(northWallPrefab, new Vector3(x, level, y) + new Vector3(0, northWallPrefab.transform.position.y, northWallPrefab.transform.position.z));
     }
 
-    private void CreateEastWall(int x, int y)
+    private void CreateEastWall(int x, int y, int level)
     {
-        CreateWall(eastWallPrefab, new Vector3(x, 0, y) + new Vector3(eastWallPrefab.transform.position.x, eastWallPrefab.transform.position.y, 0));
+        CreateWall(eastWallPrefab, new Vector3(x, level, y) + new Vector3(eastWallPrefab.transform.position.x, eastWallPrefab.transform.position.y, 0));
     }
 
-    private void CreateSouthWall(int x, int y)
+    private void CreateSouthWall(int x, int y, int level)
     {
-        CreateWall(southWallPrefab, new Vector3(x, 0, y) + new Vector3(0, southWallPrefab.transform.position.y, southWallPrefab.transform.position.z));
+        CreateWall(southWallPrefab, new Vector3(x, level, y) + new Vector3(0, southWallPrefab.transform.position.y, southWallPrefab.transform.position.z));
     }
 
-    private void CreateWestWall(int x, int y)
+    private void CreateWestWall(int x, int y, int level)
     {
-        CreateWall(westWallPrefab, new Vector3(x, 0, y) + new Vector3(westWallPrefab.transform.position.x, westWallPrefab.transform.position.y, 0));
+        CreateWall(westWallPrefab, new Vector3(x, level, y) + new Vector3(westWallPrefab.transform.position.x, westWallPrefab.transform.position.y, 0));
     }
 
     private void CreateWall(GameObject prefab, Vector3 position)
