@@ -10,7 +10,7 @@ public class MazeGenerator : MonoBehaviour
     public int height = 21;
     [Range(0, 50)]
     public int roomCount = 6;
-    public Material material;
+    public List<Material> materials;
     public GameObject floorPrefab;
     public GameObject ceilingPrefab;
     public GameObject northWallPrefab;
@@ -208,7 +208,7 @@ public class MazeGenerator : MonoBehaviour
     private GameObject CreateMazePiece(GameObject prefab, Vector3 position)
     {
         GameObject mazePiece = Instantiate(prefab, position, prefab.transform.rotation);
-        mazePiece.GetComponent<MeshRenderer>().material = material;
+        mazePiece.GetComponent<MeshRenderer>().material = materials[Random.Range(0, materials.Count)];
         return mazePiece;
     }
 
