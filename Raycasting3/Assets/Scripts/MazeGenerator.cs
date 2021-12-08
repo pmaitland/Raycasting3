@@ -10,7 +10,9 @@ public class MazeGenerator : MonoBehaviour
     public int height = 21;
     [Range(0, 50)]
     public int roomCount = 6;
+
     public List<Material> materials;
+
     public GameObject floorPrefab;
     public GameObject ceilingPrefab;
     public GameObject northWallPrefab;
@@ -18,9 +20,12 @@ public class MazeGenerator : MonoBehaviour
     public GameObject southWallPrefab;
     public GameObject westWallPrefab;
 
+    public GameObject barrelPrefab;
+
     private GameObject floorParent;
     private GameObject ceilingParent;
     private GameObject wallParent;
+    private GameObject propParent;
 
     void OnValidate()
     {
@@ -36,6 +41,8 @@ public class MazeGenerator : MonoBehaviour
         ceilingParent.transform.parent = transform;
         wallParent = new GameObject("Walls");
         wallParent.transform.parent = transform;
+        propParent = new GameObject("Props");
+        propParent.transform.parent = transform;
 
         GenerateMaze();
     }
@@ -102,6 +109,7 @@ public class MazeGenerator : MonoBehaviour
                     case "r":
                         CreateFloor(i, j);
                         CreateCeiling(i, j, 1);
+                        CreateBarrel(i, j, 0);
                         break; 
                     default:
                         break;
@@ -207,9 +215,21 @@ public class MazeGenerator : MonoBehaviour
 
     private GameObject CreateMazePiece(GameObject prefab, Vector3 position)
     {
-        GameObject mazePiece = Instantiate(prefab, position, prefab.transform.rotation);
+        GameObject mazePiece = CreateObject(prefab, position);
         mazePiece.GetComponent<MeshRenderer>().material = materials[Random.Range(0, materials.Count)];
         return mazePiece;
+    }
+
+    private void CreateBarrel(int x, int y, int level)
+    {
+        GameObject barrel = CreateObject(barrelPrefab, new Vector3(x, level, y) + new Vector3(barrelPrefab.transform.position.x, barrelPrefab.transform.position.y, 0));
+        barrel.transform.parent = propParent.transform;
+    }
+
+    private GameObject CreateObject(GameObject prefab, Vector3 position)
+    {
+        GameObject obj = Instantiate(prefab, position, prefab.transform.rotation);
+        return obj;
     }
 
 }
