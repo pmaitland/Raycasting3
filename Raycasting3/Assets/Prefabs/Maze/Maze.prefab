@@ -54,3 +54,4 @@ MonoBehaviour:
   southWallPrefab: {fileID: 7617880232423462224, guid: b52208d0f86de5076add23313369f0c8, type: 3}
   westWallPrefab: {fileID: 3403030851966282781, guid: 89a13a3278fd7bed8a6460cf7660f9e6, type: 3}
   barrelPrefab: {fileID: 2270920480958254443, guid: c8b029693e448337caefac08cbe2db95, type: 3}
+  turretPrefab: {fileID: 5938546514879256478, guid: 1e20423e2c730edd7abc7b2821b0a002, type: 3}

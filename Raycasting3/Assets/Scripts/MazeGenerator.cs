@@ -22,10 +22,13 @@ public class MazeGenerator : MonoBehaviour
 
     public GameObject barrelPrefab;
 
+    public GameObject turretPrefab;
+
     private GameObject floorParent;
     private GameObject ceilingParent;
     private GameObject wallParent;
     private GameObject propParent;
+    private GameObject enemyParent;
 
     void OnValidate()
     {
@@ -43,6 +46,8 @@ public class MazeGenerator : MonoBehaviour
         wallParent.transform.parent = transform;
         propParent = new GameObject("Props");
         propParent.transform.parent = transform;
+        enemyParent = new GameObject("Enemies");
+        enemyParent.transform.parent = transform;
 
         GenerateMaze();
     }
@@ -109,7 +114,9 @@ public class MazeGenerator : MonoBehaviour
                     case "r":
                         CreateFloor(i, j);
                         CreateCeiling(i, j, 1);
-                        CreateBarrel(i, j, 0);
+                        int random = Random.Range(0, 100);
+                        if (random >=  0 && random < 10) CreateTurret(i, j, 0);
+                        if (random >= 10 && random < 30) CreateBarrel(i, j, 0);
                         break; 
                     default:
                         break;
@@ -224,6 +231,12 @@ public class MazeGenerator : MonoBehaviour
     {
         GameObject barrel = CreateObject(barrelPrefab, new Vector3(x, level, y) + new Vector3(barrelPrefab.transform.position.x, barrelPrefab.transform.position.y, 0));
         barrel.transform.parent = propParent.transform;
+    }
+
+    private void CreateTurret(int x, int y, int level)
+    {
+        GameObject turret = CreateObject(turretPrefab, new Vector3(x, level, y) + new Vector3(turretPrefab.transform.position.x, turretPrefab.transform.position.y, 0));
+        turret.transform.parent = enemyParent.transform;
     }
 
     private GameObject CreateObject(GameObject prefab, Vector3 position)
