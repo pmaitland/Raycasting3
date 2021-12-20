@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
@@ -98,6 +99,9 @@ public class MazeGenerator : MonoBehaviour
             }
         }
 
+        string path = "Assets/maze.txt";
+        StreamWriter writer = new StreamWriter(path, false);
+
         int random = 0;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -166,8 +170,11 @@ public class MazeGenerator : MonoBehaviour
                     default:
                         break;
                 }
+                writer.Write(grid[i][j] + " ");
             }
+            writer.Write("\n");
         }
+        writer.Close();
     }
 
     private void MazeDepthFirstSearch(List<List<string>> grid, List<int> currentCell)
