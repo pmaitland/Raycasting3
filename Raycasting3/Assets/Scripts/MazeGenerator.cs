@@ -15,12 +15,10 @@ public class MazeGenerator : MonoBehaviour
 
     public GameObject floorPrefab;
     public GameObject ceilingPrefab;
-    public GameObject northWallPrefab;
-    public GameObject eastWallPrefab;
-    public GameObject southWallPrefab;
-    public GameObject westWallPrefab;
+    public GameObject wallPrefab;
 
     public GameObject barrelPrefab;
+    public GameObject torchPrefab;
 
     public GameObject turretPrefab;
 
@@ -82,6 +80,25 @@ public class MazeGenerator : MonoBehaviour
             }
         }
 
+        for (int i = 1; i < width - 1; i++) {
+            for (int j = 1; j < height - 1; j++) {
+                if (grid[i][j] == "p") {
+                    int surroundingWCount = 0;
+                    int surroundingPCount = 0;
+                    if (grid[i - 1][j] == "w") surroundingWCount++;
+                    if (grid[i + 1][j] == "w") surroundingWCount++;
+                    if (grid[i][j - 1] == "w") surroundingWCount++;
+                    if (grid[i][j + 1] == "w") surroundingWCount++;
+                    if (grid[i - 1][j] == "p") surroundingPCount++;
+                    if (grid[i + 1][j] == "p") surroundingPCount++;
+                    if (grid[i][j - 1] == "p") surroundingPCount++;
+                    if (grid[i][j + 1] == "p") surroundingPCount++;
+                    if (surroundingWCount == 3 && surroundingPCount == 1) grid[i][j] = "d";
+                }
+            }
+        }
+
+        int random = 0;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (grid[i][j]) {
@@ -102,22 +119,50 @@ public class MazeGenerator : MonoBehaviour
                             if (grid[i][j + 1] != "w") CreateNorthWall(i, j, 0);
                             if (grid[i][j + 1] == "r") CreateNorthWall(i, j, 1);
                         }
+
                         break;
                     case "p":
                         CreateFloor(i, j);
                         CreateCeiling(i, j, 0);
+
                         if (i > 0          && grid[i - 1][j] == "r") CreateWestWall(i, j, 1);
                         if (i < width - 1  && grid[i + 1][j] == "r") CreateEastWall(i, j, 1);
                         if (j > 0          && grid[i][j - 1] == "r") CreateSouthWall(i, j, 1);
                         if (j < height - 1 && grid[i][j + 1] == "r") CreateNorthWall(i, j, 1);
+
                         break;
                     case "r":
                         CreateFloor(i, j);
                         CreateCeiling(i, j, 1);
-                        int random = Random.Range(0, 100);
+
+                        random = Random.Range(0, 100);
                         if (random >=  0 && random < 10) CreateTurret(i, j, 0);
                         if (random >= 10 && random < 30) CreateBarrel(i, j, 0);
-                        break; 
+
+                        random = Random.Range(0, 100);
+                        if (random >=  0 && random < 10) {
+                            if      (i > 0          && grid[i - 1][j] == "w") CreateWestTorch(i, j, 0);
+                            else if (i < width - 1  && grid[i + 1][j] == "w") CreateEastTorch(i, j, 0);
+                            else if (j > 0          && grid[i][j - 1] == "w") CreateSouthTorch(i, j, 0);
+                            else if (j < height - 1 && grid[i][j + 1] == "w") CreateNorthTorch(i, j, 0);
+                        }
+
+                        break;
+                    case "d":
+                        CreateFloor(i, j);
+                        CreateCeiling(i, j, 0);
+                        
+                        if (i > 0          && grid[i - 1][j] == "r") CreateWestWall(i, j, 0);
+                        if (i < width - 1  && grid[i + 1][j] == "r") CreateEastWall(i, j, 0);
+                        if (j > 0          && grid[i][j - 1] == "r") CreateSouthWall(i, j, 0);
+                        if (j < height - 1 && grid[i][j + 1] == "r") CreateNorthWall(i, j, 0);
+
+                        if      (i > 0          && grid[i - 1][j] != "w") CreateEastTorch(i, j, 0);
+                        else if (i < width - 1  && grid[i + 1][j] != "w") CreateWestTorch(i, j, 0);
+                        else if (j > 0          && grid[i][j - 1] != "w") CreateNorthTorch(i, j, 0);
+                        else if (j < height - 1 && grid[i][j + 1] != "w") CreateSouthTorch(i, j, 0);
+
+                        break;
                     default:
                         break;
                 }
@@ -196,27 +241,28 @@ public class MazeGenerator : MonoBehaviour
 
     private void CreateNorthWall(int x, int y, int level)
     {
-        CreateWall(northWallPrefab, new Vector3(x, level, y) + new Vector3(0, northWallPrefab.transform.position.y, northWallPrefab.transform.position.z));
+        CreateWall(new Vector3(x, level, y) + new Vector3(0, 0.5f, 0.5f), 180f);
     }
 
     private void CreateEastWall(int x, int y, int level)
     {
-        CreateWall(eastWallPrefab, new Vector3(x, level, y) + new Vector3(eastWallPrefab.transform.position.x, eastWallPrefab.transform.position.y, 0));
+        CreateWall(new Vector3(x, level, y) + new Vector3(0.5f, 0.5f, 0), 270f);
     }
 
     private void CreateSouthWall(int x, int y, int level)
     {
-        CreateWall(southWallPrefab, new Vector3(x, level, y) + new Vector3(0, southWallPrefab.transform.position.y, southWallPrefab.transform.position.z));
+        CreateWall(new Vector3(x, level, y) + new Vector3(0, 0.5f, -0.5f), 0f);
     }
 
     private void CreateWestWall(int x, int y, int level)
     {
-        CreateWall(westWallPrefab, new Vector3(x, level, y) + new Vector3(westWallPrefab.transform.position.x, westWallPrefab.transform.position.y, 0));
+        CreateWall(new Vector3(x, level, y) + new Vector3(-0.5f, 0.5f, 0), 90f);
     }
 
-    private void CreateWall(GameObject prefab, Vector3 position)
+    private void CreateWall(Vector3 position, float rotation)
     {
-        GameObject wall = CreateMazePiece(prefab, position);
+        GameObject wall = CreateMazePiece(wallPrefab, position);
+        wall.transform.Rotate(0, rotation, 0, Space.Self);
         wall.transform.parent = wallParent.transform;
     }
 
@@ -231,6 +277,33 @@ public class MazeGenerator : MonoBehaviour
     {
         GameObject barrel = CreateObject(barrelPrefab, new Vector3(x, level, y) + new Vector3(barrelPrefab.transform.position.x, barrelPrefab.transform.position.y, 0));
         barrel.transform.parent = propParent.transform;
+    }
+
+    private void CreateNorthTorch(int x, int y, int level)
+    {
+        CreateTorch(new Vector3(x, level, y) + new Vector3(0, 0, 0.4f), 180f);
+    }
+
+    private void CreateEastTorch(int x, int y, int level)
+    {
+        CreateTorch(new Vector3(x, level, y) + new Vector3(0.4f, 0, 0), 270f);
+    }
+
+    private void CreateSouthTorch(int x, int y, int level)
+    {
+        CreateTorch(new Vector3(x, level, y) + new Vector3(0, 0, -0.4f), 0f);
+    }
+
+    private void CreateWestTorch(int x, int y, int level)
+    {
+        CreateTorch(new Vector3(x, level, y) + new Vector3(-0.4f, 0, 0), 90f);
+    }
+
+    private void CreateTorch(Vector3 position, float rotation)
+    {
+        GameObject torch = CreateObject(torchPrefab, position + new Vector3(0, 0.5f, 0));
+        torch.transform.Rotate(0, rotation, 0, Space.Self);
+        torch.transform.parent = propParent.transform;
     }
 
     private void CreateTurret(int x, int y, int level)
