@@ -258,7 +258,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 483da4bf8fbc9f9729f27054b6b25b5f, type: 2}
     - target: {fileID: 1979202703222069091, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
       propertyPath: roomCount
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1979202703222069091, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
       propertyPath: materials.Array.size
