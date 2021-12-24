@@ -215,8 +215,8 @@ public class MazeGenerator : MonoBehaviour
             int roomWidth  = roomDimensions[Random.Range(0, roomDimensions.Length - 1)];
             int roomHeight = roomDimensions[Random.Range(0, roomDimensions.Length - 1)];
 
-            int roomX = Random.Range(1, (int)(width  - 1 - roomWidth) / 2) * 2 - 1;
-            int roomY = Random.Range(1, (int)(height - 1 - roomHeight) / 2) * 2 - 1;
+            int roomX = Random.Range(3, (int)(width  - 1 - roomWidth) / 2) * 2 - 3;
+            int roomY = Random.Range(3, (int)(height - 1 - roomHeight) / 2) * 2 - 3;
 
             int doorCount = Random.Range(1, 5);
             List<MazeCell> doorOptions = new List<MazeCell>();
