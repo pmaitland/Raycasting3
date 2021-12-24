@@ -50,6 +50,7 @@ MonoBehaviour:
   floorPrefab: {fileID: 4909252868652026774, guid: a6a4a946533d7ae4f8a32c1a098463a6, type: 3}
   ceilingPrefab: {fileID: 3890000064965853165, guid: a28d95da66c26a2d7bf46f13bc3145d8, type: 3}
   wallPrefab: {fileID: 7617880232423462224, guid: b52208d0f86de5076add23313369f0c8, type: 3}
+  doorPrefab: {fileID: 7115257901612888894, guid: 1498d4ad39d6697078aff6ece752aee2, type: 3}
   barrelPrefab: {fileID: 2270920480958254443, guid: c8b029693e448337caefac08cbe2db95, type: 3}
   torchPrefab: {fileID: 3681046569504041219, guid: 45d28d4228d22eafc82af067f796dadb, type: 3}
   turretPrefab: {fileID: 5938546514879256478, guid: 1e20423e2c730edd7abc7b2821b0a002, type: 3}

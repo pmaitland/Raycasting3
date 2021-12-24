@@ -34,4 +34,11 @@ public class PlayerBehaviour : MonoBehaviour
 			Instantiate(projectilePrefab, projectilePosition, transform.rotation);
 		}
 	}
+
+	void OnControllerColliderHit(ControllerColliderHit hit)
+	{
+		if (Input.GetKey("e")) {
+			if (hit.transform.parent.name.Contains("Door")) hit.transform.parent.GetComponent<DoorBehaviour>().Open();
+		}
+	}
 }
