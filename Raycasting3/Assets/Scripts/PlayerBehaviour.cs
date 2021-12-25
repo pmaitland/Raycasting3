@@ -11,9 +11,14 @@ public class PlayerBehaviour : MonoBehaviour
 
 	private CharacterController controller;
 
+	private GameObject maze;
+
 	void Start() 
 	{
 		controller = GetComponent<CharacterController>();
+
+		maze = GameObject.Find("Maze");
+
 		Cursor.lockState = CursorLockMode.Locked;
 	}
 	
@@ -37,8 +42,12 @@ public class PlayerBehaviour : MonoBehaviour
 
 	void OnControllerColliderHit(ControllerColliderHit hit)
 	{
-		if (Input.GetKey("e")) {
-			if (hit.transform.parent.name.Contains("Door")) hit.transform.parent.GetComponent<DoorBehaviour>().Open();
+		string hitName = hit.transform.parent.name;
+		if (hitName.Contains("Door")) {
+			if (Input.GetKey("e")) hit.transform.parent.GetComponent<DoorBehaviour>().Open();
+		} else if (hitName.Contains("Floor")) {
+			maze.GetComponent<MazeBehaviour>().ActivateMinimapCell((int) hit.transform.position.x, (int) hit.transform.position.z);
+			maze.GetComponent<MazeBehaviour>().MovePlayerMinimapCell((int) hit.transform.position.x, (int) hit.transform.position.z);
 		}
 	}
 }

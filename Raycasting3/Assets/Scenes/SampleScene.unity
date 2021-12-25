@@ -235,37 +235,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1979202703222069091, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
-      propertyPath: width
-      value: 21
-      objectReference: {fileID: 0}
-    - target: {fileID: 1979202703222069091, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
-      propertyPath: height
-      value: 21
-      objectReference: {fileID: 0}
-    - target: {fileID: 1979202703222069091, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
-      propertyPath: material
-      value: 
-      objectReference: {fileID: 2100000, guid: 483da4bf8fbc9f9729f27054b6b25b5f, type: 2}
-    - target: {fileID: 1979202703222069091, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
-      propertyPath: roomCount
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1979202703222069091, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
-      propertyPath: materials.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1979202703222069091, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
-      propertyPath: materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 483da4bf8fbc9f9729f27054b6b25b5f, type: 2}
-    - target: {fileID: 1979202703222069091, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
-      propertyPath: materials.Array.data[1]
-      value: 
-      objectReference: {fileID: 2100000, guid: d7636e6403f92cfb59dac619cc91b9ac, type: 2}
-    - target: {fileID: 1979202703222069091, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
-      propertyPath: materials.Array.data[2]
-      value: 
-      objectReference: {fileID: 2100000, guid: 72326cfe0a81c8386a105feb2106fab0, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
