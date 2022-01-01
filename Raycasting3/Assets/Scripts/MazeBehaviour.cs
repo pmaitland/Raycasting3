@@ -14,6 +14,8 @@ public class MazeBehaviour : MonoBehaviour
 
     public List<Material> materials;
 
+    public GameObject playerPrefab;
+
     public GameObject floorPrefab;
     public GameObject ceilingPrefab;
     public GameObject wallPrefab;
@@ -259,6 +261,8 @@ public class MazeBehaviour : MonoBehaviour
         string path = "Assets/maze.txt";
         StreamWriter writer = new StreamWriter(path, false);
 
+        List<MazeCell> deadEnds = new List<MazeCell>();
+
         int random = 0;
         MazeCell neighbour;
         for (int y = 0; y < size; y++) {
@@ -317,6 +321,8 @@ public class MazeBehaviour : MonoBehaviour
 
                         CreateMinimapCell(x, y, Color.white);
 
+                        deadEnds.Add(grid.GetCell(x, y));
+
                         break;
                     case MazeCellType.Room:
                         CreateFloor(x, y);
@@ -367,6 +373,9 @@ public class MazeBehaviour : MonoBehaviour
             writer.Write("\n");
         }
         writer.Close();
+
+        MazeCell playerStart = deadEnds[Random.Range(0, deadEnds.Count)];
+        CreateObject(playerPrefab, new Vector3(playerStart.GetX(), 1, playerStart.GetY()));
     }
 
     private void MazeDepthFirstSearch(MazeGrid grid, int x, int y)
