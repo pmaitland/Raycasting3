@@ -38,6 +38,10 @@ public class PlayerBehaviour : MonoBehaviour
 			projectilePosition -= transform.up * 0.25f;
 			Instantiate(projectilePrefab, projectilePosition, transform.rotation);
 		}
+
+		if (Input.GetKey("escape")) {
+            Application.Quit();
+        }
 	}
 
 	void OnControllerColliderHit(ControllerColliderHit hit)

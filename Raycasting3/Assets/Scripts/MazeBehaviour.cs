@@ -513,12 +513,16 @@ public class MazeBehaviour : MonoBehaviour
 
     private GameObject CreateMinimapCell(int x, int y, Color color)
     {
-        GameObject cell = CreateObject(minimapCellPrefab, new Vector3(minimapCellSize * (0.5f + y), minimapCellSize * (size - 0.5f - x), 0));
-        cell.GetComponent<RectTransform>().sizeDelta = new Vector2(minimapCellSize, minimapCellSize);
+        float scaleFactor = transform.Find("Minimap").GetComponent<Canvas>().scaleFactor;
+        GameObject cell = CreateObject(minimapCellPrefab, new Vector3(0, 0, 0));
+        cell.GetComponent<RectTransform>().sizeDelta = new Vector2(minimapCellSize * scaleFactor, minimapCellSize * scaleFactor);
         cell.name = x + "," + y;
         cell.GetComponent<Image>().color = color;
         cell.SetActive(false);
         cell.transform.SetParent(minimapBackground);
+        cell.transform.localPosition = new Vector3(-minimapBackground.GetComponent<RectTransform>().rect.width  * 0.5f + minimapCellSize * (y + 0.5f),
+                                                    minimapBackground.GetComponent<RectTransform>().rect.height * 0.5f - minimapCellSize * (x + 0.5f),
+                                                    0);
         return cell;
     }
 
@@ -535,7 +539,8 @@ public class MazeBehaviour : MonoBehaviour
 
     public void MovePlayerMinimapCell(int x, int y)
     {
-        playerMinimapCell.transform.position = new Vector3(minimapCellSize * (0.5f + y), minimapCellSize * (size - 0.5f - x), 0);
+        Transform currentCell = minimapBackground.Find(x + "," + y);
+        playerMinimapCell.transform.position = new Vector3(currentCell.position.x, currentCell.position.y, 0);
     }
 
 }
