@@ -50,7 +50,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 483da4bf8fbc9f9729f27054b6b25b5f, type: 2}
   - {fileID: 2100000, guid: d7636e6403f92cfb59dac619cc91b9ac, type: 2}
   - {fileID: 2100000, guid: 72326cfe0a81c8386a105feb2106fab0, type: 2}
-  playerPrefab: {fileID: 8867510874428536555, guid: 4e0c1b2ed58c8258fac6d39702e22d97, type: 3}
   floorPrefab: {fileID: 4909252868652026774, guid: a6a4a946533d7ae4f8a32c1a098463a6, type: 3}
   ceilingPrefab: {fileID: 3890000064965853165, guid: a28d95da66c26a2d7bf46f13bc3145d8, type: 3}
   wallPrefab: {fileID: 7617880232423462224, guid: b52208d0f86de5076add23313369f0c8, type: 3}
@@ -191,10 +190,10 @@ RectTransform:
   m_Father: {fileID: 1472055554761781877}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 125, y: 125}
-  m_SizeDelta: {x: 250, y: 250}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 45, y: -45}
+  m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4811754894118751702
 CanvasRenderer:

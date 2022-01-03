@@ -14,8 +14,6 @@ public class MazeBehaviour : MonoBehaviour
 
     public List<Material> materials;
 
-    public GameObject playerPrefab;
-
     public GameObject floorPrefab;
     public GameObject ceilingPrefab;
     public GameObject wallPrefab;
@@ -37,6 +35,8 @@ public class MazeBehaviour : MonoBehaviour
     private GameObject doorParent;
     private GameObject propParent;
     private GameObject enemyParent;
+
+    private MazeCell playerStart;
 
     public enum MazeCellType { Empty, Passage, DeadEnd, Room, DisconnectedDoor, Door };
 
@@ -195,7 +195,7 @@ public class MazeBehaviour : MonoBehaviour
         if (size % 2 == 0) size -= 1;
     }
 
-    void Start()
+    void Awake()
     {
         minimapBackground = transform.Find("Minimap").Find("Background");
         minimapCellSize = minimapBackground.GetComponent<RectTransform>().rect.width / (float) size;
@@ -374,8 +374,7 @@ public class MazeBehaviour : MonoBehaviour
         }
         writer.Close();
 
-        MazeCell playerStart = deadEnds[Random.Range(0, deadEnds.Count)];
-        CreateObject(playerPrefab, new Vector3(playerStart.GetX(), 1, playerStart.GetY()));
+        playerStart = deadEnds[Random.Range(0, deadEnds.Count)];
     }
 
     private void MazeDepthFirstSearch(MazeGrid grid, int x, int y)
@@ -530,6 +529,11 @@ public class MazeBehaviour : MonoBehaviour
     {
         GameObject obj = Instantiate(prefab, position, prefab.transform.rotation);
         return obj;
+    }
+
+    public Vector3 GetPlayerStart()
+    {
+        return new Vector3(playerStart.GetX(), 1, playerStart.GetY());
     }
 
     public void ActivateMinimapCell(int x, int y)
