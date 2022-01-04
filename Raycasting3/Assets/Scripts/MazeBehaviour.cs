@@ -24,17 +24,14 @@ public class MazeBehaviour : MonoBehaviour
 
     public GameObject turretPrefab;
 
-    private Transform minimapBackground;
-    public GameObject minimapCellPrefab;
-    private float minimapCellSize;
-    private GameObject playerMinimapCell;
-
     private GameObject floorParent;
     private GameObject ceilingParent;
     private GameObject wallParent;
     private GameObject doorParent;
     private GameObject propParent;
     private GameObject enemyParent;
+
+    private GameBehaviour gameController;
 
     private MazeCell playerStart;
 
@@ -195,10 +192,9 @@ public class MazeBehaviour : MonoBehaviour
         if (size % 2 == 0) size -= 1;
     }
 
-    void Awake()
+    void Start()
     {
-        minimapBackground = transform.Find("Minimap").Find("Background");
-        minimapCellSize = minimapBackground.GetComponent<RectTransform>().rect.width / (float) size;
+        gameController = GameObject.Find("Controller").GetComponent<GameBehaviour>();
 
         floorParent = new GameObject("Floors");
         floorParent.transform.parent = transform;
@@ -214,10 +210,6 @@ public class MazeBehaviour : MonoBehaviour
         enemyParent.transform.parent = transform;
 
         GenerateMaze();
-
-        playerMinimapCell = CreateMinimapCell(0, 0, Color.green);
-        playerMinimapCell.name = "Player";
-        playerMinimapCell.SetActive(true);
     }
 
     private void GenerateMaze()
@@ -302,7 +294,7 @@ public class MazeBehaviour : MonoBehaviour
                         neighbour = grid.GetWestNeighbour(x, y);
                         if (neighbour != null && neighbour.GetCellType() == MazeCellType.Room) CreateWestWall(x, y, 1);
 
-                        CreateMinimapCell(x, y, Color.white);
+                        gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
 
                         break;
                     case MazeCellType.DeadEnd:
@@ -319,7 +311,7 @@ public class MazeBehaviour : MonoBehaviour
                         else if (grid.GetSouthNeighbour(x, y).GetCellType() != MazeCellType.Empty) CreateNorthTorch(x, y, 0);
                         else if (grid.GetWestNeighbour(x, y).GetCellType() != MazeCellType.Empty) CreateEastTorch(x, y, 0);
 
-                        CreateMinimapCell(x, y, Color.white);
+                        gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
 
                         deadEnds.Add(grid.GetCell(x, y));
 
@@ -340,7 +332,7 @@ public class MazeBehaviour : MonoBehaviour
                             else if (grid.GetWestNeighbour(x, y) != null && grid.GetWestNeighbour(x, y).GetCellType() == MazeCellType.Empty) CreateWestTorch(x, y, 0);
                         }
 
-                        CreateMinimapCell(x, y, Color.gray);
+                        gameController.CreateMinimapCell(x, y, x + "," + y, Color.gray, false);
 
                         break;
                     case MazeCellType.Door:
@@ -362,7 +354,7 @@ public class MazeBehaviour : MonoBehaviour
                         neighbour = grid.GetWestNeighbour(x, y);
                         if (neighbour != null && neighbour.GetCellType() == MazeCellType.Room) CreateWestWall(x, y, 1);
 
-                        CreateMinimapCell(x, y, Color.gray);
+                        gameController.CreateMinimapCell(x, y, x + "," + y, Color.gray, false);
 
                         break;
                     default:
@@ -375,6 +367,7 @@ public class MazeBehaviour : MonoBehaviour
         writer.Close();
 
         playerStart = deadEnds[Random.Range(0, deadEnds.Count)];
+        gameController.SetPlayerPosition(new Vector3(playerStart.GetX(), 1, playerStart.GetY()));
     }
 
     private void MazeDepthFirstSearch(MazeGrid grid, int x, int y)
@@ -510,41 +503,15 @@ public class MazeBehaviour : MonoBehaviour
         turret.transform.parent = enemyParent.transform;
     }
 
-    private GameObject CreateMinimapCell(int x, int y, Color color)
-    {
-        float scaleFactor = transform.Find("Minimap").GetComponent<Canvas>().scaleFactor;
-        GameObject cell = CreateObject(minimapCellPrefab, new Vector3(0, 0, 0));
-        cell.GetComponent<RectTransform>().sizeDelta = new Vector2(minimapCellSize * scaleFactor, minimapCellSize * scaleFactor);
-        cell.name = x + "," + y;
-        cell.GetComponent<Image>().color = color;
-        cell.SetActive(false);
-        cell.transform.SetParent(minimapBackground);
-        cell.transform.localPosition = new Vector3(-minimapBackground.GetComponent<RectTransform>().rect.width  * 0.5f + minimapCellSize * (y + 0.5f),
-                                                    minimapBackground.GetComponent<RectTransform>().rect.height * 0.5f - minimapCellSize * (x + 0.5f),
-                                                    0);
-        return cell;
-    }
-
     private GameObject CreateObject(GameObject prefab, Vector3 position)
     {
         GameObject obj = Instantiate(prefab, position, prefab.transform.rotation);
         return obj;
     }
 
-    public Vector3 GetPlayerStart()
+    public int GetSize()
     {
-        return new Vector3(playerStart.GetX(), 1, playerStart.GetY());
-    }
-
-    public void ActivateMinimapCell(int x, int y)
-    {
-        minimapBackground.Find(x + "," + y).gameObject.SetActive(true);
-    }
-
-    public void MovePlayerMinimapCell(int x, int y)
-    {
-        Transform currentCell = minimapBackground.Find(x + "," + y);
-        playerMinimapCell.transform.position = new Vector3(currentCell.position.x, currentCell.position.y, 0);
+        return size;
     }
 
 }

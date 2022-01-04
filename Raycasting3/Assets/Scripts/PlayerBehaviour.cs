@@ -54,4 +54,9 @@ public class PlayerBehaviour : MonoBehaviour
 			gameController.MovePlayerMinimapCell((int) hit.transform.position.x, (int) hit.transform.position.z);
 		}
 	}
+
+	public void SetPosition(Vector3 position)
+	{
+		transform.position = position;
+	}
 }

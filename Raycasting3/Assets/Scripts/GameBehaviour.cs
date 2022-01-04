@@ -7,27 +7,50 @@ public class GameBehaviour : MonoBehaviour
 
     public GameObject playerPrefab;
     public GameObject mazePrefab;
+    public GameObject minimapPrefab;
 
     private GameObject player;
     private GameObject maze;
-    
-    private MazeBehaviour mazeBehaviour;
-    
-    void Start()
-    {
-        maze = Instantiate(mazePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
-        player = Instantiate(playerPrefab, maze.GetComponent<MazeBehaviour>().GetPlayerStart(), new Quaternion(0, 0, 0, 0));
+    private GameObject minimap;
 
+    private PlayerBehaviour playerBehaviour;
+    private MazeBehaviour mazeBehaviour;
+    private MinimapBehaviour minimapBehaviour;
+
+    void Awake()
+    {
+        player = Instantiate(playerPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        playerBehaviour = player.GetComponent<PlayerBehaviour>();
+
+        minimap = Instantiate(minimapPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        minimapBehaviour = minimap.GetComponent<MinimapBehaviour>();
+
+        maze = Instantiate(mazePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
         mazeBehaviour = maze.GetComponent<MazeBehaviour>();
+    }
+
+    public void SetPlayerPosition(Vector3 position)
+    {
+        playerBehaviour.SetPosition(position);
+    }
+
+    public int GetMazeSize()
+    {
+        return mazeBehaviour.GetSize();
+    }
+
+    public void CreateMinimapCell(int x, int y, string name, Color color, bool active)
+    {
+        minimapBehaviour.CreateMinimapCell(x, y, name, color, active);
     }
 
     public void ActivateMinimapCell(int x, int y)
     {
-        mazeBehaviour.ActivateMinimapCell(x, y);
+        minimapBehaviour.ActivateMinimapCell(x, y);
     }
 
     public void MovePlayerMinimapCell(int x, int y)
     {
-        mazeBehaviour.MovePlayerMinimapCell(x, y);
+        minimapBehaviour.MovePlayerMinimapCell(x, y);
     }
 }
