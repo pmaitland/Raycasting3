@@ -8,21 +8,21 @@ public class MinimapBehaviour : MonoBehaviour
     
     public GameObject cellPrefab;
 
+    private GameBehaviour gameController;
+
     private Transform minimapBackground;
     private float scaleFactor;
     private float minimapCellSize;
     private GameObject playerMinimapCell;
 
-    private GameBehaviour gameController;
-
     void Start()
     {
+        gameController = GameObject.Find("Controller").GetComponent<GameBehaviour>();
+
         minimapBackground = transform.Find("Background");
         scaleFactor = GetComponent<Canvas>().scaleFactor;
         minimapCellSize = minimapBackground.GetComponent<RectTransform>().rect.width / (float) gameController.GetMazeSize();
         playerMinimapCell = CreateMinimapCell(0, 0, "Player", Color.green, true);
-
-        gameController = GameObject.Find("Controller").GetComponent<GameBehaviour>();
     }
 
     public GameObject CreateMinimapCell(int x, int y, string name, Color color, bool active)
