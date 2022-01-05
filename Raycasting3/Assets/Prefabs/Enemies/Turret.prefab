@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 7780806029075466819}
   - component: {fileID: 335266839308511019}
   - component: {fileID: 8209495787768327749}
-  - component: {fileID: 8454553766609467090}
+  - component: {fileID: 286276258609043096}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -141,7 +141,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &8454553766609467090
+--- !u!114 &286276258609043096
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,9 +150,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 4012273230324987698}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4354a944d5efcded3928a0b45c804579, type: 3}
+  m_Script: {fileID: 11500000, guid: a942a911f804c1873b0bc1b5551b2901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 21300000, guid: b65b6b0dea6764e3e86025b7f0455d29, type: 3}
+  - {fileID: 21300000, guid: 087d124d6d9655dcc99e487a0c2e8fa4, type: 3}
+  - {fileID: 21300000, guid: 658a8084b1115e132823b2332ee9669d, type: 3}
+  - {fileID: 21300000, guid: f00bbb5286467b2cc898286188d4bc0b, type: 3}
+  - {fileID: 21300000, guid: 50384d13be364f446a426c5edb1c2e0b, type: 3}
+  - {fileID: 21300000, guid: f87e8e5b76b8e010f84a1bc2b60d2f3c, type: 3}
+  - {fileID: 21300000, guid: 0e05f8d1d70c15a34bd1f75df65a782d, type: 3}
+  - {fileID: 21300000, guid: 30833b3364a5b2d789bdd1109251657b, type: 3}
+  destroyedSprite: {fileID: 21300000, guid: 2b3ad71bc65c4bba88c150da56b8af8e, type: 3}
 --- !u!1 &5938546514879256478
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,6 +172,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8147168320510643619}
+  - component: {fileID: 2143256054467045307}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -182,59 +193,19 @@ Transform:
   m_Children:
   - {fileID: 8870080930895534317}
   - {fileID: 7394463017406292888}
-  - {fileID: 8060168640597800354}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6986955724440100242
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8060168640597800354}
-  - component: {fileID: 8060839059242729074}
-  m_Layer: 0
-  m_Name: Sprite 3D
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8060168640597800354
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6986955724440100242}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 8147168320510643619}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8060839059242729074
+--- !u!114 &2143256054467045307
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6986955724440100242}
+  m_GameObject: {fileID: 5938546514879256478}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a942a911f804c1873b0bc1b5551b2901, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f52695d15347afd8a6933ff77894aaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprites:
-  - {fileID: 21300000, guid: b65b6b0dea6764e3e86025b7f0455d29, type: 3}
-  - {fileID: 21300000, guid: 087d124d6d9655dcc99e487a0c2e8fa4, type: 3}
-  - {fileID: 21300000, guid: 658a8084b1115e132823b2332ee9669d, type: 3}
-  - {fileID: 21300000, guid: f00bbb5286467b2cc898286188d4bc0b, type: 3}
-  - {fileID: 21300000, guid: 50384d13be364f446a426c5edb1c2e0b, type: 3}
-  - {fileID: 21300000, guid: f87e8e5b76b8e010f84a1bc2b60d2f3c, type: 3}
-  - {fileID: 21300000, guid: 0e05f8d1d70c15a34bd1f75df65a782d, type: 3}
-  - {fileID: 21300000, guid: 30833b3364a5b2d789bdd1109251657b, type: 3}
+  maxHealth: 3

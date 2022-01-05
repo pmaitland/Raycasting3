@@ -1,53 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &111156210171126543
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1055874631097207615}
-  - component: {fileID: 1054293834004414703}
-  m_Layer: 0
-  m_Name: Sprite 3D
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1055874631097207615
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 111156210171126543}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1183547994858599230}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1054293834004414703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 111156210171126543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a942a911f804c1873b0bc1b5551b2901, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sprites:
-  - {fileID: 21300000, guid: 37f9ff320884474fe96100a24d747615, type: 3}
-  - {fileID: 21300000, guid: 77f3eaefdb878fbb289dbf1d9ccf0618, type: 3}
-  - {fileID: 21300000, guid: c8e4cbe83972ad8d0bc6642fbccc4799, type: 3}
-  - {fileID: 21300000, guid: 43e475b545be94a0f972353f044f96f1, type: 3}
 --- !u!1 &3681046569504041219
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,7 +29,6 @@ Transform:
   m_Children:
   - {fileID: 117715716178378036}
   - {fileID: 568060632251079941}
-  - {fileID: 1055874631097207615}
   - {fileID: 2416704277879587975}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -111,7 +62,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1183547994858599230}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!108 &5842045055547695810
 Light:
@@ -217,7 +168,7 @@ GameObject:
   - component: {fileID: 758497093818299614}
   - component: {fileID: 7339560779953592758}
   - component: {fileID: 1193942226746036440}
-  - component: {fileID: 1452651768373889103}
+  - component: {fileID: 6426398298759042446}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -302,7 +253,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1452651768373889103
+--- !u!114 &6426398298759042446
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -311,6 +262,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6256122153622702511}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4354a944d5efcded3928a0b45c804579, type: 3}
+  m_Script: {fileID: 11500000, guid: a942a911f804c1873b0bc1b5551b2901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 21300000, guid: 37f9ff320884474fe96100a24d747615, type: 3}
+  - {fileID: 21300000, guid: 77f3eaefdb878fbb289dbf1d9ccf0618, type: 3}
+  - {fileID: 21300000, guid: c8e4cbe83972ad8d0bc6642fbccc4799, type: 3}
+  - {fileID: 21300000, guid: 43e475b545be94a0f972353f044f96f1, type: 3}
+  destroyedSprite: {fileID: 0}

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8497853845804041892}
   - component: {fileID: 8102767511222841378}
   - component: {fileID: 3787477017845267375}
-  - component: {fileID: 3520798340748952675}
+  - component: {fileID: 6190360913296207179}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -97,7 +97,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &3520798340748952675
+--- !u!114 &6190360913296207179
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,9 +106,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1602807724622661851}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4354a944d5efcded3928a0b45c804579, type: 3}
+  m_Script: {fileID: 11500000, guid: a942a911f804c1873b0bc1b5551b2901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 21300000, guid: 8cbff1e76025a39bda974f1de598b487, type: 3}
+  destroyedSprite: {fileID: 21300000, guid: ebb2e4e80b3436337baefefc51277c59, type: 3}
 --- !u!1 &2270920480958254443
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,6 +121,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2270920480958254447}
+  - component: {fileID: 754701064351640571}
   m_Layer: 0
   m_Name: Barrel
   m_TagString: Untagged
@@ -140,3 +144,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &754701064351640571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2270920480958254443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f52695d15347afd8a6933ff77894aaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 2

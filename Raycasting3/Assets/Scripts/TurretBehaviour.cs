@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class TurretBehaviour : MonoBehaviour
 {
-    enum State { Turning, ReadyingShot, ReadyingTurn }
+    enum State { Turning, ReadyingShot, ReadyingTurn, Destroyed }
 
     public GameObject projectilePrefab;
+
+    private HealthBehaviour healthBehaviour;
 
     private State currentState = State.ReadyingTurn;
     private float timeToReadyShot = 3;
@@ -14,9 +16,16 @@ public class TurretBehaviour : MonoBehaviour
     private float elapsedTime = 0;
     private float degreesTurned = 0;
 
+    void Start()
+    {
+        healthBehaviour = GetComponentInParent<HealthBehaviour>();
+    }
+
     void Update()
     {
         elapsedTime += Time.deltaTime;
+
+        if (healthBehaviour.GetCurrentHealth() <= 0) currentState = State.Destroyed;
 
         switch (currentState) {
             case State.Turning:
@@ -39,6 +48,8 @@ public class TurretBehaviour : MonoBehaviour
                     currentState = State.Turning;
                     elapsedTime = 0;
                 }
+                break;
+            case State.Destroyed:
                 break;
             default:
                 break;

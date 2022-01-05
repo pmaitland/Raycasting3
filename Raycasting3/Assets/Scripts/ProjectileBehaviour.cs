@@ -13,6 +13,9 @@ public class ProjectileBehaviour : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        HealthBehaviour otherHealth = other.GetComponentInParent<HealthBehaviour>();
+        if (otherHealth != null) otherHealth.ReduceHealth(1);
+
         Destroy(gameObject);
     }
 }
