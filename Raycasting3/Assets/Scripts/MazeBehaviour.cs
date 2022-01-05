@@ -12,7 +12,7 @@ public class MazeBehaviour : MonoBehaviour
     [Range(0, 50)]
     public int roomCount = 6;
 
-    public List<Material> materials;
+    public Texture2D[] textures;
 
     public GameObject floorPrefab;
     public GameObject ceilingPrefab;
@@ -453,13 +453,13 @@ public class MazeBehaviour : MonoBehaviour
     private GameObject CreateMazePiece(GameObject prefab, Vector3 position)
     {
         GameObject mazePiece = CreateObject(prefab, position);
-        Material material = materials[Random.Range(0, materials.Count)];
+        Texture2D texture = textures[Random.Range(0, textures.Length)];
 
         MeshRenderer meshRenderer = mazePiece.GetComponent<MeshRenderer>();
-        if (meshRenderer != null) meshRenderer.material = material;
+        if (meshRenderer != null) meshRenderer.material.mainTexture = texture;
 
         MeshRenderer[] childrenMeshRenderers = mazePiece.GetComponentsInChildren<MeshRenderer>();
-        foreach (MeshRenderer meshRen in childrenMeshRenderers) meshRen.material = material;
+        foreach (MeshRenderer meshRen in childrenMeshRenderers) meshRen.material.mainTexture = texture;
 
         return mazePiece;
     }

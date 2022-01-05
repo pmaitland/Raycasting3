@@ -22,6 +22,7 @@ public class SpriteBehaviour : MonoBehaviour
         if (body == null) body = transform;
 
         sprite = transform.parent.Find("Sprite");
+        sprite.GetComponent<MeshRenderer>().material.mainTexture = sprites[0].texture;
 
         healthBehaviour = GetComponentInParent<HealthBehaviour>();
 
