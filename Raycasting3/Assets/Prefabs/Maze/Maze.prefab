@@ -43,8 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f66af20dbd654a9834c8a5789aab99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 21
-  roomCount: 6
+  size: 35
+  roomCount: 4
   textures:
   - {fileID: 2800000, guid: 2c96257a45a3f551d98b40d405bb4ad9, type: 3}
   - {fileID: 2800000, guid: dff35d10150aa2a77adb9d3196da94d2, type: 3}
