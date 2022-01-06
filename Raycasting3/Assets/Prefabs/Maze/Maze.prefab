@@ -47,8 +47,20 @@ MonoBehaviour:
   roomCount: 4
   textures:
   - {fileID: 2800000, guid: 2c96257a45a3f551d98b40d405bb4ad9, type: 3}
-  - {fileID: 2800000, guid: dff35d10150aa2a77adb9d3196da94d2, type: 3}
-  - {fileID: 2800000, guid: 87262644fefc871da810c1d0490e1e66, type: 3}
+  carpetN: {fileID: 2800000, guid: 3b14a49e67ba263f6a3179bd1b2a6ad8, type: 3}
+  carpetE: {fileID: 2800000, guid: 5f8fa08ba70cb3e4bb6497e120521d9b, type: 3}
+  carpetS: {fileID: 2800000, guid: d9fa3f6592d8b56c78347c2182d8e022, type: 3}
+  carpetW: {fileID: 2800000, guid: f6d2a5639c90580dc9e38e3ba31b3eb0, type: 3}
+  carpetNS: {fileID: 2800000, guid: 678c70eb1f37732e3ac85943e0c4691e, type: 3}
+  carpetEW: {fileID: 2800000, guid: e0e8c7f414f8161baaf66cbeace4ddff, type: 3}
+  carpetNE: {fileID: 2800000, guid: be7ef61171f915fec9e37ed9031e2661, type: 3}
+  carpetES: {fileID: 2800000, guid: 8ac0c58739d869b13a7452fb69a5f4eb, type: 3}
+  carpetSW: {fileID: 2800000, guid: bb83ee620e3dbb98ba1823c1153fd68d, type: 3}
+  carpetNW: {fileID: 2800000, guid: 703211f86d5c268d8a835d0589eb597e, type: 3}
+  carpetNES: {fileID: 2800000, guid: 88e7cd5d959b58fc8a01d5e8cc34df44, type: 3}
+  carpetESW: {fileID: 2800000, guid: 5ed53e2719d6e4090a1f6f6f19f2bb85, type: 3}
+  carpetNSW: {fileID: 2800000, guid: 61d5fd0397c9e13db8c0422993e72631, type: 3}
+  carpetNEW: {fileID: 2800000, guid: 6842f4624fe34bbb8a966d2f74018ea8, type: 3}
   floorPrefab: {fileID: 4909252868652026774, guid: a6a4a946533d7ae4f8a32c1a098463a6, type: 3}
   ceilingPrefab: {fileID: 3890000064965853165, guid: a28d95da66c26a2d7bf46f13bc3145d8, type: 3}
   wallPrefab: {fileID: 7617880232423462224, guid: b52208d0f86de5076add23313369f0c8, type: 3}
