@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorBehaviour : MonoBehaviour
+public class HiddenDoorBehaviour : MonoBehaviour
 {
     private float openY;
     private bool open = false;
@@ -10,7 +10,7 @@ public class DoorBehaviour : MonoBehaviour
 
     void Start()
     {
-        openY = transform.position.y + 0.75f;
+        openY = transform.position.y + 1f;
     }
 
     void Update()
