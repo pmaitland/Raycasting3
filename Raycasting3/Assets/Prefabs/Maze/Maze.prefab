@@ -45,8 +45,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   size: 35
   roomCount: 4
-  textures:
-  - {fileID: 2800000, guid: 2c96257a45a3f551d98b40d405bb4ad9, type: 3}
+  stoneBrick: {fileID: 2800000, guid: 2c96257a45a3f551d98b40d405bb4ad9, type: 3}
+  banner: {fileID: 2800000, guid: e4256658a3bb5e307847372ad31015f4, type: 3}
   carpetN: {fileID: 2800000, guid: 3b14a49e67ba263f6a3179bd1b2a6ad8, type: 3}
   carpetE: {fileID: 2800000, guid: 5f8fa08ba70cb3e4bb6497e120521d9b, type: 3}
   carpetS: {fileID: 2800000, guid: d9fa3f6592d8b56c78347c2182d8e022, type: 3}
