@@ -46,10 +46,13 @@ public class PlayerBehaviour : MonoBehaviour
 
 	void OnControllerColliderHit(ControllerColliderHit hit)
 	{
-		string hitName = hit.transform.parent.name;
-		if (hitName.Contains("Hidden Door")) {
+		if (hit.transform.parent.name.Contains("Hidden Door")) {
 			if (Input.GetKey("e")) hit.transform.parent.GetComponent<HiddenDoorBehaviour>().Open();
-		} else if (hitName.Contains("Floor")) {
+		} else if (hit.transform.name.Contains("Face 1")) {
+			if (Input.GetKey("e")) hit.transform.parent.parent.GetComponent<DoorBehaviour>().Open(true);
+		} else if (hit.transform.name.Contains("Face 2")) {
+			if (Input.GetKey("e")) hit.transform.parent.parent.GetComponent<DoorBehaviour>().Open(false);
+		} else if (hit.transform.parent.name.Contains("Floor")) {
 			gameController.ActivateMinimapCell((int) hit.transform.position.x, (int) hit.transform.position.z);
 			gameController.MovePlayerMinimapCell((int) hit.transform.position.x, (int) hit.transform.position.z);
 		}

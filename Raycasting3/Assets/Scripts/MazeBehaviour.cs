@@ -31,6 +31,7 @@ public class MazeBehaviour : MonoBehaviour
     public GameObject floorPrefab;
     public GameObject ceilingPrefab;
     public GameObject wallPrefab;
+    public GameObject doorPrefab;
     public GameObject hiddenDoorPrefab;
 
     public GameObject barrelPrefab;
@@ -438,22 +439,22 @@ public class MazeBehaviour : MonoBehaviour
                         neighbourType = grid.GetNorthNeighbour(x, y).GetCellType();
                         if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd || neighbourType == MazeCellType.Room) {
                             CreateNorthWall(x, y, 1);
-                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd) CreateSouthHiddenDoor(x, y);
+                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd) CreateSouthDoor(x, y);
                         }
                         neighbourType = grid.GetEastNeighbour(x, y).GetCellType();
                         if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd || neighbourType == MazeCellType.Room) {
                             CreateEastWall(x, y, 1);
-                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd) CreateWestHiddenDoor(x, y);
+                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd) CreateWestDoor(x, y);
                         }
                         neighbourType = grid.GetSouthNeighbour(x, y).GetCellType();
                         if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd || neighbourType == MazeCellType.Room) {
                             CreateSouthWall(x, y, 1);
-                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd) CreateNorthHiddenDoor(x, y);
+                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd) CreateNorthDoor(x, y);
                         }
                         neighbourType = grid.GetWestNeighbour(x, y).GetCellType();
                         if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd || neighbourType == MazeCellType.Room) {
                             CreateWestWall(x, y, 1);
-                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd) CreateEastHiddenDoor(x, y);
+                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd) CreateEastDoor(x, y);
                         }
 
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.gray, false);
@@ -551,6 +552,33 @@ public class MazeBehaviour : MonoBehaviour
         wall.transform.parent = wallParent.transform;
     }
 
+    private void CreateNorthDoor(int x, int y)
+    {
+        CreateDoor(x, y, 0);
+    }
+
+    private void CreateEastDoor(int x, int y)
+    {
+        CreateDoor(x, y, 270);
+    }
+
+    private void CreateSouthDoor(int x, int y)
+    {
+        CreateDoor(x, y, 180);
+    }
+
+    private void CreateWestDoor(int x, int y)
+    {
+        CreateDoor(x, y, 90);
+    }
+
+    private void CreateDoor(int x, int y, float rotation)
+    {
+        GameObject door = CreateMazePiece(doorPrefab, new Vector3(x, 0, y) + doorPrefab.transform.position);
+        door.transform.Rotate(0, rotation, 0, Space.Self);
+        door.transform.parent = doorParent.transform;
+    }
+
     private void CreateNorthHiddenDoor(int x, int y)
     {
         CreateHiddenDoor(x, y, 0);
@@ -590,9 +618,6 @@ public class MazeBehaviour : MonoBehaviour
 
         MeshRenderer meshRenderer = mazePiece.GetComponent<MeshRenderer>();
         if (meshRenderer != null) meshRenderer.material.mainTexture = texture;
-
-        MeshRenderer[] childrenMeshRenderers = mazePiece.GetComponentsInChildren<MeshRenderer>();
-        foreach (MeshRenderer meshRen in childrenMeshRenderers) meshRen.material.mainTexture = texture;
 
         return mazePiece;
     }
