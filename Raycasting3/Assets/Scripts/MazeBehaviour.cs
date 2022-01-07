@@ -27,6 +27,7 @@ public class MazeBehaviour : MonoBehaviour
     public Texture2D carpetESW;
     public Texture2D carpetNSW;
     public Texture2D carpetNEW;
+    public Texture2D carpetNESW;
 
     public GameObject floorPrefab;
     public GameObject ceilingPrefab;
@@ -375,6 +376,8 @@ public class MazeBehaviour : MonoBehaviour
                             else if (hasPassageEastNeighbour && hasPassageSouthNeighbour && hasPassageWestNeighbour) CreateFloor(x, y, carpetESW);
                             else if (hasPassageSouthNeighbour && hasPassageWestNeighbour && hasPassageNorthNeighbour) CreateFloor(x, y, carpetNSW);
                             else if (hasPassageWestNeighbour && hasPassageNorthNeighbour && hasPassageEastNeighbour) CreateFloor(x, y, carpetNEW);
+                        } else if (passageNeighbourCount == 4) {
+                            CreateFloor(x, y, carpetNESW);
                         } else {
                             CreateFloor(x, y);
                         }

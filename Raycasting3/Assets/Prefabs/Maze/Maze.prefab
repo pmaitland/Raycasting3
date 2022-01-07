@@ -61,6 +61,7 @@ MonoBehaviour:
   carpetESW: {fileID: 2800000, guid: 5ed53e2719d6e4090a1f6f6f19f2bb85, type: 3}
   carpetNSW: {fileID: 2800000, guid: 61d5fd0397c9e13db8c0422993e72631, type: 3}
   carpetNEW: {fileID: 2800000, guid: 6842f4624fe34bbb8a966d2f74018ea8, type: 3}
+  carpetNESW: {fileID: 2800000, guid: 3e56b417007fd2379b338543a72d22da, type: 3}
   floorPrefab: {fileID: 4909252868652026774, guid: a6a4a946533d7ae4f8a32c1a098463a6, type: 3}
   ceilingPrefab: {fileID: 3890000064965853165, guid: a28d95da66c26a2d7bf46f13bc3145d8, type: 3}
   wallPrefab: {fileID: 7617880232423462224, guid: b52208d0f86de5076add23313369f0c8, type: 3}
