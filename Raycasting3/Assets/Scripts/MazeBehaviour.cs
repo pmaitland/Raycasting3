@@ -205,6 +205,48 @@ public class MazeBehaviour : MonoBehaviour
         }
     }
 
+    public class Room
+    {
+        private int x;
+        private int y;
+        private int width;
+        private int height;
+
+        public Room(int x, int y, int width, int height)
+        {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+
+        public int GetX()
+        {
+            return x;
+        }
+
+        public int GetY()
+        {
+            return y;
+        }
+
+        public int GetWidth()
+        {
+            return width;
+        }
+
+        public int GetHeight()
+        {
+            return height;
+        }
+
+        public static bool Overlap(Room roomA, Room roomB)
+        {
+            return roomA.GetX() < roomB.GetX() + roomB.GetWidth()  && roomA.GetX() + roomA.GetWidth()  > roomB.GetX()
+                && roomA.GetY() < roomB.GetY() + roomB.GetHeight() && roomA.GetY() + roomA.GetHeight() > roomB.GetY();
+        }
+    }
+
     void OnValidate()
     {
         if (size % 2 == 0) size -= 1;
@@ -235,35 +277,55 @@ public class MazeBehaviour : MonoBehaviour
         MazeGrid grid = new MazeGrid(size);
 
         int[] roomDimensions = new int[] { 3, 5, 7 };
+
+        List<Room> existingRooms = new List<Room>();
         for (int i = 0; i < roomCount; i++) {
-            int roomWidth  = roomDimensions[Random.Range(0, roomDimensions.Length - 1)];
-            int roomHeight = roomDimensions[Random.Range(0, roomDimensions.Length - 1)];
 
-            int roomX = Random.Range(3, (size - roomWidth) - 1);
-            int roomY = Random.Range(3, (size - roomHeight) - 1);
+            bool canBeCreated = false;
+            int attemptCount = 0;
 
-            if (roomX % 2 == 0) roomX -= 1;
-            if (roomY % 2 == 0) roomY -= 1;
+            while (!canBeCreated && attemptCount < 10) {
+                canBeCreated = true;
+                attemptCount++;
 
-            List<MazeCell> doorOptions = new List<MazeCell>();
+                int roomWidth  = roomDimensions[Random.Range(0, roomDimensions.Length - 1)];
+                int roomHeight = roomDimensions[Random.Range(0, roomDimensions.Length - 1)];
 
-            for (int x = roomX; x < roomX + roomWidth; x++) {
-                for (int y = roomY; y < roomY + roomHeight; y++) {
-                    grid.SetCellType(x, y, MazeCellType.Room);
+                int roomX = Random.Range(3, (size - roomWidth) - 1);
+                int roomY = Random.Range(3, (size - roomHeight) - 1);
+                if (roomX % 2 == 0) roomX -= 1;
+                if (roomY % 2 == 0) roomY -= 1;
 
-                    if (x % 2 == 1 && y % 2 == 1) {
-                        if ((x == roomX || x == roomX + roomWidth - 1) || (y == roomY || y == roomY + roomHeight - 1)) {
-                            doorOptions.Add(grid.GetCell(x, y));
+                Room room = new Room(roomX, roomY, roomWidth, roomHeight);
+
+                foreach (Room existingRoom in existingRooms) {
+                    if (Room.Overlap(room, existingRoom)) canBeCreated = false;
+                }
+
+                if (canBeCreated) {
+                    List<MazeCell> doorOptions = new List<MazeCell>();
+
+                    for (int x = roomX; x < roomX + roomWidth; x++) {
+                        for (int y = roomY; y < roomY + roomHeight; y++) {
+                            grid.SetCellType(x, y, MazeCellType.Room);
+
+                            if (x % 2 == 1 && y % 2 == 1) {
+                                if ((x == roomX || x == roomX + roomWidth - 1) || (y == roomY || y == roomY + roomHeight - 1)) {
+                                    doorOptions.Add(grid.GetCell(x, y));
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            int doorCount = Random.Range(1, doorOptions.Count - 1);
-            for (int j = 0; j < doorCount; j++) {
-                MazeCell door = doorOptions[Random.Range(0, doorOptions.Count)];
-                grid.SetCellType(door.GetX(), door.GetY(), MazeCellType.DisconnectedDoor);
-                doorOptions.Remove(door);
+                    int doorCount = Random.Range(1, doorOptions.Count - 1);
+                    for (int j = 0; j < doorCount; j++) {
+                        MazeCell door = doorOptions[Random.Range(0, doorOptions.Count)];
+                        grid.SetCellType(door.GetX(), door.GetY(), MazeCellType.DisconnectedDoor);
+                        doorOptions.Remove(door);
+                    }
+
+                    existingRooms.Add(room);
+                }
             }
         }
 
