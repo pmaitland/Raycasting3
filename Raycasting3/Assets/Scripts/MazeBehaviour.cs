@@ -53,7 +53,7 @@ public class MazeBehaviour : MonoBehaviour
 
     private MazeCell playerStart;
 
-    public enum MazeCellType { Empty, Passage, DeadEnd, Room, DisconnectedDoor, Door };
+    public enum MazeCellType { Empty, Passage, DeadEnd, Room, HiddenRoom, DisconnectedDoor, Door, DisconnectedHiddenDoor, HiddenDoor };
 
     private class MazeGrid
     {
@@ -307,7 +307,8 @@ public class MazeBehaviour : MonoBehaviour
 
                     for (int x = roomX; x < roomX + roomWidth; x++) {
                         for (int y = roomY; y < roomY + roomHeight; y++) {
-                            grid.SetCellType(x, y, MazeCellType.Room);
+                            if (i == 0) grid.SetCellType(x, y, MazeCellType.HiddenRoom);
+                            else grid.SetCellType(x, y, MazeCellType.Room);
 
                             if (x % 2 == 1 && y % 2 == 1) {
                                 if ((x == roomX || x == roomX + roomWidth - 1) || (y == roomY || y == roomY + roomHeight - 1)) {
@@ -320,7 +321,8 @@ public class MazeBehaviour : MonoBehaviour
                     int doorCount = Random.Range(1, doorOptions.Count - 1);
                     for (int j = 0; j < doorCount; j++) {
                         MazeCell door = doorOptions[Random.Range(0, doorOptions.Count)];
-                        grid.SetCellType(door.GetX(), door.GetY(), MazeCellType.DisconnectedDoor);
+                        if (i == 0) grid.SetCellType(door.GetX(), door.GetY(), MazeCellType.DisconnectedHiddenDoor);
+                        else grid.SetCellType(door.GetX(), door.GetY(), MazeCellType.DisconnectedDoor);
                         doorOptions.Remove(door);
                     }
 
@@ -357,7 +359,8 @@ public class MazeBehaviour : MonoBehaviour
                                     CreateNorthWall(x, y, 0, stoneBrick);
                                 }
                             }
-                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd || neighbourType == MazeCellType.Room) {
+                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd
+                                || neighbourType == MazeCellType.Room || neighbourType == MazeCellType.HiddenRoom) {
                                 CreateNorthWall(x, y, 1, stoneBrick);
                             }
                         }
@@ -374,7 +377,8 @@ public class MazeBehaviour : MonoBehaviour
                                     CreateEastWall(x, y, 0, stoneBrick);
                                 }
                             }
-                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd || neighbourType == MazeCellType.Room) {
+                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd
+                                || neighbourType == MazeCellType.Room || neighbourType == MazeCellType.HiddenRoom) {
                                 CreateEastWall(x, y, 1, stoneBrick);
                             }
                         }
@@ -391,7 +395,8 @@ public class MazeBehaviour : MonoBehaviour
                                     CreateSouthWall(x, y, 0, stoneBrick);
                                 }
                             }
-                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd || neighbourType == MazeCellType.Room) {
+                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd
+                                || neighbourType == MazeCellType.Room || neighbourType == MazeCellType.HiddenRoom) {
                                 CreateSouthWall(x, y, 1, stoneBrick);
                             }
                         }
@@ -408,7 +413,8 @@ public class MazeBehaviour : MonoBehaviour
                                     CreateWestWall(x, y, 0, stoneBrick);
                                 }
                             }
-                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd || neighbourType == MazeCellType.Room) {
+                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd
+                                || neighbourType == MazeCellType.Room || neighbourType == MazeCellType.HiddenRoom) {
                                 CreateWestWall(x, y, 1, stoneBrick);
                             }
                         }
@@ -535,6 +541,13 @@ public class MazeBehaviour : MonoBehaviour
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.gray, false);
 
                         break;
+                    case MazeCellType.HiddenRoom:
+                        CreateFloor(x, y, stoneBrick);
+                        CreateCeiling(x, y, 1);
+
+                        gameController.CreateMinimapCell(x, y, x + "," + y, Color.black, false);
+
+                        break;
                     case MazeCellType.Door:
                         CreateFloor(x, y, stoneBrick);
                         CreateCeiling(x, y, 0);
@@ -563,6 +576,34 @@ public class MazeBehaviour : MonoBehaviour
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.gray, false);
 
                         break;
+                    case MazeCellType.HiddenDoor:
+                        CreateFloor(x, y, stoneBrick);
+                        CreateCeiling(x, y, 0);
+
+                        neighbourType = grid.GetNorthNeighbour(x, y).GetCellType();
+                        if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd || neighbourType == MazeCellType.HiddenRoom) {
+                            CreateNorthWall(x, y, 1, stoneBrick);
+                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd) CreateSouthHiddenDoor(x, y);
+                        }
+                        neighbourType = grid.GetEastNeighbour(x, y).GetCellType();
+                        if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd || neighbourType == MazeCellType.HiddenRoom) {
+                            CreateEastWall(x, y, 1, stoneBrick);
+                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd) CreateWestHiddenDoor(x, y);
+                        }
+                        neighbourType = grid.GetSouthNeighbour(x, y).GetCellType();
+                        if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd || neighbourType == MazeCellType.HiddenRoom) {
+                            CreateSouthWall(x, y, 1, stoneBrick);
+                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd) CreateNorthHiddenDoor(x, y);
+                        }
+                        neighbourType = grid.GetWestNeighbour(x, y).GetCellType();
+                        if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd || neighbourType == MazeCellType.HiddenRoom) {
+                            CreateWestWall(x, y, 1, stoneBrick);
+                            if (neighbourType == MazeCellType.Passage || neighbourType == MazeCellType.DeadEnd) CreateEastHiddenDoor(x, y);
+                        }
+
+                        gameController.CreateMinimapCell(x, y, x + "," + y, Color.black, false);
+
+                        break;
                     default:
                         break;
                 }
@@ -580,7 +621,7 @@ public class MazeBehaviour : MonoBehaviour
     {
         grid.SetCellType(x, y, MazeCellType.Passage);
 
-        List<MazeCell> availableNeighbours = grid.GetSecondNeighboursOfType(x, y, MazeCellType.Empty, MazeCellType.DisconnectedDoor);
+        List<MazeCell> availableNeighbours = grid.GetSecondNeighboursOfType(x, y, MazeCellType.Empty, MazeCellType.DisconnectedDoor, MazeCellType.DisconnectedHiddenDoor);
 
         while (availableNeighbours.Count != 0) {
             MazeCell chosenNeighbour = availableNeighbours[Random.Range(0, availableNeighbours.Count)];
@@ -597,6 +638,12 @@ public class MazeBehaviour : MonoBehaviour
                 else if (chosenNeighbour == grid.GetSecondSouthNeighbour(x, y)) grid.SetCellType(x,     y + 1, MazeCellType.Door);
                 else if (chosenNeighbour == grid.GetSecondWestNeighbour(x, y))  grid.SetCellType(x - 1, y,     MazeCellType.Door);
                 grid.SetCellType(chosenNeighbour.GetX(), chosenNeighbour.GetY(), MazeCellType.Room);
+            } else if (chosenNeighbour.GetCellType() == MazeCellType.DisconnectedHiddenDoor) {
+                if      (chosenNeighbour == grid.GetSecondNorthNeighbour(x, y)) grid.SetCellType(x,     y - 1, MazeCellType.HiddenDoor);
+                else if (chosenNeighbour == grid.GetSecondEastNeighbour(x, y))  grid.SetCellType(x + 1, y,     MazeCellType.HiddenDoor);
+                else if (chosenNeighbour == grid.GetSecondSouthNeighbour(x, y)) grid.SetCellType(x,     y + 1, MazeCellType.HiddenDoor);
+                else if (chosenNeighbour == grid.GetSecondWestNeighbour(x, y))  grid.SetCellType(x - 1, y,     MazeCellType.HiddenDoor);
+                grid.SetCellType(chosenNeighbour.GetX(), chosenNeighbour.GetY(), MazeCellType.HiddenRoom);
             }
             availableNeighbours.Remove(chosenNeighbour);
         }
