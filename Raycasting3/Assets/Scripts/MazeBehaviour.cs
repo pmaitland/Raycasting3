@@ -157,14 +157,18 @@ public class MazeBehaviour : MonoBehaviour
 
         public void CleanUp()
         {
+            MazeCellType cellType;
             for (int i = 1; i < size - 1; i++) {
                 for (int j = 1; j < size - 1; j++) {
-                    if (grid[j][i].GetCellType() == MazeCellType.Passage) {
+                    cellType = grid[j][i].GetCellType();
+                    if (cellType == MazeCellType.Passage) {
                         if (GetNeighboursOfType(i, j, MazeCellType.Empty).Count == 3 && GetNeighboursOfType(i, j, MazeCellType.Passage).Count == 1) {
                             grid[j][i].SetCellType(MazeCellType.DeadEnd);
                         }
-                    } else if (grid[j][i].GetCellType() == MazeCellType.DisconnectedDoor) {
+                    } else if (cellType == MazeCellType.DisconnectedDoor) {
                         grid[j][i].SetCellType(MazeCellType.Room);
+                    } else if (cellType == MazeCellType.DisconnectedHiddenDoor) {
+                        grid[j][i].SetCellType(MazeCellType.HiddenRoom);
                     }
                 }
             }
@@ -577,7 +581,6 @@ public class MazeBehaviour : MonoBehaviour
 
                         break;
                     case MazeCellType.HiddenDoor:
-                        CreateFloor(x, y, stoneBrick);
                         CreateCeiling(x, y, 0);
 
                         neighbourType = grid.GetNorthNeighbour(x, y).GetCellType();
@@ -717,29 +720,32 @@ public class MazeBehaviour : MonoBehaviour
 
     private void CreateNorthHiddenDoor(int x, int y)
     {
-        CreateHiddenDoor(x, y, 0);
+        GameObject hiddenDoor = CreateHiddenDoor(x, y, 0);
     }
 
     private void CreateEastHiddenDoor(int x, int y)
     {
-        CreateHiddenDoor(x, y, 270);
+        GameObject hiddenDoor = CreateHiddenDoor(x, y, 90);
+        hiddenDoor.transform.Find("Top").Rotate(0, 0, 90);
     }
 
     private void CreateSouthHiddenDoor(int x, int y)
     {
-        CreateHiddenDoor(x, y, 180);
+        GameObject hiddenDoor = CreateHiddenDoor(x, y, 0);
     }
 
     private void CreateWestHiddenDoor(int x, int y)
     {
-        CreateHiddenDoor(x, y, 90);
+        GameObject hiddenDoor = CreateHiddenDoor(x, y, 90);
+        hiddenDoor.transform.Find("Top").Rotate(0, 0, 90);
     }
 
-    private void CreateHiddenDoor(int x, int y, float rotation)
+    private GameObject CreateHiddenDoor(int x, int y, float rotation)
     {
         GameObject hiddenDoor = CreateObject(hiddenDoorPrefab, new Vector3(x, 0, y) + hiddenDoorPrefab.transform.position);
         hiddenDoor.transform.Rotate(0, rotation, 0, Space.Self);
         hiddenDoor.transform.parent = doorParent.transform;
+        return hiddenDoor;
     }
 
     private GameObject CreateMazePiece(GameObject prefab, Vector3 position, Texture2D texture)

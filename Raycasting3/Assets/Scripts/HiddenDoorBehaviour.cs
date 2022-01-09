@@ -10,15 +10,16 @@ public class HiddenDoorBehaviour : MonoBehaviour
 
     void Start()
     {
-        openY = transform.position.y + 1f;
+        openY = transform.position.y - 1f;
     }
 
     void Update()
     {
-        if (opening) transform.position += new Vector3(0, 0.005f, 0);
-        if (transform.position.y >= openY) {
+        if (opening) transform.position -= new Vector3(0, 0.005f, 0);
+        if (transform.position.y <= openY) {
             opening = false;
             open = true;
+            transform.position = new Vector3(transform.position.x, openY, transform.position.z);
         }
     }
 
