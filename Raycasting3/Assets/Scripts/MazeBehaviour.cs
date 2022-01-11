@@ -610,11 +610,11 @@ public class MazeBehaviour : MonoBehaviour
                     default:
                         break;
                 }
-                writer.Write((int) grid.GetCellType(y, x) + " ");
+                if (Application.isEditor) writer.Write((int) grid.GetCellType(y, x) + " ");
             }
-            writer.Write("\n");
+            if (Application.isEditor) writer.Write("\n");
         }
-        writer.Close();
+        if (Application.isEditor) writer.Close();
 
         playerStart = deadEnds[Random.Range(0, deadEnds.Count)];
         gameController.SetPlayerPosition(new Vector3(playerStart.GetX(), 1, playerStart.GetY()));
@@ -789,6 +789,7 @@ public class MazeBehaviour : MonoBehaviour
         GameObject torch = CreateObject(torchPrefab, position + new Vector3(0, 0.5f, 0));
         torch.transform.Rotate(0, rotation, 0, Space.Self);
         torch.transform.parent = propParent.transform;
+        if (Application.isEditor) torch.transform.Find("Directional Light").gameObject.SetActive(false);
     }
 
     private void CreateTurret(int x, int y, int level)
