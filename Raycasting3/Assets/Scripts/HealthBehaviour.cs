@@ -26,7 +26,10 @@ public class HealthBehaviour : MonoBehaviour
         if (destroyed) return;
         currentHealth -= amount;
         if (currentHealth <= 0) {
+            Destroy(GetComponent<Rigidbody>());
             GetComponentInChildren<Collider>().enabled = false;
+            GetComponentInChildren<MeshCollider>().enabled = false;
+            transform.Find("Sprite").GetComponent<MeshCollider>().enabled = false;
             destroyed = true;
         }
     }

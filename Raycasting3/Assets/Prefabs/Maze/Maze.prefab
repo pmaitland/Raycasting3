@@ -70,3 +70,4 @@ MonoBehaviour:
   barrelPrefab: {fileID: 2270920480958254443, guid: c8b029693e448337caefac08cbe2db95, type: 3}
   torchPrefab: {fileID: 3681046569504041219, guid: 45d28d4228d22eafc82af067f796dadb, type: 3}
   turretPrefab: {fileID: 5938546514879256478, guid: 1e20423e2c730edd7abc7b2821b0a002, type: 3}
+  knightPrefab: {fileID: 7925531397398036891, guid: 90a6e85750b4607f6a3ca5135d2ea299, type: 3}

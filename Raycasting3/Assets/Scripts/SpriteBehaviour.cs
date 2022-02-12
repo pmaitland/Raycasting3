@@ -32,7 +32,7 @@ public class SpriteBehaviour : MonoBehaviour
     void Update()
     {
         if (!usingDestroyedSprites) {
-            if (healthBehaviour!= null && healthBehaviour.GetCurrentHealth() <= 0) {
+            if (healthBehaviour != null && healthBehaviour.GetCurrentHealth() <= 0) {
                 sprite.GetComponent<MeshRenderer>().material.mainTexture = destroyedSprite.texture;
                 usingDestroyedSprites = true;
             } else {

@@ -29,6 +29,11 @@ public class GameBehaviour : MonoBehaviour
         mazeBehaviour = maze.GetComponent<MazeBehaviour>();
     }
 
+    public GameObject GetPlayer()
+    {
+        return player;
+    }
+
     public void SetPlayerPosition(Vector3 position)
     {
         playerBehaviour.SetPosition(position);

@@ -41,6 +41,7 @@ public class MazeBehaviour : MonoBehaviour
     public GameObject torchPrefab;
 
     public GameObject turretPrefab;
+    public GameObject knightPrefab;
 
     private GameObject floorParent;
     private GameObject ceilingParent;
@@ -55,7 +56,7 @@ public class MazeBehaviour : MonoBehaviour
 
     public enum MazeCellType { Empty, Passage, DeadEnd, Room, HiddenRoom, DisconnectedDoor, Door, DisconnectedHiddenDoor, HiddenDoor };
 
-    private class MazeGrid
+    public class MazeGrid
     {
         private int size;
         private List<List<MazeCell>> grid;
@@ -102,6 +103,11 @@ public class MazeBehaviour : MonoBehaviour
             return x > 0 ? grid[y][x - 1] : null;
         }
 
+        public List<MazeCell> GetNeighboursOfType(MazeCell cell, params MazeCellType[] types)
+        {
+            return GetNeighboursOfType(cell.GetX(), cell.GetY(), types);
+        }
+
         public List<MazeCell> GetNeighboursOfType(int x, int y, params MazeCellType[] types)
         {
             List<MazeCell> neighbours = new List<MazeCell>();
@@ -113,6 +119,25 @@ public class MazeBehaviour : MonoBehaviour
             if (neighbour != null && types.Contains(neighbour.GetCellType())) neighbours.Add(neighbour);
             neighbour = GetWestNeighbour(x, y);
             if (neighbour != null && types.Contains(neighbour.GetCellType())) neighbours.Add(neighbour);
+            return neighbours;
+        }
+
+        public List<MazeCell> GetNeighboursNotOfType(MazeCell cell, params MazeCellType[] types)
+        {
+            return GetNeighboursNotOfType(cell.GetX(), cell.GetY(), types);
+        }
+
+        public List<MazeCell> GetNeighboursNotOfType(int x, int y, params MazeCellType[] types)
+        {
+            List<MazeCell> neighbours = new List<MazeCell>();
+            MazeCell neighbour = GetNorthNeighbour(x, y);
+            if (neighbour != null && !types.Contains(neighbour.GetCellType())) neighbours.Add(neighbour);
+            neighbour = GetEastNeighbour(x, y);
+            if (neighbour != null && !types.Contains(neighbour.GetCellType())) neighbours.Add(neighbour);
+            neighbour = GetSouthNeighbour(x, y);
+            if (neighbour != null && !types.Contains(neighbour.GetCellType())) neighbours.Add(neighbour);
+            neighbour = GetWestNeighbour(x, y);
+            if (neighbour != null && !types.Contains(neighbour.GetCellType())) neighbours.Add(neighbour);
             return neighbours;
         }
 
@@ -172,6 +197,30 @@ public class MazeBehaviour : MonoBehaviour
                     }
                 }
             }
+        }
+
+        public Vector3 GetNextCellInPath(Vector3 currentPosition, Vector3 targetPosition)
+        {
+            MazeCell currentCell = GetCell(Mathf.RoundToInt(currentPosition.x), Mathf.RoundToInt(currentPosition.z));
+            MazeCell targetCell = GetCell(Mathf.RoundToInt(targetPosition.x), Mathf.RoundToInt(targetPosition.z));
+
+            if (currentCell == targetCell) return new Vector3(currentCell.GetX(), 0, currentCell.GetY());
+
+            List<MazeCell> suitableNeighbours = GetNeighboursOfType(currentCell, MazeCellType.Passage, MazeCellType.DeadEnd);
+            foreach (MazeCell neighbour in suitableNeighbours) {
+                if (IsNextCell(currentCell, neighbour, targetCell)) return new Vector3(neighbour.GetX(), 0, neighbour.GetY());
+            }
+
+            return new Vector3(currentCell.GetX(), 0, currentCell.GetY());
+        }
+
+        private bool IsNextCell(MazeCell previousCell, MazeCell currentCell, MazeCell targetCell)
+        {
+            List<MazeCell> suitableNeighbours = GetNeighboursOfType(currentCell, MazeCellType.Passage, MazeCellType.DeadEnd);
+            foreach (MazeCell neighbour in suitableNeighbours) {
+                if (neighbour == targetCell || (neighbour != previousCell && IsNextCell(currentCell, neighbour, targetCell))) return true;
+            }
+            return false;
         }
     }
 
@@ -523,6 +572,8 @@ public class MazeBehaviour : MonoBehaviour
 
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
 
+                        CreateKnight(x, y, 0);
+
                         deadEnds.Add(grid.GetCell(x, y));
 
                         break;
@@ -618,6 +669,10 @@ public class MazeBehaviour : MonoBehaviour
 
         playerStart = deadEnds[Random.Range(0, deadEnds.Count)];
         gameController.SetPlayerPosition(new Vector3(playerStart.GetX(), 1, playerStart.GetY()));
+
+        foreach (Transform enemy in enemyParent.transform) {
+            if (enemy.GetComponentInChildren<KnightBehaviour>() != null) enemy.GetComponentInChildren<KnightBehaviour>().SetMaze(grid);
+        }
     }
 
     private void MazeDepthFirstSearch(MazeGrid grid, int x, int y)
@@ -796,6 +851,13 @@ public class MazeBehaviour : MonoBehaviour
     {
         GameObject turret = CreateObject(turretPrefab, new Vector3(x, level, y) + new Vector3(turretPrefab.transform.position.x, turretPrefab.transform.position.y, 0));
         turret.transform.parent = enemyParent.transform;
+    }
+
+    private void CreateKnight(int x, int y, int level)
+    {
+        GameObject knight = CreateObject(knightPrefab, new Vector3(x, level, y) + new Vector3(knightPrefab.transform.position.x, knightPrefab.transform.position.y, 0));
+        knight.transform.parent = enemyParent.transform;
+        knight.transform.Find("Body").GetComponent<KnightBehaviour>().SetPlayer(gameController.GetPlayer());
     }
 
     private GameObject CreateObject(GameObject prefab, Vector3 position)
