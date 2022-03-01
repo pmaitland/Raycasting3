@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class KnightBehaviour : MonoBehaviour
 {
@@ -14,21 +15,31 @@ public class KnightBehaviour : MonoBehaviour
 
     private State currentState = State.Chasing;
 
+    private NavMeshAgent navMeshAgent;
+    private NavMeshPath navMeshPath;
+
     void Start()
     {
         healthBehaviour = GetComponentInParent<HealthBehaviour>();
+
+        navMeshAgent = GetComponentInParent<NavMeshAgent>();
+        navMeshPath = new NavMeshPath();
     }
 
     void Update()
     {
-        if (healthBehaviour.GetCurrentHealth() <= 0) currentState = State.Destroyed;
+        if (healthBehaviour.IsDestroyed()) currentState = State.Destroyed;
 
         float distanceToPlayer = Vector3.Distance(transform.parent.position, player.position);
 
         switch (currentState) {
             case State.Chasing:
-                Vector3 targetCellPosition = maze.GetNextCellInPath(transform.parent.position, player.position);
-                transform.parent.position = Vector3.MoveTowards(transform.parent.position, targetCellPosition, 0.02f);
+                if (distanceToPlayer <= 1) {
+                    currentState = State.Stopped;
+                } else {
+                    navMeshAgent.CalculatePath(player.position, navMeshPath);
+                    navMeshAgent.SetPath(navMeshPath);
+                }
                 break;
             case State.Stopped:
                 if (distanceToPlayer > 1) currentState = State.Chasing;

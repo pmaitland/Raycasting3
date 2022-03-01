@@ -49,12 +49,14 @@ public class PlayerBehaviour : MonoBehaviour
 
 	void OnControllerColliderHit(ControllerColliderHit hit)
 	{
-		if (hit.transform.parent.name.Contains("Hidden Door")) {
-			if (Input.GetKey("e")) hit.transform.parent.GetComponent<HiddenDoorBehaviour>().Open();
-		} else if (hit.transform.name.Contains("Face 1")) {
-			if (Input.GetKey("e")) hit.transform.parent.parent.GetComponent<DoorBehaviour>().Open(true);
-		} else if (hit.transform.name.Contains("Face 2")) {
-			if (Input.GetKey("e")) hit.transform.parent.parent.GetComponent<DoorBehaviour>().Open(false);
+		if (hit.transform.parent != null) {
+			if (hit.transform.parent.name.Contains("Hidden Door")) {
+				if (Input.GetKey("e")) hit.transform.parent.GetComponent<HiddenDoorBehaviour>().Open();
+			} else if (hit.transform.name.Contains("Face 1")) {
+				if (Input.GetKey("e")) hit.transform.parent.parent.GetComponent<DoorBehaviour>().Open(true);
+			} else if (hit.transform.name.Contains("Face 2")) {
+				if (Input.GetKey("e")) hit.transform.parent.parent.GetComponent<DoorBehaviour>().Open(false);
+			}
 		}
 	}
 

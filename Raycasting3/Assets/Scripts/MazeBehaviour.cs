@@ -572,8 +572,6 @@ public class MazeBehaviour : MonoBehaviour
 
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
 
-                        CreateKnight(x, y, 0);
-
                         deadEnds.Add(grid.GetCell(x, y));
 
                         break;
@@ -669,10 +667,9 @@ public class MazeBehaviour : MonoBehaviour
 
         playerStart = deadEnds[Random.Range(0, deadEnds.Count)];
         gameController.SetPlayerPosition(new Vector3(playerStart.GetX(), 1, playerStart.GetY()));
+        deadEnds.Remove(playerStart);
 
-        foreach (Transform enemy in enemyParent.transform) {
-            if (enemy.GetComponentInChildren<KnightBehaviour>() != null) enemy.GetComponentInChildren<KnightBehaviour>().SetMaze(grid);
-        }
+        foreach (MazeCell deadEnd in deadEnds) CreateKnight(deadEnd.GetX(), deadEnd.GetY(), 0, grid);
     }
 
     private void MazeDepthFirstSearch(MazeGrid grid, int x, int y)
@@ -853,11 +850,12 @@ public class MazeBehaviour : MonoBehaviour
         turret.transform.parent = enemyParent.transform;
     }
 
-    private void CreateKnight(int x, int y, int level)
+    private void CreateKnight(int x, int y, int level, MazeGrid grid)
     {
         GameObject knight = CreateObject(knightPrefab, new Vector3(x, level, y) + new Vector3(knightPrefab.transform.position.x, knightPrefab.transform.position.y, 0));
         knight.transform.parent = enemyParent.transform;
-        knight.transform.Find("Body").GetComponent<KnightBehaviour>().SetPlayer(gameController.GetPlayer());
+        knight.GetComponentInChildren<KnightBehaviour>().SetPlayer(gameController.GetPlayer());
+        knight.GetComponentInChildren<KnightBehaviour>().SetMaze(grid);
     }
 
     private GameObject CreateObject(GameObject prefab, Vector3 position)

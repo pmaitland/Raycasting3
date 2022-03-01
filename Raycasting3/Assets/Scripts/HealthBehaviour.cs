@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class HealthBehaviour : MonoBehaviour
 {
@@ -27,11 +28,17 @@ public class HealthBehaviour : MonoBehaviour
         currentHealth -= amount;
         if (currentHealth <= 0) {
             Destroy(GetComponent<Rigidbody>());
-            GetComponentInChildren<Collider>().enabled = false;
-            GetComponentInChildren<MeshCollider>().enabled = false;
-            transform.Find("Sprite").GetComponent<MeshCollider>().enabled = false;
+            if (GetComponent<NavMeshAgent>() != null) GetComponent<NavMeshAgent>().enabled = false;
+            if (GetComponentInChildren<Collider>() != null) GetComponentInChildren<Collider>().enabled = false;
+            if (GetComponentInChildren<MeshCollider>() != null) GetComponentInChildren<MeshCollider>().enabled = false;
+            if (transform.Find("Sprite").GetComponent<MeshCollider>() != null) transform.Find("Sprite").GetComponent<MeshCollider>().enabled = false;
             destroyed = true;
         }
+    }
+
+    public bool IsDestroyed()
+    {
+        return destroyed;
     }
 
 }
