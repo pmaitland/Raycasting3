@@ -1,21 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SpriteBehaviour : MonoBehaviour
-{
+public class SpriteBehaviour : MonoBehaviour {
+
     public Sprite[] sprites;
     public Sprite destroyedSprite;
 
     private Transform player;
     private Transform body;
     private Transform sprite;
-    private HealthBehaviour healthBehaviour;
+    private Health health;
 
     private bool usingDestroyedSprites;
 
-    void Start()
-    {
+    void Start() {
         player = GameObject.FindWithTag("Player").transform;
 
         body = transform.parent.Find("Body");
@@ -24,15 +21,14 @@ public class SpriteBehaviour : MonoBehaviour
         sprite = transform.parent.Find("Sprite");
         sprite.GetComponent<MeshRenderer>().material.mainTexture = sprites[0].texture;
 
-        healthBehaviour = GetComponentInParent<HealthBehaviour>();
+        health = GetComponentInParent<Health>();
 
         usingDestroyedSprites = false;
     }
 
-    void Update()
-    {
+    void Update() {
         if (!usingDestroyedSprites) {
-            if (healthBehaviour != null && healthBehaviour.GetCurrentHealth() <= 0) {
+            if (health != null && health.GetCurrentHealth() <= 0) {
                 sprite.GetComponent<MeshRenderer>().material.mainTexture = destroyedSprite.texture;
                 usingDestroyedSprites = true;
             } else {
@@ -45,5 +41,4 @@ public class SpriteBehaviour : MonoBehaviour
 
         transform.forward = new Vector3(player.forward.x, transform.forward.y, player.forward.z);
     }
-
 }

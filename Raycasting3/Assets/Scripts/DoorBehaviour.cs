@@ -1,26 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorBehaviour : MonoBehaviour
-{
-    private float speed = 200.0f;
+public class DoorBehaviour : MonoBehaviour {
+
     private Transform door1;
     private Transform door2;
-    private float rotation;
+    private float speed = 200.0f;
+    private float rotation = 0.0f;
     private bool open = false;
     private bool opening = false;
     private bool openInOppositeDirection;
 
-    void Start()
-    {
+    void Start() {
         door1 = transform.Find("Door 1");
         door2 = transform.Find("Door 2");
-        rotation = 0.0f;
     }
 
-    void Update()
-    {
+    void Update() {
         float angle = speed * Time.deltaTime;
         if (opening) {
             if (openInOppositeDirection) {
@@ -38,8 +33,7 @@ public class DoorBehaviour : MonoBehaviour
         }
     }
 
-    public void Open(bool oppositeDirection)
-    {
+    public void Open(bool oppositeDirection) {
         if (!open) opening = true;
         openInOppositeDirection = oppositeDirection;
     }

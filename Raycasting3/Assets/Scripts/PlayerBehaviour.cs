@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerBehaviour : MonoBehaviour
-{
+public class PlayerBehaviour : MonoBehaviour {
+
 	public float turnSpeed = 4.0f;
 	public float moveSpeed = 2.0f;
 	public float gravity = 10.0f;
@@ -13,8 +11,7 @@ public class PlayerBehaviour : MonoBehaviour
 
 	private GameBehaviour gameController;
 
-	void Start() 
-	{
+	void Start() {
 		controller = GetComponent<CharacterController>();
 
 		gameController = GameObject.Find("Controller").GetComponent<GameBehaviour>();
@@ -22,8 +19,7 @@ public class PlayerBehaviour : MonoBehaviour
 		Cursor.lockState = CursorLockMode.Locked;
 	}
 	
-	void Update()
-	{
+	void Update() {
 	    float y = Input.GetAxis("Mouse X") * turnSpeed;
 	    transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + y, 0);
 
@@ -47,8 +43,7 @@ public class PlayerBehaviour : MonoBehaviour
         }
 	}
 
-	void OnControllerColliderHit(ControllerColliderHit hit)
-	{
+	void OnControllerColliderHit(ControllerColliderHit hit)	{
 		if (hit.transform.parent != null) {
 			if (hit.transform.parent.name.Contains("Hidden Door")) {
 				if (Input.GetKey("e")) hit.transform.parent.GetComponent<HiddenDoorBehaviour>().Open();
@@ -60,8 +55,7 @@ public class PlayerBehaviour : MonoBehaviour
 		}
 	}
 
-	public void SetPosition(Vector3 position)
-	{
+	public void SetPosition(Vector3 position) {
 		transform.position = position;
 	}
 }

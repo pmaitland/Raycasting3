@@ -1,19 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileBehaviour : MonoBehaviour
-{
+public class ProjectileBehaviour : MonoBehaviour {
+
     public float moveSpeed = 4.0f;
 
-    void Update()
-    {
+    void Update() {
         GetComponent<Rigidbody>().velocity = transform.forward * moveSpeed;
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        HealthBehaviour otherHealth = other.GetComponentInParent<HealthBehaviour>();
+    void OnTriggerEnter(Collider other) {
+        Health otherHealth = other.GetComponentInParent<Health>();
         if (otherHealth != null) otherHealth.ReduceHealth(1);
 
         Destroy(gameObject);

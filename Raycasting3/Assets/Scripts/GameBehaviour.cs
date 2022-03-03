@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class GameBehaviour : MonoBehaviour
-{
+public class GameBehaviour : MonoBehaviour {
 
     public GameObject playerPrefab;
     public GameObject mazePrefab;
@@ -14,11 +11,10 @@ public class GameBehaviour : MonoBehaviour
     private GameObject minimap;
 
     private PlayerBehaviour playerBehaviour;
-    private MazeBehaviour mazeBehaviour;
+    private MazeGenerator mazeGenerator;
     private MinimapBehaviour minimapBehaviour;
 
-    void Awake()
-    {
+    void Awake() {
         player = Instantiate(playerPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
         playerBehaviour = player.GetComponent<PlayerBehaviour>();
 
@@ -26,36 +22,30 @@ public class GameBehaviour : MonoBehaviour
         minimapBehaviour = minimap.GetComponent<MinimapBehaviour>();
 
         maze = Instantiate(mazePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
-        mazeBehaviour = maze.GetComponent<MazeBehaviour>();
+        mazeGenerator = maze.GetComponent<MazeGenerator>();
     }
 
-    public GameObject GetPlayer()
-    {
+    public GameObject GetPlayer() {
         return player;
     }
 
-    public void SetPlayerPosition(Vector3 position)
-    {
+    public void SetPlayerPosition(Vector3 position) {
         playerBehaviour.SetPosition(position);
     }
 
-    public int GetMazeSize()
-    {
-        return mazeBehaviour.GetSize();
+    public int GetMazeSize() {
+        return mazeGenerator.GetSize();
     }
 
-    public void CreateMinimapCell(int x, int y, string name, Color color, bool active)
-    {
+    public void CreateMinimapCell(int x, int y, string name, Color color, bool active) {
         minimapBehaviour.CreateMinimapCell(x, y, name, color, active);
     }
 
-    public void ActivateMinimapCell(int x, int y)
-    {
+    public void ActivateMinimapCell(int x, int y) {
         minimapBehaviour.ActivateMinimapCell(x, y);
     }
 
-    public void MovePlayerMinimapCell(int x, int y)
-    {
+    public void MovePlayerMinimapCell(int x, int y) {
         minimapBehaviour.MovePlayerMinimapCell(x, y);
     }
 }
