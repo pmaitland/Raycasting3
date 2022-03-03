@@ -7,10 +7,10 @@ public class SpriteBehaviour : MonoBehaviour {
 
     private Transform player;
     private Transform body;
-    private Transform sprite;
+    private SpriteRenderer spriteRenderer;
     private Health health;
 
-    private bool usingDestroyedSprites;
+    private bool usingDestroyedSprite;
 
     void Start() {
         player = GameObject.FindWithTag("Player").transform;
@@ -18,24 +18,23 @@ public class SpriteBehaviour : MonoBehaviour {
         body = transform.parent.Find("Body");
         if (body == null) body = transform;
 
-        sprite = transform.parent.Find("Sprite");
-        sprite.GetComponent<MeshRenderer>().material.mainTexture = sprites[0].texture;
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         health = GetComponentInParent<Health>();
 
-        usingDestroyedSprites = false;
+        usingDestroyedSprite = false;
     }
 
     void Update() {
-        if (!usingDestroyedSprites) {
+        if (!usingDestroyedSprite) {
             if (health != null && health.GetCurrentHealth() <= 0) {
-                sprite.GetComponent<MeshRenderer>().material.mainTexture = destroyedSprite.texture;
-                usingDestroyedSprites = true;
+                spriteRenderer.sprite = destroyedSprite;
+                usingDestroyedSprite = true;
             } else {
                 float angle = Vector3.SignedAngle(body.position - player.position, body.forward, Vector3.up) + 180 + ((360 / sprites.Length) / 2);
                 if (angle > 360) angle -= 360;
                 int spriteIndex = (int) (angle / 360 * sprites.Length);
-                sprite.GetComponent<MeshRenderer>().material.mainTexture = sprites[spriteIndex].texture;
+                spriteRenderer.sprite = sprites[spriteIndex];
             }
         }
 
