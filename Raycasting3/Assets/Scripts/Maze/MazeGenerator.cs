@@ -36,6 +36,7 @@ public class MazeGenerator : MonoBehaviour {
 
     public GameObject barrelPrefab;
     public GameObject torchPrefab;
+    public GameObject chandelierPrefab;
 
     public GameObject turretPrefab;
     public GameObject knightPrefab;
@@ -288,6 +289,9 @@ public class MazeGenerator : MonoBehaviour {
                         } else {
                             CreateFloor(x, y, stoneBrick);
                         }
+
+                        random = Random.Range(0, 100);
+                        if (random >=  0 && random < 10) CreateChandelier(x, y, 1);
 
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
 
@@ -565,6 +569,12 @@ public class MazeGenerator : MonoBehaviour {
         torch.transform.Rotate(0, rotation, 0, Space.Self);
         torch.transform.parent = propParent.transform;
         if (Application.isEditor) torch.transform.Find("Directional Light").gameObject.SetActive(false);
+    }
+
+    private void CreateChandelier(int x, int y, int level) {
+        GameObject chandelier = CreateObject(chandelierPrefab, new Vector3(x, level, y) + new Vector3(0, 0.75f, 0));
+        chandelier.transform.parent = propParent.transform;
+        if (Application.isEditor) chandelier.transform.Find("Directional Light").gameObject.SetActive(false);
     }
 
     private void CreateTurret(int x, int y, int level) {
