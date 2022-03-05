@@ -7,7 +7,6 @@ public class MinimapBehaviour : MonoBehaviour {
 
     private GameBehaviour gameController;
 
-    private Transform minimapBackground;
     private float scaleFactor;
     private float minimapCellSize;
     private GameObject playerMinimapCell;
@@ -15,9 +14,8 @@ public class MinimapBehaviour : MonoBehaviour {
     void Start() {
         gameController = GameObject.Find("Controller").GetComponent<GameBehaviour>();
 
-        minimapBackground = transform.Find("Background");
-        scaleFactor = GetComponent<Canvas>().scaleFactor;
-        minimapCellSize = minimapBackground.GetComponent<RectTransform>().rect.width / (float) gameController.GetMazeSize();
+        scaleFactor = GetComponentInParent<Canvas>().scaleFactor;
+        minimapCellSize = transform.GetComponent<RectTransform>().rect.width / (float) gameController.GetMazeSize();
         playerMinimapCell = CreateMinimapCell(0, 0, "Player", Color.green, true);
     }
 
@@ -30,10 +28,10 @@ public class MinimapBehaviour : MonoBehaviour {
 
         cell.GetComponent<RectTransform>().sizeDelta = new Vector2(minimapCellSize * scaleFactor, minimapCellSize * scaleFactor);
 
-        cell.transform.SetParent(minimapBackground);
+        cell.transform.SetParent(transform);
         cell.transform.localPosition = new Vector3(
-            -minimapBackground.GetComponent<RectTransform>().rect.width  * 0.5f + minimapCellSize * (y + 0.5f),
-            minimapBackground.GetComponent<RectTransform>().rect.height * 0.5f - minimapCellSize * (x + 0.5f),
+            -transform.GetComponent<RectTransform>().rect.width  * 0.5f + minimapCellSize * (y + 0.5f),
+            transform.GetComponent<RectTransform>().rect.height * 0.5f - minimapCellSize * (x + 0.5f),
             0
         );
         
@@ -41,7 +39,7 @@ public class MinimapBehaviour : MonoBehaviour {
     }
 
     public void ActivateMinimapCell(int x, int y) {
-        minimapBackground.Find(x + "," + y).gameObject.SetActive(true);
+        transform.Find(x + "," + y).gameObject.SetActive(true);
     }
 
     public void ActivateMinimapCell(float x, float y) {
@@ -49,7 +47,7 @@ public class MinimapBehaviour : MonoBehaviour {
     }
 
     public void MovePlayerMinimapCell(int x, int y) {
-        Transform currentCell = minimapBackground.Find(x + "," + y);
+        Transform currentCell = transform.Find(x + "," + y);
         playerMinimapCell.transform.position = new Vector3(currentCell.position.x, currentCell.position.y, 0);
         playerMinimapCell.transform.SetAsLastSibling();
     }

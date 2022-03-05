@@ -4,11 +4,11 @@ public class GameBehaviour : MonoBehaviour {
 
     public GameObject playerPrefab;
     public GameObject mazePrefab;
-    public GameObject minimapPrefab;
+    public GameObject canvasPrefab;
 
     private GameObject player;
     private GameObject maze;
-    private GameObject minimap;
+    private GameObject canvas;
 
     private PlayerBehaviour playerBehaviour;
     private MazeGenerator mazeGenerator;
@@ -18,8 +18,8 @@ public class GameBehaviour : MonoBehaviour {
         player = Instantiate(playerPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
         playerBehaviour = player.GetComponent<PlayerBehaviour>();
 
-        minimap = Instantiate(minimapPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
-        minimapBehaviour = minimap.GetComponent<MinimapBehaviour>();
+        canvas = Instantiate(canvasPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        minimapBehaviour = canvas.GetComponentInChildren<MinimapBehaviour>();
 
         maze = Instantiate(mazePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
         mazeGenerator = maze.GetComponent<MazeGenerator>();
