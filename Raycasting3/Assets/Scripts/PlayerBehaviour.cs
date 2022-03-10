@@ -13,21 +13,37 @@ public class PlayerBehaviour : MonoBehaviour {
 	private float currentRightShootCooldown = 0.0f;
 	private float currentLeftShootCooldown = 0.0f;
 
+	private Camera camera;
 	private CharacterController controller;
 
 	private GameBehaviour gameController;
 	private HandsBehaviour hands;
+	private Health health;
 
 	void Start() {
+		camera = GetComponent<Camera>();
 		controller = GetComponent<CharacterController>();
 
 		gameController = GameObject.Find("Controller").GetComponent<GameBehaviour>();
 		hands = GameObject.Find("Hands").GetComponent<HandsBehaviour>();
+		health = GetComponent<Health>();
 
 		Cursor.lockState = CursorLockMode.Locked;
 	}
 	
 	void Update() {
+		if (Input.GetKey("escape")) Application.Quit();
+
+		if (health.GetCurrentHealth() <= 0) {
+			Vector3 cameraPosition = camera.transform.position;
+			Vector3 killerPosition = health.GetKiller().transform.position;
+			Vector3 lookPosition = new Vector3(killerPosition.x, cameraPosition.y, killerPosition.z);
+			camera.transform.rotation = Quaternion.Slerp(camera.transform.rotation, Quaternion.LookRotation(lookPosition - cameraPosition), Time.deltaTime);
+
+			if (transform.position.y > 0.05) transform.position = new Vector3(transform.position.x, transform.position.y - 0.01f, transform.position.z);
+			return;
+		}
+
 	    float y = Input.GetAxis("Mouse X") * turnSpeed;
 	    transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + y, 0);
 
@@ -61,10 +77,6 @@ public class PlayerBehaviour : MonoBehaviour {
 			hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
 			leftShootOnCooldown = true;
 		}
-
-		if (Input.GetKey("escape")) {
-            Application.Quit();
-        }
 	}
 
 	void OnControllerColliderHit(ControllerColliderHit hit)	{
@@ -99,6 +111,9 @@ public class PlayerBehaviour : MonoBehaviour {
 		projectilePosition += transform.forward * (controller.radius + projectilePrefab.GetComponent<SphereCollider>().radius);
 		if (vertical < 0) projectilePosition += transform.forward * 0.1f;
 		projectilePosition -= transform.up * 0.25f;
-		return Instantiate(projectilePrefab, projectilePosition, transform.rotation);
+		GameObject projectile = Instantiate(projectilePrefab, projectilePosition, transform.rotation);
+		projectile.GetComponent<ProjectileBehaviour>().SetCreator(gameObject);
+		return projectile;
 	}
+
 }

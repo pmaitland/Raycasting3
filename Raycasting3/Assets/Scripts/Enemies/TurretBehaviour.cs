@@ -62,6 +62,7 @@ public class TurretBehaviour : MonoBehaviour {
         projectilePosition += transform.forward * projectilePrefab.GetComponent<SphereCollider>().radius;
         projectilePosition += transform.forward * 0.3f;
         projectilePosition += transform.up * 0.4f;
-        Instantiate(projectilePrefab, projectilePosition, transform.rotation);
+        GameObject projectile = Instantiate(projectilePrefab, projectilePosition, transform.rotation);
+        projectile.GetComponent<ProjectileBehaviour>().SetCreator(gameObject);
     }
 }
