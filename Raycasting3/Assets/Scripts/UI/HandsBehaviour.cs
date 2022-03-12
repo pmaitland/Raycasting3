@@ -6,12 +6,24 @@ public class HandsBehaviour : MonoBehaviour {
     private GameObject rightHand;
     private GameObject leftHand;
 
+    private GameObject player;
+    private GameBehaviour gameBehaviour;
+
     public Sprite handSprite;
     public Sprite handCastingSprite;
 
     void Start() {
         rightHand = GameObject.Find("Right Hand");
         leftHand = GameObject.Find("Left Hand");
+
+        player = GameObject.Find("Player");
+        gameBehaviour = GameObject.Find("Controller").GetComponent<GameBehaviour>();
+    }
+
+    void Update() {
+        LightingType lightingType = gameBehaviour.GetMazeCell(player.transform.position.x, player.transform.position.z).GetLighting();
+        rightHand.GetComponent<Image>().color = LightingColor.GetLightingColor(lightingType);
+        leftHand.GetComponent<Image>().color = LightingColor.GetLightingColor(lightingType);
     }
 
     public void ChangeHandSprite(Hand chosenHand, HandState newState) {

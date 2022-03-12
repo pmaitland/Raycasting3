@@ -50,7 +50,10 @@ public class MazeGenerator : MonoBehaviour {
 
     private GameBehaviour gameController;
 
+    private MazeGrid grid;
     private MazeCell playerStart;
+
+    private Dictionary<GameObject, LightingType> lightSources;
 
     void OnValidate() {
         if (size % 2 == 0) size -= 1;
@@ -72,11 +75,26 @@ public class MazeGenerator : MonoBehaviour {
         enemyParent = new GameObject("Enemies");
         enemyParent.transform.parent = transform;
 
+        lightSources = new Dictionary<GameObject, LightingType>();
+
         GenerateMaze();
     }
 
+    void Update() {
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                grid.GetCell(x, y).SetLighting(LightingType.DARKNESS);
+            }
+        }
+
+        foreach (KeyValuePair<GameObject, LightingType> entry in lightSources) {
+            MazeCell cell = grid.GetCell(entry.Key.transform.position.x, entry.Key.transform.position.z);
+            grid.SetLighting(cell, entry.Value);
+        }
+    }
+
     private void GenerateMaze() {
-        MazeGrid grid = new MazeGrid(size);
+        grid = new MazeGrid(size);
 
         int[] roomDimensions = new int[] { 3, 5, 7 };
 
@@ -133,7 +151,7 @@ public class MazeGenerator : MonoBehaviour {
             }
         }
 
-        MazeDepthFirstSearch(grid, 1, 1);
+        MazeDepthFirstSearch(1, 1);
 
         grid.CleanUp();
 
@@ -143,87 +161,12 @@ public class MazeGenerator : MonoBehaviour {
         List<MazeCell> deadEnds = new List<MazeCell>();
 
         int random = 0;
-        MazeCell neighbour;
-        MazeCellType neighbourType;
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                switch (grid.GetCell(x, y).GetCellType()) {
-                    case MazeCellType.WALL:
-                        neighbour = grid.GetNorthNeighbour(x, y);
-                        if (neighbour != null) {
-                            neighbourType = neighbour.GetCellType();
-                            if (neighbourType != MazeCellType.WALL) {
-                                if (neighbourType == MazeCellType.PASSAGE) {
-                                    random = Random.Range(0, 100);
-                                    if (random <= 5) CreateNorthWall(x, y, 0, banner);
-                                    else CreateNorthWall(x, y, 0, stoneBrick);
-                                } else {
-                                    CreateNorthWall(x, y, 0, stoneBrick);
-                                }
-                            }
-                            if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END
-                                || neighbourType == MazeCellType.ROOM || neighbourType == MazeCellType.HIDDEN_ROOM) {
-                                CreateNorthWall(x, y, 1, stoneBrick);
-                            }
-                        }
-
-                        neighbour = grid.GetEastNeighbour(x, y);
-                        if (neighbour != null) {
-                            neighbourType = neighbour.GetCellType();
-                            if (neighbourType != MazeCellType.WALL) {
-                                if (neighbourType == MazeCellType.PASSAGE) {
-                                    random = Random.Range(0, 100);
-                                    if (random <= 5) CreateEastWall(x, y, 0, banner);
-                                    else CreateEastWall(x, y, 0, stoneBrick);
-                                } else {
-                                    CreateEastWall(x, y, 0, stoneBrick);
-                                }
-                            }
-                            if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END
-                                || neighbourType == MazeCellType.ROOM || neighbourType == MazeCellType.HIDDEN_ROOM) {
-                                CreateEastWall(x, y, 1, stoneBrick);
-                            }
-                        }
-
-                        neighbour = grid.GetSouthNeighbour(x, y);
-                        if (neighbour != null) {
-                            neighbourType = neighbour.GetCellType();
-                            if (neighbourType != MazeCellType.WALL) {
-                                if (neighbourType == MazeCellType.PASSAGE) {
-                                    random = Random.Range(0, 100);
-                                    if (random <= 5) CreateSouthWall(x, y, 0, banner);
-                                    else CreateSouthWall(x, y, 0, stoneBrick);
-                                } else {
-                                    CreateSouthWall(x, y, 0, stoneBrick);
-                                }
-                            }
-                            if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END
-                                || neighbourType == MazeCellType.ROOM || neighbourType == MazeCellType.HIDDEN_ROOM) {
-                                CreateSouthWall(x, y, 1, stoneBrick);
-                            }
-                        }
-
-                        neighbour = grid.GetWestNeighbour(x, y);
-                        if (neighbour != null) {
-                            neighbourType = neighbour.GetCellType();
-                            if (neighbourType != MazeCellType.WALL) {
-                                if (neighbourType == MazeCellType.PASSAGE) {
-                                    random = Random.Range(0, 100);
-                                    if (random <= 5) CreateWestWall(x, y, 0, banner);
-                                    else CreateWestWall(x, y, 0, stoneBrick);
-                                } else {
-                                    CreateWestWall(x, y, 0, stoneBrick);
-                                }
-                            }
-                            if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END
-                                || neighbourType == MazeCellType.ROOM || neighbourType == MazeCellType.HIDDEN_ROOM) {
-                                CreateWestWall(x, y, 1, stoneBrick);
-                            }
-                        }
-
-                        break;
+                MazeCell currentCell = grid.GetCell(x, y);
+                switch (currentCell.GetCellType()) {
                     case MazeCellType.PASSAGE:
-                        CreateCeiling(x, y, 1);
+                        CreateCeiling(currentCell, 1);
 
                         int passageNeighbourCount = 0;
                         bool hasPassageNorthNeighbour = false;
@@ -231,73 +174,85 @@ public class MazeGenerator : MonoBehaviour {
                         bool hasPassageSouthNeighbour = false;
                         bool hasPassageWestNeighbour = false;
 
-                        neighbourType = grid.GetNorthNeighbour(x, y).GetCellType();
-                        if (neighbourType == MazeCellType.ROOM) {
-                            CreateNorthWall(x, y, 1, stoneBrick);
+                        MazeCellType neighbourType = grid.GetNorthNeighbour(x, y).GetCellType();
+                        if (neighbourType == MazeCellType.WALL) {
+                            CreateNorthWall(currentCell, 0, stoneBrick);
+                            CreateNorthWall(currentCell, 1, stoneBrick);
+                        } else if (neighbourType == MazeCellType.DOOR || neighbourType == MazeCellType.HIDDEN_DOOR) {
+                            CreateNorthWall(currentCell, 1, stoneBrick);
                         } else if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) {
                             passageNeighbourCount++;
                             hasPassageNorthNeighbour = true;
                         }
 
                         neighbourType = grid.GetEastNeighbour(x, y).GetCellType();
-                        if (neighbourType == MazeCellType.ROOM) {
-                            CreateEastWall(x, y, 1, stoneBrick);
+                        if (neighbourType == MazeCellType.WALL) {
+                            CreateEastWall(currentCell, 0, stoneBrick);
+                            CreateEastWall(currentCell, 1, stoneBrick);
+                        } else if (neighbourType == MazeCellType.DOOR || neighbourType == MazeCellType.HIDDEN_DOOR) {
+                            CreateEastWall(currentCell, 1, stoneBrick);
                         } else if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) {
                             passageNeighbourCount++;
                             hasPassageEastNeighbour = true;
                         }
 
                         neighbourType = grid.GetSouthNeighbour(x, y).GetCellType();
-                        if (neighbourType == MazeCellType.ROOM) {
-                            CreateSouthWall(x, y, 1, stoneBrick);
+                        if (neighbourType == MazeCellType.WALL) {
+                            CreateSouthWall(currentCell, 0, stoneBrick);
+                            CreateSouthWall(currentCell, 1, stoneBrick);
+                        } else if (neighbourType == MazeCellType.DOOR || neighbourType == MazeCellType.HIDDEN_DOOR) {
+                            CreateSouthWall(currentCell, 1, stoneBrick);
                         } else if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) {
                             passageNeighbourCount++;
                             hasPassageSouthNeighbour = true;
                         }
 
                         neighbourType = grid.GetWestNeighbour(x, y).GetCellType();
-                        if (neighbourType == MazeCellType.ROOM) {
-                            CreateWestWall(x, y, 1, stoneBrick);
+                        if (neighbourType == MazeCellType.WALL) {
+                            CreateWestWall(currentCell, 0, stoneBrick);
+                            CreateWestWall(currentCell, 1, stoneBrick);
+                        } else if (neighbourType == MazeCellType.DOOR || neighbourType == MazeCellType.HIDDEN_DOOR) {
+                            CreateWestWall(currentCell, 1, stoneBrick);
                         } else if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) {
                             passageNeighbourCount++;
                             hasPassageWestNeighbour = true;
                         }
 
                         if (passageNeighbourCount == 1) {
-                            if (hasPassageNorthNeighbour) CreateFloor(x, y, carpetN);
-                            else if (hasPassageEastNeighbour) CreateFloor(x, y, carpetE);
-                            else if (hasPassageSouthNeighbour) CreateFloor(x, y, carpetS);
-                            else if (hasPassageWestNeighbour) CreateFloor(x, y, carpetW);
+                            if (hasPassageNorthNeighbour) CreateFloor(currentCell, carpetN);
+                            else if (hasPassageEastNeighbour) CreateFloor(currentCell, carpetE);
+                            else if (hasPassageSouthNeighbour) CreateFloor(currentCell, carpetS);
+                            else if (hasPassageWestNeighbour) CreateFloor(currentCell, carpetW);
                         } else if (passageNeighbourCount == 2) {
                             if (hasPassageNorthNeighbour) {
-                                if (hasPassageEastNeighbour) CreateFloor(x, y, carpetNE);
-                                else if (hasPassageSouthNeighbour) CreateFloor(x, y, carpetNS);
-                                else if (hasPassageWestNeighbour) CreateFloor(x, y, carpetNW);
+                                if (hasPassageEastNeighbour) CreateFloor(currentCell, carpetNE);
+                                else if (hasPassageSouthNeighbour) CreateFloor(currentCell, carpetNS);
+                                else if (hasPassageWestNeighbour) CreateFloor(currentCell, carpetNW);
                             } else if (hasPassageEastNeighbour) {
-                                if (hasPassageSouthNeighbour) CreateFloor(x, y, carpetES);
-                                else if (hasPassageWestNeighbour) CreateFloor(x, y, carpetEW);
+                                if (hasPassageSouthNeighbour) CreateFloor(currentCell, carpetES);
+                                else if (hasPassageWestNeighbour) CreateFloor(currentCell, carpetEW);
                             } else if (hasPassageSouthNeighbour) {
-                                if (hasPassageWestNeighbour) CreateFloor(x, y, carpetSW);
+                                if (hasPassageWestNeighbour) CreateFloor(currentCell, carpetSW);
                             }
                         } else if (passageNeighbourCount == 3) {
-                            if (hasPassageNorthNeighbour && hasPassageEastNeighbour && hasPassageSouthNeighbour) CreateFloor(x, y, carpetNES);
-                            else if (hasPassageEastNeighbour && hasPassageSouthNeighbour && hasPassageWestNeighbour) CreateFloor(x, y, carpetESW);
-                            else if (hasPassageSouthNeighbour && hasPassageWestNeighbour && hasPassageNorthNeighbour) CreateFloor(x, y, carpetNSW);
-                            else if (hasPassageWestNeighbour && hasPassageNorthNeighbour && hasPassageEastNeighbour) CreateFloor(x, y, carpetNEW);
+                            if (hasPassageNorthNeighbour && hasPassageEastNeighbour && hasPassageSouthNeighbour) CreateFloor(currentCell, carpetNES);
+                            else if (hasPassageEastNeighbour && hasPassageSouthNeighbour && hasPassageWestNeighbour) CreateFloor(currentCell, carpetESW);
+                            else if (hasPassageSouthNeighbour && hasPassageWestNeighbour && hasPassageNorthNeighbour) CreateFloor(currentCell, carpetNSW);
+                            else if (hasPassageWestNeighbour && hasPassageNorthNeighbour && hasPassageEastNeighbour) CreateFloor(currentCell, carpetNEW);
                         } else if (passageNeighbourCount == 4) {
-                            CreateFloor(x, y, carpetNESW);
+                            CreateFloor(currentCell, carpetNESW);
                         } else {
-                            CreateFloor(x, y, stoneBrick);
+                            CreateFloor(currentCell, stoneBrick);
                         }
 
-                        random = Random.Range(0, 100);
-                        if (random >=  0 && random < 10) CreateChandelier(x, y, 1);
+                        // random = Random.Range(0, 100);
+                        // if (random >=  0 && random < 10) CreateChandelier(currentCell, 1);
 
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
 
                         break;
                     case MazeCellType.DEAD_END:
-                        CreateCeiling(x, y, 1);
+                        CreateCeiling(currentCell, 1);
 
                         MazeCellType northNeighbourType = grid.GetNorthNeighbour(x, y).GetCellType();
                         MazeCellType eastNeighbourType = grid.GetEastNeighbour(x, y).GetCellType();
@@ -305,21 +260,53 @@ public class MazeGenerator : MonoBehaviour {
                         MazeCellType westNeighbourType = grid.GetWestNeighbour(x, y).GetCellType();
 
                         if (northNeighbourType != MazeCellType.WALL) {
-                            if (northNeighbourType == MazeCellType.ROOM) CreateNorthWall(x, y, 0, stoneBrick);
-                            CreateFloor(x, y, carpetN);
-                            CreateSouthTorch(x, y, 0);
+                            CreateFloor(currentCell, carpetN);
+
+                            CreateEastWall(currentCell, 0, stoneBrick);
+                            CreateSouthWall(currentCell, 0, stoneBrick);
+                            CreateWestWall(currentCell, 0, stoneBrick);
+
+                            CreateEastWall(currentCell, 1, stoneBrick);
+                            CreateSouthWall(currentCell, 1, stoneBrick);
+                            CreateWestWall(currentCell, 1, stoneBrick);
+                            
+                            CreateSouthTorch(currentCell, 0);
                         } else if (eastNeighbourType != MazeCellType.WALL) {
-                            if (eastNeighbourType == MazeCellType.ROOM) CreateEastWall(x, y, 0, stoneBrick);
-                            CreateFloor(x, y, carpetE);
-                            CreateWestTorch(x, y, 0);
+                            CreateFloor(currentCell, carpetE);
+
+                            CreateNorthWall(currentCell, 0, stoneBrick);
+                            CreateSouthWall(currentCell, 0, stoneBrick);
+                            CreateWestWall(currentCell, 0, stoneBrick);
+
+                            CreateNorthWall(currentCell, 1, stoneBrick);
+                            CreateSouthWall(currentCell, 1, stoneBrick);
+                            CreateWestWall(currentCell, 1, stoneBrick);
+                            
+                            CreateWestTorch(currentCell, 0);
                         } else if (southNeighbourType != MazeCellType.WALL) {
-                            if (southNeighbourType == MazeCellType.ROOM) CreateSouthWall(x, y, 0, stoneBrick);
-                            CreateFloor(x, y, carpetS);
-                            CreateNorthTorch(x, y, 0);
+                            CreateFloor(currentCell, carpetS);
+
+                            CreateNorthWall(currentCell, 0, stoneBrick);
+                            CreateEastWall(currentCell, 0, stoneBrick);
+                            CreateWestWall(currentCell, 0, stoneBrick);
+
+                            CreateNorthWall(currentCell, 1, stoneBrick);
+                            CreateEastWall(currentCell, 1, stoneBrick);
+                            CreateWestWall(currentCell, 1, stoneBrick);
+                            
+                            CreateNorthTorch(currentCell, 0);
                         } else if (westNeighbourType != MazeCellType.WALL) {
-                            if (westNeighbourType == MazeCellType.ROOM) CreateWestWall(x, y, 0, stoneBrick);
-                            CreateFloor(x, y, carpetW);
-                            CreateEastTorch(x, y, 0);
+                            CreateFloor(currentCell, carpetW);
+
+                            CreateNorthWall(currentCell, 0, stoneBrick);
+                            CreateEastWall(currentCell, 0, stoneBrick);
+                            CreateSouthWall(currentCell, 0, stoneBrick);
+
+                            CreateNorthWall(currentCell, 1, stoneBrick);
+                            CreateEastWall(currentCell, 1, stoneBrick);
+                            CreateSouthWall(currentCell, 1, stoneBrick);
+                            
+                            CreateEastTorch(currentCell, 0);
                         }
 
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
@@ -328,82 +315,206 @@ public class MazeGenerator : MonoBehaviour {
 
                         break;
                     case MazeCellType.ROOM:
-                        CreateFloor(x, y, stoneBrick);
-                        CreateCeiling(x, y, 1);
+                        CreateFloor(currentCell, stoneBrick);
+                        CreateCeiling(currentCell, 1);
+
+                        switch (grid.GetNorthNeighbour(x, y).GetCellType()) {
+                            case MazeCellType.WALL:
+                                CreateNorthWall(currentCell, 0, stoneBrick);
+                                CreateNorthWall(currentCell, 1, stoneBrick);
+                                
+                                random = Random.Range(0, 100);
+                                if (random >=  0 && random < 10) CreateNorthTorch(currentCell, 0);
+                                break;
+                            case MazeCellType.DOOR:
+                                CreateNorthWall(currentCell, 1, stoneBrick);
+                                break;
+                            default:
+                                break;
+                        }
+
+                        switch (grid.GetEastNeighbour(x, y).GetCellType()) {
+                            case MazeCellType.WALL:
+                                CreateEastWall(currentCell, 0, stoneBrick);
+                                CreateEastWall(currentCell, 1, stoneBrick);
+                                
+                                random = Random.Range(0, 100);
+                                if (random >=  0 && random < 10) CreateEastTorch(currentCell, 0);
+                                break;
+                            case MazeCellType.DOOR:
+                                CreateEastWall(currentCell, 1, stoneBrick);
+                                break;
+                            default:
+                                break;
+                        }
+
+                        switch (grid.GetSouthNeighbour(x, y).GetCellType()) {
+                            case MazeCellType.WALL:
+                                CreateSouthWall(currentCell, 0, stoneBrick);
+                                CreateSouthWall(currentCell, 1, stoneBrick);
+                                
+                                random = Random.Range(0, 100);
+                                if (random >=  0 && random < 10) CreateSouthTorch(currentCell, 0);
+                                break;
+                            case MazeCellType.DOOR:
+                                CreateSouthWall(currentCell, 1, stoneBrick);
+                                break;
+                            default:
+                                break;
+                        }
+
+                        switch (grid.GetWestNeighbour(x, y).GetCellType()) {
+                            case MazeCellType.WALL:
+                                CreateWestWall(currentCell, 0, stoneBrick);
+                                CreateWestWall(currentCell, 1, stoneBrick);
+                                
+                                random = Random.Range(0, 100);
+                                if (random >=  0 && random < 10) CreateWestTorch(currentCell, 0);
+                                break;
+                            case MazeCellType.DOOR:
+                                CreateWestWall(currentCell, 1, stoneBrick);
+                                break;
+                            default:
+                                break;
+                        }
 
                         random = Random.Range(0, 100);
                         if (random >=  0 && random < 10) CreateTurret(x, y, 0);
                         if (random >= 10 && random < 30) CreateBarrel(x, y, 0);
 
-                        random = Random.Range(0, 100);
-                        if (random >=  0 && random < 10) {
-                            if (grid.GetNorthNeighbour(x, y).GetCellType() == MazeCellType.WALL) CreateNorthTorch(x, y, 0);
-                            else if (grid.GetEastNeighbour(x, y).GetCellType() == MazeCellType.WALL) CreateEastTorch(x, y, 0);
-                            else if (grid.GetSouthNeighbour(x, y).GetCellType() == MazeCellType.WALL) CreateSouthTorch(x, y, 0);
-                            else if (grid.GetWestNeighbour(x, y).GetCellType() == MazeCellType.WALL) CreateWestTorch(x, y, 0);
-                        }
-
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.gray, false);
 
                         break;
                     case MazeCellType.HIDDEN_ROOM:
-                        CreateFloor(x, y, stoneBrick);
-                        CreateCeiling(x, y, 1);
+                        CreateFloor(currentCell, stoneBrick);
+                        CreateCeiling(currentCell, 1);
+
+                        switch (grid.GetNorthNeighbour(x, y).GetCellType()) {
+                            case MazeCellType.WALL:
+                                CreateNorthWall(currentCell, 0, stoneBrick);
+                                CreateNorthWall(currentCell, 1, stoneBrick);
+                                
+                                random = Random.Range(0, 100);
+                                if (random >=  0 && random < 10) CreateNorthTorch(currentCell, 0);
+                                break;
+                            case MazeCellType.HIDDEN_DOOR:
+                                CreateNorthWall(currentCell, 1, stoneBrick);
+                                break;
+                            default:
+                                break;
+                        }
+
+                        switch (grid.GetEastNeighbour(x, y).GetCellType()) {
+                            case MazeCellType.WALL:
+                                CreateEastWall(currentCell, 0, stoneBrick);
+                                CreateEastWall(currentCell, 1, stoneBrick);
+                                
+                                random = Random.Range(0, 100);
+                                if (random >=  0 && random < 10) CreateEastTorch(currentCell, 0);
+                                break;
+                            case MazeCellType.HIDDEN_DOOR:
+                                CreateEastWall(currentCell, 1, stoneBrick);
+                                break;
+                            default:
+                                break;
+                        }
+
+                        switch (grid.GetSouthNeighbour(x, y).GetCellType()) {
+                            case MazeCellType.WALL:
+                                CreateSouthWall(currentCell, 0, stoneBrick);
+                                CreateSouthWall(currentCell, 1, stoneBrick);
+                                
+                                random = Random.Range(0, 100);
+                                if (random >=  0 && random < 10) CreateSouthTorch(currentCell, 0);
+                                break;
+                            case MazeCellType.HIDDEN_DOOR:
+                                CreateSouthWall(currentCell, 1, stoneBrick);
+                                break;
+                            default:
+                                break;
+                        }
+
+                        switch (grid.GetWestNeighbour(x, y).GetCellType()) {
+                            case MazeCellType.WALL:
+                                CreateWestWall(currentCell, 0, stoneBrick);
+                                CreateWestWall(currentCell, 1, stoneBrick);
+                                
+                                random = Random.Range(0, 100);
+                                if (random >=  0 && random < 10) CreateWestTorch(currentCell, 0);
+                                break;
+                            case MazeCellType.HIDDEN_DOOR:
+                                CreateWestWall(currentCell, 1, stoneBrick);
+                                break;
+                            default:
+                                break;
+                        }
 
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.black, false);
 
                         break;
                     case MazeCellType.DOOR:
-                        CreateFloor(x, y, stoneBrick);
-                        CreateCeiling(x, y, 0);
+                        CreateFloor(currentCell, stoneBrick);
+                        CreateCeiling(currentCell, 0);
 
-                        neighbourType = grid.GetNorthNeighbour(x, y).GetCellType();
-                        if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END || neighbourType == MazeCellType.ROOM) {
-                            CreateNorthWall(x, y, 1, stoneBrick);
-                            if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) CreateSouthDoor(x, y);
+                        if (grid.GetNorthNeighbour(x, y).GetCellType() == MazeCellType.ROOM) {
+                            CreateSouthDoor(currentCell);
+
+                            CreateEastWall(currentCell, 0, stoneBrick);
+                            CreateWestWall(currentCell, 0, stoneBrick);
                         }
-                        neighbourType = grid.GetEastNeighbour(x, y).GetCellType();
-                        if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END || neighbourType == MazeCellType.ROOM) {
-                            CreateEastWall(x, y, 1, stoneBrick);
-                            if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) CreateWestDoor(x, y);
+                        if (grid.GetEastNeighbour(x, y).GetCellType() == MazeCellType.ROOM){
+                            CreateWestDoor(currentCell);
+
+                            CreateNorthWall(currentCell, 0, stoneBrick);
+                            CreateSouthWall(currentCell, 0, stoneBrick);
                         }
-                        neighbourType = grid.GetSouthNeighbour(x, y).GetCellType();
-                        if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END || neighbourType == MazeCellType.ROOM) {
-                            CreateSouthWall(x, y, 1, stoneBrick);
-                            if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) CreateNorthDoor(x, y);
+                        if (grid.GetSouthNeighbour(x, y).GetCellType() == MazeCellType.ROOM) {
+                            CreateNorthDoor(currentCell);
+
+                            CreateEastWall(currentCell, 0, stoneBrick);
+                            CreateWestWall(currentCell, 0, stoneBrick);
                         }
-                        neighbourType = grid.GetWestNeighbour(x, y).GetCellType();
-                        if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END || neighbourType == MazeCellType.ROOM) {
-                            CreateWestWall(x, y, 1, stoneBrick);
-                            if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) CreateEastDoor(x, y);
+                        if (grid.GetWestNeighbour(x, y).GetCellType() == MazeCellType.ROOM) {
+                            CreateWestDoor(currentCell);
+
+                            CreateNorthWall(currentCell, 0, stoneBrick);
+                            CreateSouthWall(currentCell, 0, stoneBrick);
                         }
 
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.gray, false);
 
                         break;
-                    case MazeCellType.HIDDENDOOR:
-                        CreateCeiling(x, y, 0);
+                    case MazeCellType.HIDDEN_DOOR:
+                        HiddenDoorMazeCell newCell = new HiddenDoorMazeCell(currentCell.GetX(), currentCell.GetY());
 
-                        neighbourType = grid.GetNorthNeighbour(x, y).GetCellType();
-                        if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END || neighbourType == MazeCellType.HIDDEN_ROOM) {
-                            CreateNorthWall(x, y, 1, stoneBrick);
-                            if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) CreateSouthHiddenDoor(x, y);
+                        CreateCeiling(newCell, 0);
+
+                        if (grid.GetNorthNeighbour(x, y).GetCellType() == MazeCellType.HIDDEN_ROOM) {
+                            CreateSouthHiddenDoor(newCell);
+
+                            CreateEastWall(newCell, 0, stoneBrick);
+                            CreateWestWall(newCell, 0, stoneBrick);
                         }
-                        neighbourType = grid.GetEastNeighbour(x, y).GetCellType();
-                        if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END || neighbourType == MazeCellType.HIDDEN_ROOM) {
-                            CreateEastWall(x, y, 1, stoneBrick);
-                            if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) CreateWestHiddenDoor(x, y);
+                        if (grid.GetEastNeighbour(x, y).GetCellType() == MazeCellType.HIDDEN_ROOM){
+                            CreateWestHiddenDoor(newCell);
+
+                            CreateNorthWall(newCell, 0, stoneBrick);
+                            CreateSouthWall(newCell, 0, stoneBrick);
                         }
-                        neighbourType = grid.GetSouthNeighbour(x, y).GetCellType();
-                        if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END || neighbourType == MazeCellType.HIDDEN_ROOM) {
-                            CreateSouthWall(x, y, 1, stoneBrick);
-                            if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) CreateNorthHiddenDoor(x, y);
+                        if (grid.GetSouthNeighbour(x, y).GetCellType() == MazeCellType.HIDDEN_ROOM) {
+                            CreateNorthHiddenDoor(newCell);
+
+                            CreateEastWall(newCell, 0, stoneBrick);
+                            CreateWestWall(newCell, 0, stoneBrick);
                         }
-                        neighbourType = grid.GetWestNeighbour(x, y).GetCellType();
-                        if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END || neighbourType == MazeCellType.HIDDEN_ROOM) {
-                            CreateWestWall(x, y, 1, stoneBrick);
-                            if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) CreateEastHiddenDoor(x, y);
+                        if (grid.GetWestNeighbour(x, y).GetCellType() == MazeCellType.HIDDEN_ROOM) {
+                            CreateWestHiddenDoor(newCell);
+
+                            CreateNorthWall(newCell, 0, stoneBrick);
+                            CreateSouthWall(newCell, 0, stoneBrick);
                         }
+
+                        grid.SetCell(newCell);
 
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.black, false);
 
@@ -424,7 +535,7 @@ public class MazeGenerator : MonoBehaviour {
         foreach (MazeCell deadEnd in deadEnds) CreateKnight(deadEnd.GetX(), deadEnd.GetY(), 0, grid);
     }
 
-    private void MazeDepthFirstSearch(MazeGrid grid, int x, int y) {
+    private void MazeDepthFirstSearch(int x, int y) {
         grid.SetCellType(x, y, MazeCellType.PASSAGE);
 
         List<MazeCell> availableNeighbours = grid.GetSecondNeighboursOfType(x, y, MazeCellType.WALL, MazeCellType.DISCONNECTED_DOOR, MazeCellType.DISCONNECTED_HIDDEN_DOOR);
@@ -437,7 +548,7 @@ public class MazeGenerator : MonoBehaviour {
                 else if (chosenNeighbour == grid.GetSecondSouthNeighbour(x, y)) grid.SetCellType(x,     y + 1, MazeCellType.PASSAGE);
                 else if (chosenNeighbour == grid.GetSecondWestNeighbour(x, y))  grid.SetCellType(x - 1, y,     MazeCellType.PASSAGE);
                 grid.SetCellType(chosenNeighbour.GetX(), chosenNeighbour.GetY(), MazeCellType.PASSAGE);
-                MazeDepthFirstSearch(grid, chosenNeighbour.GetX(), chosenNeighbour.GetY());
+                MazeDepthFirstSearch(chosenNeighbour.GetX(), chosenNeighbour.GetY());
             } else if (chosenNeighbour.GetCellType() == MazeCellType.DISCONNECTED_DOOR) {
                 if      (chosenNeighbour == grid.GetSecondNorthNeighbour(x, y)) grid.SetCellType(x,     y - 1, MazeCellType.DOOR);
                 else if (chosenNeighbour == grid.GetSecondEastNeighbour(x, y))  grid.SetCellType(x + 1, y,     MazeCellType.DOOR);
@@ -445,92 +556,122 @@ public class MazeGenerator : MonoBehaviour {
                 else if (chosenNeighbour == grid.GetSecondWestNeighbour(x, y))  grid.SetCellType(x - 1, y,     MazeCellType.DOOR);
                 grid.SetCellType(chosenNeighbour.GetX(), chosenNeighbour.GetY(), MazeCellType.ROOM);
             } else if (chosenNeighbour.GetCellType() == MazeCellType.DISCONNECTED_HIDDEN_DOOR) {
-                if      (chosenNeighbour == grid.GetSecondNorthNeighbour(x, y)) grid.SetCellType(x,     y - 1, MazeCellType.HIDDENDOOR);
-                else if (chosenNeighbour == grid.GetSecondEastNeighbour(x, y))  grid.SetCellType(x + 1, y,     MazeCellType.HIDDENDOOR);
-                else if (chosenNeighbour == grid.GetSecondSouthNeighbour(x, y)) grid.SetCellType(x,     y + 1, MazeCellType.HIDDENDOOR);
-                else if (chosenNeighbour == grid.GetSecondWestNeighbour(x, y))  grid.SetCellType(x - 1, y,     MazeCellType.HIDDENDOOR);
+                if      (chosenNeighbour == grid.GetSecondNorthNeighbour(x, y)) grid.SetCellType(x,     y - 1, MazeCellType.HIDDEN_DOOR);
+                else if (chosenNeighbour == grid.GetSecondEastNeighbour(x, y))  grid.SetCellType(x + 1, y,     MazeCellType.HIDDEN_DOOR);
+                else if (chosenNeighbour == grid.GetSecondSouthNeighbour(x, y)) grid.SetCellType(x,     y + 1, MazeCellType.HIDDEN_DOOR);
+                else if (chosenNeighbour == grid.GetSecondWestNeighbour(x, y))  grid.SetCellType(x - 1, y,     MazeCellType.HIDDEN_DOOR);
                 grid.SetCellType(chosenNeighbour.GetX(), chosenNeighbour.GetY(), MazeCellType.HIDDEN_ROOM);
             }
             availableNeighbours.Remove(chosenNeighbour);
         }
     }
 
-    private void CreateFloor(int x, int y, Texture2D texture) {
-        GameObject floor = CreateMazePiece(floorPrefab, new Vector3(x, 0, y) + floorPrefab.transform.position, texture);
+    private void CreateFloor(MazeCell mazeCell, Texture2D texture) {
+        GameObject floor = CreateMazePiece(floorPrefab, new Vector3(mazeCell.GetX(), 0, mazeCell.GetY()) + floorPrefab.transform.position, texture);
         floor.transform.parent = floorParent.transform;
+        mazeCell.AddToMazePieces(floor);
     }
 
-    private void CreateCeiling(int x, int y, int level) {
-        GameObject ceiling = CreateMazePiece(ceilingPrefab, new Vector3(x, level, y) + ceilingPrefab.transform.position, stoneBrick);
+    private void CreateCeiling(MazeCell mazeCell, int level) {
+        GameObject ceiling = CreateMazePiece(ceilingPrefab, new Vector3(mazeCell.GetX(), level, mazeCell.GetY()) + ceilingPrefab.transform.position, stoneBrick);
         ceiling.transform.parent = ceilingParent.transform;
+        ceiling.name = "Ceiling-L" + level;
+        mazeCell.AddToMazePieces(ceiling);
     }
 
-    private void CreateNorthWall(int x, int y, int level, Texture2D texture) {
-        CreateWall(new Vector3(x, level, y) + new Vector3(0, 0.5f, -0.5f), 0f, texture);
+    private void CreateNorthWall(MazeCell mazeCell, int level, Texture2D texture) {
+        GameObject wall = CreateWall(mazeCell, new Vector3(mazeCell.GetX(), level, mazeCell.GetY()) + new Vector3(0, 0.5f, -0.5f), 180f, texture);
+        wall.name = "Wall-L" + level;
     }
 
-    private void CreateEastWall(int x, int y, int level, Texture2D texture) {
-        CreateWall(new Vector3(x, level, y) + new Vector3(0.5f, 0.5f, 0), 270f, texture);
+    private void CreateEastWall(MazeCell mazeCell, int level, Texture2D texture) {
+        GameObject wall = CreateWall(mazeCell, new Vector3(mazeCell.GetX(), level, mazeCell.GetY()) + new Vector3(0.5f, 0.5f, 0), 90f, texture);
+        wall.name = "Wall-L" + level;
     }
 
-    private void CreateSouthWall(int x, int y, int level, Texture2D texture) {
-        CreateWall(new Vector3(x, level, y) + new Vector3(0, 0.5f, 0.5f), 180f, texture);
+    private void CreateSouthWall(MazeCell mazeCell, int level, Texture2D texture) {
+        GameObject wall = CreateWall(mazeCell, new Vector3(mazeCell.GetX(), level, mazeCell.GetY()) + new Vector3(0, 0.5f, 0.5f), 0f, texture);
+        wall.name = "Wall-L" + level;
     }
 
-    private void CreateWestWall(int x, int y, int level, Texture2D texture) {
-        CreateWall(new Vector3(x, level, y) + new Vector3(-0.5f, 0.5f, 0), 90f, texture);
+    private void CreateWestWall(MazeCell mazeCell, int level, Texture2D texture) {
+        GameObject wall = CreateWall(mazeCell, new Vector3(mazeCell.GetX(), level, mazeCell.GetY()) + new Vector3(-0.5f, 0.5f, 0), 270f, texture);
+        wall.name = "Wall-L" + level;
     }
 
-    private void CreateWall(Vector3 position, float rotation, Texture2D texture) {
+    private GameObject CreateWall(MazeCell mazeCell, Vector3 position, float rotation, Texture2D texture) {
         GameObject wall = CreateMazePiece(wallPrefab, position, texture);
         wall.transform.Rotate(0, rotation, 0, Space.Self);
         wall.transform.parent = wallParent.transform;
+        mazeCell.AddToMazePieces(wall);
+        return wall;
     }
 
-    private void CreateNorthDoor(int x, int y) {
-        CreateDoor(x, y, 0);
+    private void CreateNorthDoor(MazeCell mazeCell) {
+        CreateDoor(mazeCell, 0);
     }
 
-    private void CreateEastDoor(int x, int y) {
-        CreateDoor(x, y, 270);
+    private void CreateEastDoor(MazeCell mazeCell) {
+        CreateDoor(mazeCell, 270);
     }
 
-    private void CreateSouthDoor(int x, int y) {
-        CreateDoor(x, y, 180);
+    private void CreateSouthDoor(MazeCell mazeCell) {
+        CreateDoor(mazeCell, 180);
     }
 
-    private void CreateWestDoor(int x, int y) {
-        CreateDoor(x, y, 90);
+    private void CreateWestDoor(MazeCell mazeCell) {
+        CreateDoor(mazeCell, 90);
     }
 
-    private void CreateDoor(int x, int y, float rotation) {
-        GameObject door = CreateObject(doorPrefab, new Vector3(x, 0, y) + doorPrefab.transform.position);
+    private void CreateDoor(MazeCell mazeCell, float rotation) {
+        GameObject door = CreateObject(doorPrefab, new Vector3(mazeCell.GetX(), 0, mazeCell.GetY()) + doorPrefab.transform.position);
         door.transform.Rotate(0, rotation, 0, Space.Self);
         door.transform.parent = doorParent.transform;
+        mazeCell.AddToMazePieces(door.transform.Find("Door 1/Face 1").gameObject);
+        mazeCell.AddToMazePieces(door.transform.Find("Door 1/Face 2").gameObject);
+        mazeCell.AddToMazePieces(door.transform.Find("Door 1/Face 3").gameObject);
+        mazeCell.AddToMazePieces(door.transform.Find("Door 1/Face 4").gameObject);
+        mazeCell.AddToMazePieces(door.transform.Find("Door 2/Face 1").gameObject);
+        mazeCell.AddToMazePieces(door.transform.Find("Door 2/Face 2").gameObject);
+        mazeCell.AddToMazePieces(door.transform.Find("Door 2/Face 3").gameObject);
+        mazeCell.AddToMazePieces(door.transform.Find("Door 2/Face 4").gameObject);
     }
 
-    private void CreateNorthHiddenDoor(int x, int y) {
-        GameObject hiddenDoor = CreateHiddenDoor(x, y, 0);
+    private void CreateNorthHiddenDoor(HiddenDoorMazeCell mazeCell) {
+        GameObject hiddenDoor = CreateHiddenDoor(mazeCell, 0);
+        grid.GetNorthNeighbour(mazeCell).AddToMazePieces(hiddenDoor.transform.Find("Face 1").gameObject);
+        grid.GetSouthNeighbour(mazeCell).AddToMazePieces(hiddenDoor.transform.Find("Face 2").gameObject);
+        mazeCell.SetHiddenDoor(hiddenDoor);
     }
     
-    private void CreateEastHiddenDoor(int x, int y) {
-        GameObject hiddenDoor = CreateHiddenDoor(x, y, 90);
+    private void CreateEastHiddenDoor(HiddenDoorMazeCell mazeCell) {
+        GameObject hiddenDoor = CreateHiddenDoor(mazeCell, 90);
         hiddenDoor.transform.Find("Top").Rotate(0, 0, 90);
+        grid.GetEastNeighbour(mazeCell).AddToMazePieces(hiddenDoor.transform.Find("Face 1").gameObject);
+        grid.GetWestNeighbour(mazeCell).AddToMazePieces(hiddenDoor.transform.Find("Face 2").gameObject);
+        mazeCell.SetHiddenDoor(hiddenDoor);
     }
 
-    private void CreateSouthHiddenDoor(int x, int y) {
-        GameObject hiddenDoor = CreateHiddenDoor(x, y, 0);
+    private void CreateSouthHiddenDoor(HiddenDoorMazeCell mazeCell) {
+        GameObject hiddenDoor = CreateHiddenDoor(mazeCell, 0);
+        grid.GetNorthNeighbour(mazeCell).AddToMazePieces(hiddenDoor.transform.Find("Face 1").gameObject);
+        grid.GetSouthNeighbour(mazeCell).AddToMazePieces(hiddenDoor.transform.Find("Face 2").gameObject);
+        mazeCell.SetHiddenDoor(hiddenDoor);
     }
 
-    private void CreateWestHiddenDoor(int x, int y) {
-        GameObject hiddenDoor = CreateHiddenDoor(x, y, 90);
+    private void CreateWestHiddenDoor(HiddenDoorMazeCell mazeCell) {
+        GameObject hiddenDoor = CreateHiddenDoor(mazeCell, 90);
         hiddenDoor.transform.Find("Top").Rotate(0, 0, 90);
+        grid.GetEastNeighbour(mazeCell).AddToMazePieces(hiddenDoor.transform.Find("Face 2").gameObject);
+        grid.GetWestNeighbour(mazeCell).AddToMazePieces(hiddenDoor.transform.Find("Face 1").gameObject);
+        mazeCell.SetHiddenDoor(hiddenDoor);
     }
 
-    private GameObject CreateHiddenDoor(int x, int y, float rotation) {
-        GameObject hiddenDoor = CreateObject(hiddenDoorPrefab, new Vector3(x, 0, y) + hiddenDoorPrefab.transform.position);
+    private GameObject CreateHiddenDoor(MazeCell mazeCell, float rotation) {
+        GameObject hiddenDoor = CreateObject(hiddenDoorPrefab, new Vector3(mazeCell.GetX(), 0, mazeCell.GetY()) + hiddenDoorPrefab.transform.position);
         hiddenDoor.transform.Rotate(0, rotation, 0, Space.Self);
         hiddenDoor.transform.parent = doorParent.transform;
+        mazeCell.AddToMazePieces(hiddenDoor.transform.Find("Top").gameObject);
         return hiddenDoor;
     }
 
@@ -548,33 +689,33 @@ public class MazeGenerator : MonoBehaviour {
         barrel.transform.parent = propParent.transform;
     }
 
-    private void CreateNorthTorch(int x, int y, int level) {
-        CreateTorch(new Vector3(x, level, y) + new Vector3(0, 0, -0.4f), 0f);
+    private void CreateNorthTorch(MazeCell mazeCell, int level) {
+        CreateTorch(mazeCell, new Vector3(mazeCell.GetX(), level, mazeCell.GetY()) + new Vector3(0, 0, -0.4f), 0f);
     }
 
-    private void CreateEastTorch(int x, int y, int level) {
-        CreateTorch(new Vector3(x, level, y) + new Vector3(0.4f, 0, 0), 270f);
+    private void CreateEastTorch(MazeCell mazeCell, int level) {
+        CreateTorch(mazeCell, new Vector3(mazeCell.GetX(), level, mazeCell.GetY()) + new Vector3(0.4f, 0, 0), 270f);
     }
 
-    private void CreateSouthTorch(int x, int y, int level) {
-        CreateTorch(new Vector3(x, level, y) + new Vector3(0, 0, 0.4f), 180f);
+    private void CreateSouthTorch(MazeCell mazeCell, int level) {
+        CreateTorch(mazeCell, new Vector3(mazeCell.GetX(), level, mazeCell.GetY()) + new Vector3(0, 0, 0.4f), 180f);
     }
 
-    private void CreateWestTorch(int x, int y, int level) {
-        CreateTorch(new Vector3(x, level, y) + new Vector3(-0.4f, 0, 0), 90f);
+    private void CreateWestTorch(MazeCell mazeCell, int level) {
+        CreateTorch(mazeCell, new Vector3(mazeCell.GetX(), level, mazeCell.GetY()) + new Vector3(-0.4f, 0, 0), 90f);
     }
 
-    private void CreateTorch(Vector3 position, float rotation) {
+    private void CreateTorch(MazeCell mazeCell, Vector3 position, float rotation) {
         GameObject torch = CreateObject(torchPrefab, position + new Vector3(0, 0.5f, 0));
         torch.transform.Rotate(0, rotation, 0, Space.Self);
         torch.transform.parent = propParent.transform;
-        if (Application.isEditor) torch.transform.Find("Directional Light").gameObject.SetActive(false);
+        lightSources.Add(torch, LightingType.TORCH);
     }
 
-    private void CreateChandelier(int x, int y, int level) {
-        GameObject chandelier = CreateObject(chandelierPrefab, new Vector3(x, level, y) + new Vector3(0, 0.75f, 0));
+    private void CreateChandelier(MazeCell mazeCell, int level) {
+        GameObject chandelier = CreateObject(chandelierPrefab, new Vector3(mazeCell.GetX(), level, mazeCell.GetY()) + new Vector3(0, 0.75f, 0));
         chandelier.transform.parent = propParent.transform;
-        if (Application.isEditor) chandelier.transform.Find("Directional Light").gameObject.SetActive(false);
+        lightSources.Add(chandelier, LightingType.TORCH);
     }
 
     private void CreateTurret(int x, int y, int level) {
@@ -595,5 +736,9 @@ public class MazeGenerator : MonoBehaviour {
 
     public int GetSize() {
         return size;
+    }
+
+    public MazeCell GetMazeCell(float x, float y) {
+        return grid.GetCell(x, y);
     }
 }

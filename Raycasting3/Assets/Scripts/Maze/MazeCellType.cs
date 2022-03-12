@@ -6,7 +6,7 @@ public enum MazeCellType {
     ROOM,
     HIDDEN_ROOM,
     DOOR,
-    HIDDENDOOR,
+    HIDDEN_DOOR,
 
     // Used for generation; not in final maze
     DISCONNECTED_DOOR,

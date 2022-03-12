@@ -12,6 +12,8 @@ public class SpriteBehaviour : MonoBehaviour {
 
     private bool usingDestroyedSprite;
 
+    private GameBehaviour gameBehaviour;
+
     void Start() {
         player = GameObject.FindWithTag("Player").transform;
 
@@ -23,6 +25,8 @@ public class SpriteBehaviour : MonoBehaviour {
         health = GetComponentInParent<Health>();
 
         usingDestroyedSprite = false;
+
+        gameBehaviour = GameObject.Find("Controller").GetComponent<GameBehaviour>();
     }
 
     void Update() {
@@ -39,5 +43,8 @@ public class SpriteBehaviour : MonoBehaviour {
         }
 
         transform.forward = new Vector3(player.forward.x, transform.forward.y, player.forward.z);
+
+        LightingType lightingType = gameBehaviour.GetMazeCell(transform.position.x, transform.position.z).GetLighting();
+        spriteRenderer.material.color = LightingColor.GetLightingColor(lightingType);
     }
 }

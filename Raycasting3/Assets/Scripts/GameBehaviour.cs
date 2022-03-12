@@ -16,12 +16,15 @@ public class GameBehaviour : MonoBehaviour {
 
     void Awake() {
         player = Instantiate(playerPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        player.name = "Player";
         playerBehaviour = player.GetComponent<PlayerBehaviour>();
 
         canvas = Instantiate(canvasPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        canvas.name = "Canvas";
         minimapBehaviour = canvas.GetComponentInChildren<MinimapBehaviour>();
 
         maze = Instantiate(mazePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        maze.name = "Maze";
         mazeGenerator = maze.GetComponent<MazeGenerator>();
     }
 
@@ -35,6 +38,10 @@ public class GameBehaviour : MonoBehaviour {
 
     public int GetMazeSize() {
         return mazeGenerator.GetSize();
+    }
+
+    public MazeCell GetMazeCell(float x, float y) {
+        return mazeGenerator.GetMazeCell(x, y);
     }
 
     public void CreateMinimapCell(int x, int y, string name, Color color, bool active) {

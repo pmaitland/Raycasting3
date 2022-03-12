@@ -23,20 +23,40 @@ public class MazeGrid {
         return grid[y][x];
     }
 
+    public MazeCell GetCell(float x, float y) {
+        return grid[Mathf.RoundToInt(y)][Mathf.RoundToInt(x)];
+    }
+
     public MazeCell GetNorthNeighbour(int x, int y) {
         return y > 0 ? grid[y - 1][x] : null;
+    }
+
+    public MazeCell GetNorthNeighbour(MazeCell cell) {
+        return cell.GetY() > 0 ? grid[cell.GetY() - 1][cell.GetX()] : null;
     }
 
     public MazeCell GetSouthNeighbour(int x, int y) {
         return y < size - 1 ? grid[y + 1][x] : null;
     }
 
+    public MazeCell GetSouthNeighbour(MazeCell cell) {
+        return cell.GetY() < size - 1 ? grid[cell.GetY() + 1][cell.GetX()] : null;
+    }
+
     public MazeCell GetEastNeighbour(int x, int y) {
         return x < size - 1 ? grid[y][x + 1] : null;
     }
 
+    public MazeCell GetEastNeighbour(MazeCell cell) {
+        return cell.GetX() < size - 1 ? grid[cell.GetY()][cell.GetX() + 1] : null;
+    }
+
     public MazeCell GetWestNeighbour(int x, int y) {
         return x > 0 ? grid[y][x - 1] : null;
+    }
+
+    public MazeCell GetWestNeighbour(MazeCell cell) {
+        return cell.GetX() > 0 ? grid[cell.GetY()][cell.GetX() - 1] : null;
     }
 
     public List<MazeCell> GetNeighboursOfType(MazeCell cell, params MazeCellType[] types) {
@@ -104,6 +124,72 @@ public class MazeGrid {
 
     public void SetCellType(int x, int y, MazeCellType newType) {
         grid[y][x].SetCellType(newType);
+    }
+
+    public void SetCell(HiddenDoorMazeCell newCell) {
+        grid[newCell.GetY()][newCell.GetX()] = newCell;
+    }
+
+    public void SetLighting(MazeCell mazeCell, LightingType lightingType) {
+        switch (lightingType) {
+            case (LightingType.TORCH):
+                mazeCell.SetLighting(LightingType.TORCH);
+                foreach (MazeCell neighbour in GetNeighboursNotOfType(mazeCell, MazeCellType.WALL)) {
+                    if (neighbour is HiddenDoorMazeCell) {
+                        HiddenDoorMazeCell hiddenDoorMazeCell = (HiddenDoorMazeCell) neighbour;
+                        if (hiddenDoorMazeCell.IsDoorOpen()) SetLighting(neighbour, LightingType.TORCH_1);
+                    } else {
+                        SetLighting(neighbour, LightingType.TORCH_1);
+                    }
+                }
+                break;
+            case (LightingType.TORCH_1):
+                if (mazeCell.GetLighting() != LightingType.TORCH) {
+                    mazeCell.SetLighting(LightingType.TORCH_1);
+                    foreach (MazeCell neighbour in GetNeighboursNotOfType(mazeCell, MazeCellType.WALL)) {
+                        if (neighbour.GetCellType() == MazeCellType.HIDDEN_DOOR) {
+                            HiddenDoorMazeCell hiddenDoorMazeCell = (HiddenDoorMazeCell) neighbour;
+                            if (hiddenDoorMazeCell.IsDoorOpen()) SetLighting(neighbour, LightingType.TORCH_2);
+                        } else {
+                            SetLighting(neighbour, LightingType.TORCH_2);
+                        }
+                    }
+                }
+                break;
+            case (LightingType.TORCH_2):
+                if (mazeCell.GetLighting() != LightingType.TORCH && mazeCell.GetLighting() != LightingType.TORCH_1) {
+                    mazeCell.SetLighting(LightingType.TORCH_2);
+                    foreach (MazeCell neighbour in GetNeighboursNotOfType(mazeCell, MazeCellType.WALL)) {
+                        if (neighbour.GetCellType() == MazeCellType.HIDDEN_DOOR) {
+                            HiddenDoorMazeCell hiddenDoorMazeCell = (HiddenDoorMazeCell) neighbour;
+                            if (hiddenDoorMazeCell.IsDoorOpen()) SetLighting(neighbour, LightingType.TORCH_3);
+                        } else {
+                            SetLighting(neighbour, LightingType.TORCH_3);
+                        }
+                    }
+                }
+                break;
+            case (LightingType.TORCH_3):
+                if (mazeCell.GetLighting() != LightingType.TORCH && mazeCell.GetLighting() != LightingType.TORCH_1
+                    && mazeCell.GetLighting() != LightingType.TORCH_2) {
+                    mazeCell.SetLighting(LightingType.TORCH_3);
+                    foreach (MazeCell neighbour in GetNeighboursNotOfType(mazeCell, MazeCellType.WALL)) {
+                        if (neighbour.GetCellType() == MazeCellType.HIDDEN_DOOR) {
+                            HiddenDoorMazeCell hiddenDoorMazeCell = (HiddenDoorMazeCell) neighbour;
+                            if (hiddenDoorMazeCell.IsDoorOpen()) SetLighting(neighbour, LightingType.TORCH_4);
+                        } else {
+                            SetLighting(neighbour, LightingType.TORCH_4);
+                        }
+                    }
+                }
+                break;
+            case (LightingType.TORCH_4):
+                if (mazeCell.GetLighting() != LightingType.TORCH && mazeCell.GetLighting() != LightingType.TORCH_1
+                    && mazeCell.GetLighting() != LightingType.TORCH_2 && mazeCell.GetLighting() != LightingType.TORCH_3) {
+                    mazeCell.SetLighting(LightingType.TORCH_4);
+                }
+                break;
+        }
     }
 
     public void CleanUp() {

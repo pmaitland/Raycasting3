@@ -22,4 +22,8 @@ public class HiddenDoorBehaviour : MonoBehaviour {
     public void Open() {
         if (!open) opening = true;
     }
+
+    public bool IsOpen() {
+        return open || opening;
+    }
 }
