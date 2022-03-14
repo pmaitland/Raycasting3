@@ -36,6 +36,10 @@ public class GameBehaviour : MonoBehaviour {
         playerBehaviour.SetPosition(position);
     }
 
+    public void AddLightSource(GameObject lightSource, LightingType lightingType) {
+        mazeGenerator.AddLightSource(lightSource, lightingType);
+    }
+
     public int GetMazeSize() {
         return mazeGenerator.GetSize();
     }

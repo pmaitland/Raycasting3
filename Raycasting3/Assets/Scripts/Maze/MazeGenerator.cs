@@ -87,10 +87,23 @@ public class MazeGenerator : MonoBehaviour {
             }
         }
 
+        lightSources[gameController.GetPlayer()] = gameController.GetPlayer().GetComponent<PlayerBehaviour>().GetLighting();
+
+        List<GameObject> lightSourcesToRemove = new List<GameObject>();
         foreach (KeyValuePair<GameObject, LightingType> entry in lightSources) {
-            MazeCell cell = grid.GetCell(entry.Key.transform.position.x, entry.Key.transform.position.z);
-            grid.SetLighting(cell, entry.Value);
+            GameObject lightSource = entry.Key;
+            if (lightSource != null) {
+                MazeCell cell = grid.GetCell(lightSource.transform.position.x, lightSource.transform.position.z);
+                grid.SetLighting(cell, entry.Value);
+            } else {
+                lightSourcesToRemove.Add(lightSource);
+            }
         }
+        foreach (GameObject lightSource in lightSourcesToRemove) lightSources.Remove(lightSource);
+    }
+
+    public void AddLightSource(GameObject lightSource, LightingType lightingType) {
+        lightSources.Add(lightSource, lightingType);
     }
 
     private void GenerateMaze() {
@@ -533,6 +546,8 @@ public class MazeGenerator : MonoBehaviour {
         deadEnds.Remove(playerStart);
 
         foreach (MazeCell deadEnd in deadEnds) CreateKnight(deadEnd.GetX(), deadEnd.GetY(), 0, grid);
+
+        lightSources.Add(gameController.GetPlayer(), gameController.GetPlayer().GetComponent<PlayerBehaviour>().GetLighting());
     }
 
     private void MazeDepthFirstSearch(int x, int y) {
@@ -709,13 +724,13 @@ public class MazeGenerator : MonoBehaviour {
         GameObject torch = CreateObject(torchPrefab, position + new Vector3(0, 0.5f, 0));
         torch.transform.Rotate(0, rotation, 0, Space.Self);
         torch.transform.parent = propParent.transform;
-        lightSources.Add(torch, LightingType.TORCH);
+        lightSources.Add(torch, LightingType.TORCH_0);
     }
 
     private void CreateChandelier(MazeCell mazeCell, int level) {
         GameObject chandelier = CreateObject(chandelierPrefab, new Vector3(mazeCell.GetX(), level, mazeCell.GetY()) + new Vector3(0, 0.75f, 0));
         chandelier.transform.parent = propParent.transform;
-        lightSources.Add(chandelier, LightingType.TORCH);
+        lightSources.Add(chandelier, LightingType.TORCH_0);
     }
 
     private void CreateTurret(int x, int y, int level) {
