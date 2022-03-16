@@ -3,10 +3,14 @@ using UnityEngine.UI;
 
 public class HandsBehaviour : MonoBehaviour {
 
+    private GameObject hands;
     private GameObject rightHand;
-    private GameObject leftHand;
     private GameObject rightSpell;
+    private GameObject leftHand;
     private GameObject leftSpell;
+
+    private Vector3 handsShownPosition;
+    private Vector3 handsHiddenPosition;
 
     private GameObject player;
     private GameBehaviour gameBehaviour;
@@ -20,10 +24,18 @@ public class HandsBehaviour : MonoBehaviour {
     public Sprite fireballSpellSprite;
 
     void Start() {
+        hands = GameObject.Find("Hands");
         rightHand = GameObject.Find("Right Hand");
-        leftHand = GameObject.Find("Left Hand");
         rightSpell = GameObject.Find("Right Spell");
+        leftHand = GameObject.Find("Left Hand");
         leftSpell = GameObject.Find("Left Spell");
+
+        handsShownPosition = hands.transform.position;
+        handsHiddenPosition = new Vector3(
+            handsShownPosition.x, 
+            -handsShownPosition.y,
+            handsShownPosition.z
+        );
 
         player = GameObject.Find("Player");
         gameBehaviour = GameObject.Find("Controller").GetComponent<GameBehaviour>();
@@ -91,6 +103,26 @@ public class HandsBehaviour : MonoBehaviour {
                 break;
             default:
                 break;
+        }
+    }
+
+    public void HideHands() {
+        if (hands.transform.position.y > handsHiddenPosition.y) {
+            hands.transform.position = new Vector3(
+                hands.transform.position.x,
+                hands.transform.position.y - 10f,
+                hands.transform.position.z
+            );
+        }
+    }
+
+    public void ShowHands() {
+        if (hands.transform.position.y < handsShownPosition.y) {
+            hands.transform.position = new Vector3(
+                hands.transform.position.x,
+                hands.transform.position.y + 10f,
+                hands.transform.position.z
+            );
         }
     }
 

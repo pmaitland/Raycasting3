@@ -46,6 +46,10 @@ public class PlayerBehaviour : MonoBehaviour {
 			camera.transform.rotation = Quaternion.Slerp(camera.transform.rotation, Quaternion.LookRotation(lookPosition - cameraPosition), Time.deltaTime);
 
 			if (transform.position.y > 0.05) transform.position = new Vector3(transform.position.x, transform.position.y - 0.01f, transform.position.z);
+
+			hands.ChangeHandSprite(Hand.LEFT, HandState.NORMAL);
+			hands.ChangeHandSprite(Hand.RIGHT, HandState.NORMAL);
+			hands.HideHands();
 			return;
 		}
 
