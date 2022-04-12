@@ -126,6 +126,10 @@ public class MazeGrid {
         grid[y][x].SetCellType(newType);
     }
 
+    public void SetCellType(float x, float y, MazeCellType newType) {
+        grid[Mathf.RoundToInt(y)][Mathf.RoundToInt(x)].SetCellType(newType);
+    }
+
     public void SetCell(HiddenDoorMazeCell newCell) {
         grid[newCell.GetY()][newCell.GetX()] = newCell;
     }
@@ -268,7 +272,7 @@ public class MazeGrid {
                         grid[j][i].SetCellType(MazeCellType.DEAD_END);
                     }
                 } else if (cellType == MazeCellType.DISCONNECTED_DOOR) {
-                    grid[j][i].SetCellType(MazeCellType.ROOM);
+                    grid[j][i].SetCellType(MazeCellType.DOOR);
                 } else if (cellType == MazeCellType.DISCONNECTED_HIDDEN_DOOR) {
                     grid[j][i].SetCellType(MazeCellType.HIDDEN_ROOM);
                 }

@@ -29,7 +29,7 @@ public class MazeRoom {
     }
 
     public static bool Overlap(MazeRoom roomA, MazeRoom roomB) {
-        return roomA.GetX() < roomB.GetX() + roomB.GetWidth()  && roomA.GetX() + roomA.GetWidth()  > roomB.GetX()
-            && roomA.GetY() < roomB.GetY() + roomB.GetHeight() && roomA.GetY() + roomA.GetHeight() > roomB.GetY();
+        return roomA.GetX() - 1 < roomB.GetX() + roomB.GetWidth() + 1 && roomA.GetX() + roomA.GetWidth() + 1  > roomB.GetX() - 1
+            && roomA.GetY() - 1 < roomB.GetY() + roomB.GetHeight() + 1 && roomA.GetY() + roomA.GetHeight() + 1 > roomB.GetY() - 1;
     }
 }

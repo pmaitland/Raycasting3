@@ -43,32 +43,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f66af20dbd654a9834c8a5789aab99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 35
-  roomCount: 4
-  stoneBrick: {fileID: 2800000, guid: 2c96257a45a3f551d98b40d405bb4ad9, type: 3}
+  size: 49
+  roomCount: 25
   banner: {fileID: 2800000, guid: e4256658a3bb5e307847372ad31015f4, type: 3}
-  carpetN: {fileID: 2800000, guid: 3b14a49e67ba263f6a3179bd1b2a6ad8, type: 3}
+  carpetN: {fileID: 2800000, guid: fc951ff2e3e83c4f98ded77c297cbe97, type: 3}
   carpetE: {fileID: 2800000, guid: 5f8fa08ba70cb3e4bb6497e120521d9b, type: 3}
   carpetS: {fileID: 2800000, guid: d9fa3f6592d8b56c78347c2182d8e022, type: 3}
   carpetW: {fileID: 2800000, guid: f6d2a5639c90580dc9e38e3ba31b3eb0, type: 3}
-  carpetNS: {fileID: 2800000, guid: 678c70eb1f37732e3ac85943e0c4691e, type: 3}
+  carpetNS: {fileID: 2800000, guid: 2f224a6479360909ea2fdffce5f5f70f, type: 3}
   carpetEW: {fileID: 2800000, guid: e0e8c7f414f8161baaf66cbeace4ddff, type: 3}
   carpetNE: {fileID: 2800000, guid: be7ef61171f915fec9e37ed9031e2661, type: 3}
-  carpetES: {fileID: 2800000, guid: 8ac0c58739d869b13a7452fb69a5f4eb, type: 3}
+  carpetES: {fileID: 2800000, guid: 107cecc043b903f5f9809cb7eaa6d755, type: 3}
   carpetSW: {fileID: 2800000, guid: bb83ee620e3dbb98ba1823c1153fd68d, type: 3}
   carpetNW: {fileID: 2800000, guid: 703211f86d5c268d8a835d0589eb597e, type: 3}
-  carpetNES: {fileID: 2800000, guid: 88e7cd5d959b58fc8a01d5e8cc34df44, type: 3}
+  carpetNES: {fileID: 2800000, guid: 146d17cdf810b2436a1b01c112230eb3, type: 3}
   carpetESW: {fileID: 2800000, guid: 5ed53e2719d6e4090a1f6f6f19f2bb85, type: 3}
   carpetNSW: {fileID: 2800000, guid: 61d5fd0397c9e13db8c0422993e72631, type: 3}
   carpetNEW: {fileID: 2800000, guid: 6842f4624fe34bbb8a966d2f74018ea8, type: 3}
-  carpetNESW: {fileID: 2800000, guid: 3e56b417007fd2379b338543a72d22da, type: 3}
-  floorPrefab: {fileID: 4909252868652026774, guid: a6a4a946533d7ae4f8a32c1a098463a6, type: 3}
-  ceilingPrefab: {fileID: 3890000064965853165, guid: a28d95da66c26a2d7bf46f13bc3145d8, type: 3}
-  wallPrefab: {fileID: 7617880232423462224, guid: b52208d0f86de5076add23313369f0c8, type: 3}
-  doorPrefab: {fileID: 4360958528943519800, guid: e74aa0036ac6d144084020ccedfaae99, type: 3}
-  hiddenDoorPrefab: {fileID: 7115257901612888894, guid: 1498d4ad39d6697078aff6ece752aee2, type: 3}
-  barrelPrefab: {fileID: 2270920480958254443, guid: c8b029693e448337caefac08cbe2db95, type: 3}
-  torchPrefab: {fileID: 3681046569504041219, guid: 45d28d4228d22eafc82af067f796dadb, type: 3}
-  chandelierPrefab: {fileID: 8691651798388440808, guid: fbbfec7e9f75254058fa155843bbdef7, type: 3}
-  turretPrefab: {fileID: 5938546514879256478, guid: 1e20423e2c730edd7abc7b2821b0a002, type: 3}
-  knightPrefab: {fileID: 7925531397398036891, guid: 90a6e85750b4607f6a3ca5135d2ea299, type: 3}
+  carpetNESW: {fileID: 2800000, guid: 2c821796a1b7a350a91683c96c93376a, type: 3}
+  passagePrefab: {fileID: 9201763936282855289, guid: 822cd19ac778aa1448f1d5fbf12dedc4, type: 3}
+  deadEndPrefab: {fileID: 1849009846854788362, guid: 6b28c6087969813628055092234eea39, type: 3}
+  roomPrefabs3x3:
+  - {fileID: 5587744587614525102, guid: 40ea23138ceb6a151b7401f569f8a1b1, type: 3}
+  - {fileID: 5812835802137397256, guid: a25d89cd12d7a10529ace1907aa725a2, type: 3}
+  roomPrefabs3x5:
+  - {fileID: 6520085494793106296, guid: cfd4c14aaad68b9a6bb4a13cf0a5d419, type: 3}
+  roomPrefabs5x3:
+  - {fileID: 8155670373908778622, guid: 9f8cebe05da2ea989986c2126d3c60da, type: 3}
+  roomPrefabs5x5:
+  - {fileID: 3938249054364353216, guid: 2b2801eac8533ebd3886e5543e9b42a1, type: 3}
