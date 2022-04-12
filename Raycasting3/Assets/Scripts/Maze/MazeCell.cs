@@ -49,58 +49,84 @@ public class MazeCell {
                     break;
 
                 case LightingType.TORCH_0:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_1;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_0;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling"))
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_1;
+                    else 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_0;
                     break;
                 case LightingType.TORCH_1:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_2;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_1;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling"))
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_2;
+                    else
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_1;
                     break;
                 case LightingType.TORCH_2:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_3;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_2;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling"))
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_3;
+                    else
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_2;
                     break;
                 case LightingType.TORCH_3:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_4;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_3;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling"))
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_4;
+                    else
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_3;
                     break;
                 case LightingType.TORCH_4:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.DARKNESS;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_4;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling"))
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.DARKNESS;
+                    else
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.TORCH_4;
                     break;
 
                 case LightingType.LIGHT_SPELL_0:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_1;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_0;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling"))
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_1;
+                    else
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_0;
                     break;
                 case LightingType.LIGHT_SPELL_1:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_2;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_1;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling")) 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_2;
+                    else 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_1;
                     break;
                 case LightingType.LIGHT_SPELL_2:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_3;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_2;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling")) 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_3;
+                    else 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_2;
                     break;
                 case LightingType.LIGHT_SPELL_3:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_4;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_3;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling")) 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_4;
+                    else 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_3;
                     break;
                 case LightingType.LIGHT_SPELL_4:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.DARKNESS;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_4;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling")) 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.DARKNESS;
+                    else 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.LIGHT_SPELL_4;
                     break;
 
                 case LightingType.FIREBALL_SPELL_0:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.FIREBALL_SPELL_1;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.FIREBALL_SPELL_0;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling")) 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.FIREBALL_SPELL_1;
+                    else 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.FIREBALL_SPELL_0;
                     break;
                 case LightingType.FIREBALL_SPELL_1:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.FIREBALL_SPELL_2;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.FIREBALL_SPELL_1;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling")) 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.FIREBALL_SPELL_2;
+                    else 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.FIREBALL_SPELL_1;
                     break;
                 case LightingType.FIREBALL_SPELL_2:
-                    if (mazePiece.name.Contains("L1")) mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.DARKNESS;
-                    else mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.FIREBALL_SPELL_2;
+                    if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling")) 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.DARKNESS;
+                    else 
+                        mazePiece.GetComponent<MeshRenderer>().material.color = LightingColor.FIREBALL_SPELL_2;
                     break;
 
                 default:
