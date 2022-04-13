@@ -13,6 +13,10 @@ public class Health : MonoBehaviour {
         destroyed = false;
     }
 
+    public int GetMaxHealth() {
+        return maxHealth;
+    }
+
     public int GetCurrentHealth() {
         return currentHealth;
     }
