@@ -47,6 +47,7 @@ public class PlayerBehaviour : MonoBehaviour {
 
 			if (transform.position.y > 0.05) transform.position = new Vector3(transform.position.x, transform.position.y - 0.01f, transform.position.z);
 
+			lighting = LightingType.DARKNESS;
 			hands.ChangeHandSprite(Hand.LEFT, HandState.NORMAL);
 			hands.ChangeHandSprite(Hand.RIGHT, HandState.NORMAL);
 			hands.HideHands();
