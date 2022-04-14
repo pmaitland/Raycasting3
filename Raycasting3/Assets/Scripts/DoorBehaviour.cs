@@ -4,8 +4,9 @@ public class DoorBehaviour : MonoBehaviour {
 
     private Transform door1;
     private Transform door2;
-    private float speed = 200.0f;
+
     private float rotation = 0.0f;
+
     private bool open = false;
     private bool opening = false;
     private bool openInOppositeDirection;
@@ -16,7 +17,7 @@ public class DoorBehaviour : MonoBehaviour {
     }
 
     void Update() {
-        float angle = speed * Time.deltaTime;
+        float angle = 5;
         if (opening) {
             if (openInOppositeDirection) {
                 door1.RotateAround(door1.Find("Hinge").position, -Vector3.up, angle);
@@ -26,7 +27,7 @@ public class DoorBehaviour : MonoBehaviour {
                 door2.RotateAround(door2.Find("Hinge").position, -Vector3.up, angle);
             }
             rotation += angle;
-            if (rotation >= 85.0f) {
+            if (rotation >= 75.0f) {
                 open = true;
                 opening = false;
             }
