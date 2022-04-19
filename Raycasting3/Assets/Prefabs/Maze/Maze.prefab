@@ -72,3 +72,4 @@ MonoBehaviour:
   - {fileID: 8155670373908778622, guid: 9f8cebe05da2ea989986c2126d3c60da, type: 3}
   roomPrefabs5x5:
   - {fileID: 3938249054364353216, guid: 2b2801eac8533ebd3886e5543e9b42a1, type: 3}
+  - {fileID: 8341543722268653101, guid: 2e885d32c270839ee991536eadfe4884, type: 3}
