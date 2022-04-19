@@ -69,7 +69,6 @@ public class HandsBehaviour : MonoBehaviour {
                 break;
             case HandState.PREPARED:
                 hand.GetComponent<Image>().sprite = handPreparedSprite;
-                Spell currentSpell = Spell.NONE;
                 if (chosenHand == Hand.RIGHT) {
                     switch (player.GetComponent<PlayerBehaviour>().GetCurrentRightSpell()) {
                         case Spell.LIGHT:

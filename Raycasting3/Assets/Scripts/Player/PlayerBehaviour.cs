@@ -13,7 +13,7 @@ public class PlayerBehaviour : MonoBehaviour {
 	private float currentRightShootCooldown = 0.0f;
 	private float currentLeftShootCooldown = 0.0f;
 
-	private Camera camera;
+	private Camera playerCamera;
 	private CharacterController controller;
 
 	private GameBehaviour gameController;
@@ -26,7 +26,7 @@ public class PlayerBehaviour : MonoBehaviour {
 	private LightingType lighting = LightingType.DARKNESS;
 
 	void Start() {
-		camera = GetComponent<Camera>();
+		playerCamera = GetComponent<Camera>();
 		controller = GetComponent<CharacterController>();
 
 		gameController = GameObject.Find("Controller").GetComponent<GameBehaviour>();
@@ -40,10 +40,10 @@ public class PlayerBehaviour : MonoBehaviour {
 		if (Input.GetKey("escape")) Application.Quit();
 
 		if (health.GetCurrentHealth() <= 0) {
-			Vector3 cameraPosition = camera.transform.position;
+			Vector3 cameraPosition = playerCamera.transform.position;
 			Vector3 killerPosition = health.GetKiller().transform.position;
 			Vector3 lookPosition = new Vector3(killerPosition.x, cameraPosition.y, killerPosition.z);
-			camera.transform.rotation = Quaternion.Slerp(camera.transform.rotation, Quaternion.LookRotation(lookPosition - cameraPosition), Time.deltaTime);
+			playerCamera.transform.rotation = Quaternion.Slerp(playerCamera.transform.rotation, Quaternion.LookRotation(lookPosition - cameraPosition), Time.deltaTime);
 
 			if (transform.position.y > 0.05) transform.position = new Vector3(transform.position.x, transform.position.y - 0.01f, transform.position.z);
 
