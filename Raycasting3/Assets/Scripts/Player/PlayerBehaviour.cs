@@ -152,6 +152,20 @@ public class PlayerBehaviour : MonoBehaviour {
 		}
 	}
 
+	void OnTriggerEnter(Collider other) {
+		if (other.gameObject.GetComponent<HealthPickup>() != null) {
+			if (health.GetCurrentHealth() < health.GetMaxHealth()) {
+				health.IncreaseHealth(other.gameObject.GetComponent<HealthPickup>().GetHealingAmount());
+				Destroy(other.gameObject);
+			}
+		} else if (other.gameObject.GetComponent<HeartContainer>() != null) {
+			if (health.GetMaxHealth() < health.GetMaxMaxHealth()) {
+				health.IncreaseMaxHealth(other.gameObject.GetComponent<HeartContainer>().GetMaxHealthIncreaseAmount());
+				Destroy(other.gameObject);
+			}
+		}
+	}
+
 	public LightingType GetLighting() {
 		return lighting;
 	}

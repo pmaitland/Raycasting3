@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Health : MonoBehaviour {
 
+    private const int MAX_MAX_HEALTH = 20;
     public int maxHealth;
 
     private int currentHealth;
@@ -17,12 +18,25 @@ public class Health : MonoBehaviour {
         return maxHealth;
     }
 
+    public int GetMaxMaxHealth() {
+        return MAX_MAX_HEALTH;
+    }
+
     public int GetCurrentHealth() {
         return currentHealth;
     }
 
     public GameObject GetKiller() {
         return killer;
+    }
+
+    public void IncreaseHealth(int amount) {
+        currentHealth += amount;
+    }
+
+    public void IncreaseMaxHealth(int amount) {
+        maxHealth += amount;
+        currentHealth += amount;
     }
 
     public void ReduceHealth(GameObject attacker, int amount) {
