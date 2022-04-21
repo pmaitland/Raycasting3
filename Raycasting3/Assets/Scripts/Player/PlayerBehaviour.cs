@@ -140,19 +140,7 @@ public class PlayerBehaviour : MonoBehaviour {
 		}
 	}
 
-	void OnControllerColliderHit(ControllerColliderHit hit)	{
-		if (hit.transform.parent != null) {
-			if (hit.transform.parent.name.Contains("Hidden Door")) {
-				if (Input.GetKey("e")) hit.transform.parent.GetComponent<HiddenDoorBehaviour>().Open();
-			} else if (hit.transform.name.Contains("Face 1")) {
-				if (Input.GetKey("e")) hit.transform.parent.parent.GetComponent<DoorBehaviour>().Open(true);
-			} else if (hit.transform.name.Contains("Face 2")) {
-				if (Input.GetKey("e")) hit.transform.parent.parent.GetComponent<DoorBehaviour>().Open(false);
-			}
-		}
-	}
-
-	void OnTriggerEnter(Collider other) {
+	void OnTriggerStay(Collider other) {
 		if (other.gameObject.GetComponent<HealthPickup>() != null) {
 			if (health.GetCurrentHealth() < health.GetMaxHealth()) {
 				health.IncreaseHealth(other.gameObject.GetComponent<HealthPickup>().GetHealingAmount());
@@ -162,6 +150,30 @@ public class PlayerBehaviour : MonoBehaviour {
 			if (health.GetMaxHealth() < health.GetMaxMaxHealth()) {
 				health.IncreaseMaxHealth(other.gameObject.GetComponent<HeartContainer>().GetMaxHealthIncreaseAmount());
 				Destroy(other.gameObject);
+			}
+		}
+
+		if (!Input.GetKey("e")) return;
+
+		if (other.transform.parent != null) {
+
+			if (other.transform.parent.name.Contains("Hidden Door")) {
+				other.transform.parent.GetComponent<HiddenDoorBehaviour>().Open();
+			}
+
+			else if (other.transform.parent.parent != null) {
+
+				if (other.transform.name.Contains("Face 1")) {
+					other.transform.parent.parent.GetComponent<DoorBehaviour>().Open(true);
+				} else if (other.transform.name.Contains("Face 2")) {
+					other.transform.parent.parent.GetComponent<DoorBehaviour>().Open(false);
+				}
+
+				else if (other.transform.parent.parent.parent != null) {
+					if (other.transform.parent.parent.parent.name.Contains("Chest")) {
+						other.transform.parent.parent.parent.GetComponent<ChestBehaviour>().Open();
+					}
+				}
 			}
 		}
 	}

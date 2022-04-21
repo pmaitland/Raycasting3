@@ -11,6 +11,8 @@ public class ProjectileBehaviour : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
+        if (other.transform.name == creator.name) return;
+        
         Health otherHealth = other.GetComponentInParent<Health>();
         if (otherHealth != null) otherHealth.ReduceHealth(creator, 1);
 

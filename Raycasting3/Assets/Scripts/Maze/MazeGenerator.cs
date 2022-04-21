@@ -158,21 +158,21 @@ public class MazeGenerator : MonoBehaviour {
                     for (int x = roomX; x < roomX + roomWidth; x++) {
                         for (int y = roomY; y < roomY + roomHeight; y++) {
                             Transform cell = roomObject.transform.Find((x - roomX) + "-" + (y - roomY));
-                            foreach (Transform mazePiece in cell) {
-                                if (mazePiece.GetComponent<MeshRenderer>() != null)
-                                    grid.GetCell(x, y).AddToMazePieces(mazePiece.gameObject);
-                                else if (mazePiece.name.Contains("Torch"))
-                                    AddLightSource(mazePiece.gameObject, LightingType.TORCH_0);
-                            }
+
+                            foreach (Transform mazePiece in cell) grid.GetCell(x, y).AddToMazePieces(mazePiece.gameObject);
 
                             grid.SetCellType(x, y, MazeCellType.ROOM);
                             gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
                         }
                     }
 
-                    foreach (Transform cell in roomObject.transform) {
-                        if (cell.name.Contains("Door")) {
-                            string[] details = cell.name.Split('-');
+                    foreach (Transform roomPiece in roomObject.transform) {
+                        if (roomPiece.name.Contains("Torch")) {
+                            AddLightSource(roomPiece.gameObject, LightingType.TORCH_0);
+                        } else if (roomPiece.name.Contains("Chest")) {
+                            grid.GetCell(roomPiece.position.x, roomPiece.position.z).AddToMazePieces(roomPiece.gameObject);
+                        } else if (roomPiece.name.Contains("Door")) {
+                            string[] details = roomPiece.name.Split('-');
 
                             int doorX = roomX + int.Parse(details[1]);
                             int doorY = roomY + int.Parse(details[2]);
@@ -194,24 +194,7 @@ public class MazeGenerator : MonoBehaviour {
                                     break;
                             }
 
-                            foreach (Transform mazePiece in cell.Find("Maze Pieces")) {
-                                if (mazePiece.name == "Door") {
-                                    foreach (Transform doorPiece in mazePiece.Find("Door 1")) {
-                                        if (doorPiece.GetComponent<MeshRenderer>() != null) {
-                                            grid.GetCell(doorX, doorY).AddToMazePieces(doorPiece.gameObject);
-                                        }
-                                    }
-                                    foreach (Transform doorPiece in mazePiece.Find("Door 2")) {
-                                        if (doorPiece.GetComponent<MeshRenderer>() != null) {
-                                            grid.GetCell(doorX, doorY).AddToMazePieces(doorPiece.gameObject);
-                                        }
-                                    }
-                                }
-
-                                if (mazePiece.GetComponent<MeshRenderer>() != null) {
-                                    grid.GetCell(doorX, doorY).AddToMazePieces(mazePiece.gameObject);
-                                }
-                            }
+                            grid.GetCell(doorX, doorY).AddToMazePieces(roomPiece.gameObject);
 
                             grid.SetCellType(doorX, doorY, MazeCellType.DISCONNECTED_DOOR);
                             gameController.CreateMinimapCell(doorX, doorY, doorX + "," + doorY, Color.white, false);

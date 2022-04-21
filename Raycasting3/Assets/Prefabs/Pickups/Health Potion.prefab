@@ -44,7 +44,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.125, y: 0.15, z: 0.125}
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
   m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!114 &4056507409892400425
 MonoBehaviour:
@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b281f4abb6aa536908af5b4fb5e51f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healingAmout: 1
+  healingAmount: 1
 --- !u!1 &927191241863671747
 GameObject:
   m_ObjectHideFlags: 0

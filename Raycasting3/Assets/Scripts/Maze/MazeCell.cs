@@ -137,6 +137,7 @@ public class MazeCell {
     }
 
     public void AddToMazePieces(GameObject mazePiece) {
-        mazePieces.Add(mazePiece);
+        if (mazePiece.GetComponent<MeshRenderer>() != null) mazePieces.Add(mazePiece);
+        foreach (Transform child in mazePiece.transform) AddToMazePieces(child.gameObject);
     }
 }
