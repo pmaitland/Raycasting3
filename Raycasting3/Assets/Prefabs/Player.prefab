@@ -134,10 +134,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f59dc11452f62568e4b2c9cb8512b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fireballPrefab: {fileID: 726296980257958381, guid: 832048e92a01fc63db146a983e1559da, type: 3}
+  ballOfLightPrefab: {fileID: 5050181589481039010, guid: 10b3fd130ff469b07832c2563c8e564f, type: 3}
   turnSpeed: 4
   moveSpeed: 2
   gravity: 10
-  fireballPrefab: {fileID: 726296980257958381, guid: 832048e92a01fc63db146a983e1559da, type: 3}
 --- !u!114 &6088745532528870136
 MonoBehaviour:
   m_ObjectHideFlags: 0
