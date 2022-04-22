@@ -172,7 +172,21 @@ public class PlayerBehaviour : MonoBehaviour {
 				health.IncreaseMaxHealth(other.gameObject.GetComponent<HeartContainer>().GetMaxHealthIncreaseAmount());
 				Destroy(other.gameObject);
 			}
-		}
+		} else if (other.gameObject.GetComponent<ManaPickup>() != null) {
+			if (currentMana < maxMana) {
+				currentMana += other.gameObject.GetComponent<ManaPickup>().GetManaAmount();
+				if (currentMana > maxMana) currentMana = maxMana;
+				Destroy(other.gameObject);
+			}
+		} else if (other.gameObject.GetComponent<ManaContainer>() != null) {
+			if (maxMana < MAX_MAX_MANA) {
+				maxMana += other.gameObject.GetComponent<ManaContainer>().GetMaxManaIncreaseAmount();
+				if (maxMana > MAX_MAX_MANA) maxMana = MAX_MAX_MANA;
+				currentMana += other.gameObject.GetComponent<ManaContainer>().GetMaxManaIncreaseAmount();
+				if (currentMana > maxMana) currentMana = maxMana;
+				Destroy(other.gameObject);
+			}
+		} 
 
 		if (!Input.GetKey(interactKey)) return;
 

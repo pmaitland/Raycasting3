@@ -32,11 +32,14 @@ public class Health : MonoBehaviour {
 
     public void IncreaseHealth(int amount) {
         currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
     }
 
     public void IncreaseMaxHealth(int amount) {
         maxHealth += amount;
+        if (maxHealth > MAX_MAX_HEALTH) maxHealth = MAX_MAX_HEALTH;
         currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
     }
 
     public void ReduceHealth(GameObject attacker, int amount) {
