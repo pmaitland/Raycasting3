@@ -20,10 +20,20 @@ public class PlayerBehaviour : MonoBehaviour {
 	private HandsBehaviour hands;
 	private Health health;
 
+	private Spell[] availableLeftHandSpells = { Spell.NONE, Spell.LIGHT, Spell.FIREBALL };
+	private int currentLeftSpellIndex = 0;
 	private Spell currentLeftSpell = Spell.NONE;
+
+	private Spell[] availableRightHandSpells = { Spell.NONE, Spell.LIGHT, Spell.FIREBALL };
+	private int currentRightSpellIndex = 0;
 	private Spell currentRightSpell = Spell.NONE;
 
 	private LightingType lighting = LightingType.DARKNESS;
+
+	private string pauseKey = "escape";
+	private string interactKey = "space";
+	private string changeLeftHandKey = "q";
+	private string changeRightHandKey = "e";
 
 	void Start() {
 		playerCamera = GetComponent<Camera>();
@@ -37,7 +47,7 @@ public class PlayerBehaviour : MonoBehaviour {
 	}
 	
 	void Update() {
-		if (Input.GetKey("escape")) Application.Quit();
+		if (Input.GetKey(pauseKey)) Application.Quit();
 
 		if (health.GetCurrentHealth() <= 0) {
 			Vector3 cameraPosition = playerCamera.transform.position;
@@ -65,40 +75,41 @@ public class PlayerBehaviour : MonoBehaviour {
 		gameController.MovePlayerMinimapCell(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
 
 		bool switchedLeftSpell = false;
+		if (Input.GetKeyDown(changeLeftHandKey)) {
+			currentLeftSpellIndex = (currentLeftSpellIndex + 1) % availableLeftHandSpells.Length;
+			currentLeftSpell = availableLeftHandSpells[currentLeftSpellIndex];
+			if (!leftShootOnCooldown) {
+				switch (currentLeftSpell) {
+					case Spell.LIGHT:
+					case Spell.FIREBALL:
+						hands.ChangeHandSprite(Hand.LEFT, HandState.PREPARED);
+						break;
+					case Spell.NONE:
+					default:
+						hands.ChangeHandSprite(Hand.LEFT, HandState.NORMAL);
+						break;
+				}
+			}
+			switchedLeftSpell = true;
+		}
+
 		bool switchedRightSpell = false;
-		if (Input.GetKey("1")) {
-			if (Input.GetMouseButton(0)) {
-				currentLeftSpell = Spell.NONE;
-				if (!leftShootOnCooldown) hands.ChangeHandSprite(Hand.LEFT, HandState.NORMAL);
-				switchedLeftSpell = true;
+		if (Input.GetKeyDown(changeRightHandKey)) {
+			currentRightSpellIndex = (currentRightSpellIndex + 1) % availableRightHandSpells.Length;
+			currentRightSpell = availableRightHandSpells[currentRightSpellIndex];
+			if (!rightShootOnCooldown) {
+				switch (currentRightSpell) {
+					case Spell.LIGHT:
+					case Spell.FIREBALL:
+						hands.ChangeHandSprite(Hand.RIGHT, HandState.PREPARED);
+						break;
+					case Spell.NONE:
+					default:
+						hands.ChangeHandSprite(Hand.RIGHT, HandState.NORMAL);
+						break;
+				}
 			}
-			if (Input.GetMouseButton(1)) {
-				currentRightSpell = Spell.NONE;
-				if (!rightShootOnCooldown) hands.ChangeHandSprite(Hand.RIGHT, HandState.NORMAL);
-				switchedRightSpell = true;
-			}
-		} else if (Input.GetKey("2")) {
-			if (Input.GetMouseButton(0)) {
-				currentLeftSpell = Spell.LIGHT;
-				if (!leftShootOnCooldown) hands.ChangeHandSprite(Hand.LEFT, HandState.PREPARED);
-				switchedLeftSpell = true;
-			}
-			if (Input.GetMouseButton(1)) {
-				currentRightSpell = Spell.LIGHT;
-				if (!rightShootOnCooldown) hands.ChangeHandSprite(Hand.RIGHT, HandState.PREPARED);
-				switchedRightSpell = true;
-			}
-		} else if (Input.GetKey("3")) {
-			if (Input.GetMouseButton(0)) {
-				currentLeftSpell = Spell.FIREBALL;
-				if (!leftShootOnCooldown) hands.ChangeHandSprite(Hand.LEFT, HandState.PREPARED);
-				switchedLeftSpell = true;
-			}
-			if (Input.GetMouseButton(1)) {
-				currentRightSpell = Spell.FIREBALL;
-				if (!rightShootOnCooldown) hands.ChangeHandSprite(Hand.RIGHT, HandState.PREPARED);
-				switchedRightSpell = true;
-			}
+			switchedRightSpell = true;
 		}
 
 		if (currentLeftSpell == Spell.LIGHT && currentRightSpell == Spell.LIGHT) {
@@ -113,19 +124,6 @@ public class PlayerBehaviour : MonoBehaviour {
 			lighting = LightingType.DARKNESS;
 		}
 
-		if (rightShootOnCooldown) currentRightShootCooldown += Time.deltaTime;
-		if (currentRightShootCooldown >= shootRecoveryTime) {
-			rightShootOnCooldown = false;
-			currentRightShootCooldown = 0.0f;
-			if (currentRightSpell != Spell.NONE) hands.ChangeHandSprite(Hand.RIGHT, HandState.PREPARED);
-			else hands.ChangeHandSprite(Hand.RIGHT, HandState.NORMAL);
-		}
-		if (currentRightSpell == Spell.FIREBALL && Input.GetMouseButton(1) && !switchedRightSpell && !rightShootOnCooldown) {
-			ShootRightFireball();
-			hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
-			rightShootOnCooldown = true;
-		}
-
 		if (leftShootOnCooldown) currentLeftShootCooldown += Time.deltaTime;
 		if (currentLeftShootCooldown >= shootRecoveryTime) {
 			leftShootOnCooldown = false;
@@ -137,6 +135,19 @@ public class PlayerBehaviour : MonoBehaviour {
 			ShootLeftFireball();
 			hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
 			leftShootOnCooldown = true;
+		}
+
+		if (rightShootOnCooldown) currentRightShootCooldown += Time.deltaTime;
+		if (currentRightShootCooldown >= shootRecoveryTime) {
+			rightShootOnCooldown = false;
+			currentRightShootCooldown = 0.0f;
+			if (currentRightSpell != Spell.NONE) hands.ChangeHandSprite(Hand.RIGHT, HandState.PREPARED);
+			else hands.ChangeHandSprite(Hand.RIGHT, HandState.NORMAL);
+		}
+		if (currentRightSpell == Spell.FIREBALL && Input.GetMouseButton(1) && !switchedRightSpell && !rightShootOnCooldown) {
+			ShootRightFireball();
+			hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
+			rightShootOnCooldown = true;
 		}
 	}
 
@@ -153,7 +164,7 @@ public class PlayerBehaviour : MonoBehaviour {
 			}
 		}
 
-		if (!Input.GetKey("e")) return;
+		if (!Input.GetKey(interactKey)) return;
 
 		if (other.transform.parent != null) {
 
