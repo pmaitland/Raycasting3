@@ -20,6 +20,10 @@ public class PlayerBehaviour : MonoBehaviour {
 	private HandsBehaviour hands;
 	private Health health;
 
+	private const int MAX_MAX_MANA = 20;
+    public int maxMana = 5;
+    private int currentMana = 5;
+
 	private Spell[] availableLeftHandSpells = { Spell.NONE, Spell.LIGHT, Spell.FIREBALL };
 	private int currentLeftSpellIndex = 0;
 	private Spell currentLeftSpell = Spell.NONE;
@@ -132,9 +136,12 @@ public class PlayerBehaviour : MonoBehaviour {
 			else hands.ChangeHandSprite(Hand.LEFT, HandState.NORMAL);
 		}
 		if (currentLeftSpell == Spell.FIREBALL && Input.GetMouseButton(0) && !switchedLeftSpell && !leftShootOnCooldown) {
-			ShootLeftFireball();
-			hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
-			leftShootOnCooldown = true;
+			if (currentMana >= 1) {
+				ShootLeftFireball();
+				hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
+				leftShootOnCooldown = true;
+				currentMana -= 1;
+			}
 		}
 
 		if (rightShootOnCooldown) currentRightShootCooldown += Time.deltaTime;
@@ -145,9 +152,12 @@ public class PlayerBehaviour : MonoBehaviour {
 			else hands.ChangeHandSprite(Hand.RIGHT, HandState.NORMAL);
 		}
 		if (currentRightSpell == Spell.FIREBALL && Input.GetMouseButton(1) && !switchedRightSpell && !rightShootOnCooldown) {
-			ShootRightFireball();
-			hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
-			rightShootOnCooldown = true;
+			if (currentMana >= 1) {
+				ShootRightFireball();
+				hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
+				rightShootOnCooldown = true;
+				currentMana -= 1;
+			}
 		}
 	}
 
@@ -199,6 +209,14 @@ public class PlayerBehaviour : MonoBehaviour {
 
 	public Spell GetCurrentRightSpell() {
 		return currentRightSpell;
+	}
+
+	public int GetCurrentMana() {
+		return currentMana;
+	}
+
+	public int GetMaxMana() {
+		return maxMana;
 	}
 
 	public void SetPosition(Vector3 position) {
