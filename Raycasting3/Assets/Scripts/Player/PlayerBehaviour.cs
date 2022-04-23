@@ -26,11 +26,11 @@ public class PlayerBehaviour : MonoBehaviour {
     private int maxMana = 5;
     private int currentMana = 5;
 
-	private Spell[] availableLeftHandSpells = { Spell.NONE, Spell.LIGHT, Spell.FIREBALL };
+	private Spell[] availableLeftHandSpells = { Spell.NONE, Spell.LIGHT, Spell.FIREBALL, Spell.HEAL };
 	private int currentLeftSpellIndex = 0;
 	private Spell currentLeftSpell = Spell.NONE;
 
-	private Spell[] availableRightHandSpells = { Spell.NONE, Spell.LIGHT, Spell.FIREBALL };
+	private Spell[] availableRightHandSpells = { Spell.NONE, Spell.LIGHT, Spell.FIREBALL, Spell.HEAL };
 	private int currentRightSpellIndex = 0;
 	private Spell currentRightSpell = Spell.NONE;
 
@@ -88,6 +88,7 @@ public class PlayerBehaviour : MonoBehaviour {
 				switch (currentLeftSpell) {
 					case Spell.LIGHT:
 					case Spell.FIREBALL:
+					case Spell.HEAL:
 						hands.ChangeHandSprite(Hand.LEFT, HandState.PREPARED);
 						break;
 					case Spell.NONE:
@@ -107,6 +108,7 @@ public class PlayerBehaviour : MonoBehaviour {
 				switch (currentRightSpell) {
 					case Spell.LIGHT:
 					case Spell.FIREBALL:
+					case Spell.HEAL:
 						hands.ChangeHandSprite(Hand.RIGHT, HandState.PREPARED);
 						break;
 					case Spell.NONE:
@@ -158,6 +160,11 @@ public class PlayerBehaviour : MonoBehaviour {
 				hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
 				leftShootOnCooldown = true;
 				currentMana -= 1;
+			} else if (currentLeftSpell == Spell.HEAL && health.GetCurrentHealth() < health.GetMaxHealth()) {
+				health.IncreaseHealth(1);
+				hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
+				leftShootOnCooldown = true;
+				currentMana -= 1;
 			}
 		}	
 
@@ -170,6 +177,11 @@ public class PlayerBehaviour : MonoBehaviour {
 				currentMana -= 1;
 			} else if (currentRightSpell == Spell.FIREBALL) {
 				ShootRightFireball();
+				hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
+				rightShootOnCooldown = true;
+				currentMana -= 1;
+			} else if (currentRightSpell == Spell.HEAL && health.GetCurrentHealth() < health.GetMaxHealth()) {
+				health.IncreaseHealth(1);
 				hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
 				rightShootOnCooldown = true;
 				currentMana -= 1;
