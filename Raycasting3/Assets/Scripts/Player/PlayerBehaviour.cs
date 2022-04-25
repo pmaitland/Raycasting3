@@ -9,11 +9,11 @@ public class PlayerBehaviour : MonoBehaviour {
 	public float moveSpeed = 2.0f;
 	public float gravity = 10.0f;
 
-	private float shootRecoveryTime = 1.0f;
-	private bool rightShootOnCooldown = false;
-	private bool leftShootOnCooldown = false;
-	private float currentRightShootCooldown = 0.0f;
-	private float currentLeftShootCooldown = 0.0f;
+	private float castRecoveryTime = 1.0f;
+	private bool rightCastOnCooldown = false;
+	private bool leftCastOnCooldown = false;
+	private float currentRightCastCooldown = 0.0f;
+	private float currentLeftCastCooldown = 0.0f;
 
 	private Camera playerCamera;
 	private CharacterController controller;
@@ -26,11 +26,11 @@ public class PlayerBehaviour : MonoBehaviour {
     private int maxMana = 5;
     private int currentMana = 5;
 
-	private Spell[] availableLeftHandSpells = { Spell.NONE, Spell.LIGHT, Spell.FIREBALL, Spell.HEAL };
+	private Spell[] availableLeftHandSpells = { Spell.NONE, Spell.LIGHT, Spell.FIREBALL, Spell.HEAL, Spell.MANA_HEAL };
 	private int currentLeftSpellIndex = 0;
 	private Spell currentLeftSpell = Spell.NONE;
 
-	private Spell[] availableRightHandSpells = { Spell.NONE, Spell.LIGHT, Spell.FIREBALL, Spell.HEAL };
+	private Spell[] availableRightHandSpells = { Spell.NONE, Spell.LIGHT, Spell.FIREBALL, Spell.HEAL, Spell.MANA_HEAL };
 	private int currentRightSpellIndex = 0;
 	private Spell currentRightSpell = Spell.NONE;
 
@@ -84,11 +84,12 @@ public class PlayerBehaviour : MonoBehaviour {
 		if (Input.GetKeyDown(changeLeftHandKey)) {
 			currentLeftSpellIndex = (currentLeftSpellIndex + 1) % availableLeftHandSpells.Length;
 			currentLeftSpell = availableLeftHandSpells[currentLeftSpellIndex];
-			if (!leftShootOnCooldown) {
+			if (!leftCastOnCooldown) {
 				switch (currentLeftSpell) {
 					case Spell.LIGHT:
 					case Spell.FIREBALL:
 					case Spell.HEAL:
+					case Spell.MANA_HEAL:
 						hands.ChangeHandSprite(Hand.LEFT, HandState.PREPARED);
 						break;
 					case Spell.NONE:
@@ -104,11 +105,12 @@ public class PlayerBehaviour : MonoBehaviour {
 		if (Input.GetKeyDown(changeRightHandKey)) {
 			currentRightSpellIndex = (currentRightSpellIndex + 1) % availableRightHandSpells.Length;
 			currentRightSpell = availableRightHandSpells[currentRightSpellIndex];
-			if (!rightShootOnCooldown) {
+			if (!rightCastOnCooldown) {
 				switch (currentRightSpell) {
 					case Spell.LIGHT:
 					case Spell.FIREBALL:
 					case Spell.HEAL:
+					case Spell.MANA_HEAL:
 						hands.ChangeHandSprite(Hand.RIGHT, HandState.PREPARED);
 						break;
 					case Spell.NONE:
@@ -132,59 +134,77 @@ public class PlayerBehaviour : MonoBehaviour {
 			lighting = LightingType.DARKNESS;
 		}
 
-		if (leftShootOnCooldown) currentLeftShootCooldown += Time.deltaTime;
-		if (currentLeftShootCooldown >= shootRecoveryTime) {
-			leftShootOnCooldown = false;
-			currentLeftShootCooldown = 0.0f;
+		if (leftCastOnCooldown) currentLeftCastCooldown += Time.deltaTime;
+		if (currentLeftCastCooldown >= castRecoveryTime) {
+			leftCastOnCooldown = false;
+			currentLeftCastCooldown = 0.0f;
 			if (currentLeftSpell != Spell.NONE) hands.ChangeHandSprite(Hand.LEFT, HandState.PREPARED);
 			else hands.ChangeHandSprite(Hand.LEFT, HandState.NORMAL);
 		}
 		
-		if (rightShootOnCooldown) currentRightShootCooldown += Time.deltaTime;
-		if (currentRightShootCooldown >= shootRecoveryTime) {
-			rightShootOnCooldown = false;
-			currentRightShootCooldown = 0.0f;
+		if (rightCastOnCooldown) currentRightCastCooldown += Time.deltaTime;
+		if (currentRightCastCooldown >= castRecoveryTime) {
+			rightCastOnCooldown = false;
+			currentRightCastCooldown = 0.0f;
 			if (currentRightSpell != Spell.NONE) hands.ChangeHandSprite(Hand.RIGHT, HandState.PREPARED);
 			else hands.ChangeHandSprite(Hand.RIGHT, HandState.NORMAL);
 		}
 
-		if (Input.GetMouseButton(0) && !switchedLeftSpell && !leftShootOnCooldown && currentMana >= 1) {
-			if (currentLeftSpell == Spell.LIGHT) {
-				GameObject ballOfLight = Instantiate(ballOfLightPrefab, transform.position, transform.rotation);
-				gameController.AddLightSource(ballOfLight, LightingType.LIGHT_SPELL_0);
+		if (Input.GetMouseButton(0) && !switchedLeftSpell && !leftCastOnCooldown) {
+			if (currentMana > 0) {
+				if (currentLeftSpell == Spell.LIGHT) {
+					GameObject ballOfLight = Instantiate(ballOfLightPrefab, transform.position, transform.rotation);
+					gameController.AddLightSource(ballOfLight, LightingType.LIGHT_SPELL_0);
+					hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
+					leftCastOnCooldown = true;
+					currentMana -= 1;
+				} else if (currentLeftSpell == Spell.FIREBALL) {
+					ShootLeftFireball();
+					hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
+					leftCastOnCooldown = true;
+					currentMana -= 1;
+				} else if (currentLeftSpell == Spell.HEAL && health.GetCurrentHealth() < health.GetMaxHealth()) {
+					health.IncreaseHealth(1);
+					hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
+					leftCastOnCooldown = true;
+					currentMana -= 1;
+				} 
+			}
+			
+			if (currentLeftSpell == Spell.MANA_HEAL && currentMana < maxMana) {
+				currentMana += 1;
 				hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
-				leftShootOnCooldown = true;
-				currentMana -= 1;
-			} else if (currentLeftSpell == Spell.FIREBALL) {
-				ShootLeftFireball();
-				hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
-				leftShootOnCooldown = true;
-				currentMana -= 1;
-			} else if (currentLeftSpell == Spell.HEAL && health.GetCurrentHealth() < health.GetMaxHealth()) {
-				health.IncreaseHealth(1);
-				hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
-				leftShootOnCooldown = true;
-				currentMana -= 1;
+				leftCastOnCooldown = true;
+				health.ReduceHealth(this.gameObject, 1);
 			}
 		}	
 
-		if (Input.GetMouseButton(1) && !switchedRightSpell && !rightShootOnCooldown && currentMana >= 1) {
-			if (currentRightSpell == Spell.LIGHT) {
-				GameObject ballOfLight = Instantiate(ballOfLightPrefab, transform.position, transform.rotation);
-				gameController.AddLightSource(ballOfLight, LightingType.LIGHT_SPELL_0);
+		if (Input.GetMouseButton(1) && !switchedRightSpell && !rightCastOnCooldown) {
+			if (currentMana > 0) {
+				if (currentRightSpell == Spell.LIGHT) {
+					GameObject ballOfLight = Instantiate(ballOfLightPrefab, transform.position, transform.rotation);
+					gameController.AddLightSource(ballOfLight, LightingType.LIGHT_SPELL_0);
+					hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
+					rightCastOnCooldown = true;
+					currentMana -= 1;
+				} else if (currentRightSpell == Spell.FIREBALL) {
+					ShootRightFireball();
+					hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
+					rightCastOnCooldown = true;
+					currentMana -= 1;
+				} else if (currentRightSpell == Spell.HEAL && health.GetCurrentHealth() < health.GetMaxHealth()) {
+					health.IncreaseHealth(1);
+					hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
+					rightCastOnCooldown = true;
+					currentMana -= 1;
+				}
+			}
+			
+			if (currentRightSpell == Spell.MANA_HEAL && currentMana < maxMana) {
+				currentMana += 1;
 				hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
-				rightShootOnCooldown = true;
-				currentMana -= 1;
-			} else if (currentRightSpell == Spell.FIREBALL) {
-				ShootRightFireball();
-				hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
-				rightShootOnCooldown = true;
-				currentMana -= 1;
-			} else if (currentRightSpell == Spell.HEAL && health.GetCurrentHealth() < health.GetMaxHealth()) {
-				health.IncreaseHealth(1);
-				hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
-				rightShootOnCooldown = true;
-				currentMana -= 1;
+				rightCastOnCooldown = true;
+				health.ReduceHealth(this.gameObject, 1);
 			}
 		}
 	}

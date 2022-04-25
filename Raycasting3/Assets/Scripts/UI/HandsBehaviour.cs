@@ -23,6 +23,7 @@ public class HandsBehaviour : MonoBehaviour {
     public Sprite lightSpellSprite;
     public Sprite fireballSpellSprite;
     public Sprite healSpellSprite;
+    public Sprite manaHealSpellSprite;
 
     void Start() {
         hands = GameObject.Find("Hands");
@@ -81,6 +82,9 @@ public class HandsBehaviour : MonoBehaviour {
                         case Spell.HEAL:
                             rightSpell.GetComponent<Image>().sprite = healSpellSprite;
                             break;
+                        case Spell.MANA_HEAL:
+                            rightSpell.GetComponent<Image>().sprite = manaHealSpellSprite;
+                            break;
                         default:
                             rightSpell.GetComponent<Image>().sprite = noSpellSprite;
                             break;
@@ -95,6 +99,9 @@ public class HandsBehaviour : MonoBehaviour {
                             break;
                         case Spell.HEAL:
                             leftSpell.GetComponent<Image>().sprite = healSpellSprite;
+                            break;
+                        case Spell.MANA_HEAL:
+                            leftSpell.GetComponent<Image>().sprite = manaHealSpellSprite;
                             break;
                         default:
                             leftSpell.GetComponent<Image>().sprite = noSpellSprite;

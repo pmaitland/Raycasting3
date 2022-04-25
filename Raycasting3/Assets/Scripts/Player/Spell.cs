@@ -3,4 +3,5 @@ public enum Spell {
     LIGHT,
     FIREBALL,
     HEAL,
+    MANA_HEAL,
 }
