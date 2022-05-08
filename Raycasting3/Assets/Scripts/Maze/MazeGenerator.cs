@@ -169,8 +169,6 @@ public class MazeGenerator : MonoBehaviour {
                     foreach (Transform roomPiece in roomObject.transform) {
                         if (roomPiece.name.Contains("Torch")) {
                             AddLightSource(roomPiece.gameObject, LightingType.TORCH_0);
-                        } else if (roomPiece.name.Contains("Chest")) {
-                            grid.GetCell(roomPiece.position.x, roomPiece.position.z).AddToMazePieces(roomPiece.gameObject);
                         } else if (roomPiece.name.Contains("Door")) {
                             string[] details = roomPiece.name.Split('-');
 
@@ -198,6 +196,8 @@ public class MazeGenerator : MonoBehaviour {
 
                             grid.SetCellType(doorX, doorY, MazeCellType.DISCONNECTED_DOOR);
                             gameController.CreateMinimapCell(doorX, doorY, doorX + "," + doorY, Color.white, false);
+                        } else {
+                            grid.GetCell(roomPiece.position.x, roomPiece.position.z).AddToMazePieces(roomPiece.gameObject);
                         }
                     }
 
