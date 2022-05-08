@@ -157,10 +157,6 @@ public class MazeGenerator : MonoBehaviour {
 
                     for (int x = roomX; x < roomX + roomWidth; x++) {
                         for (int y = roomY; y < roomY + roomHeight; y++) {
-                            Transform cell = roomObject.transform.Find((x - roomX) + "-" + (y - roomY));
-
-                            foreach (Transform mazePiece in cell) grid.GetCell(x, y).AddToMazePieces(mazePiece.gameObject);
-
                             grid.SetCellType(x, y, MazeCellType.ROOM);
                             gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
                         }
