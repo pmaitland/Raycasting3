@@ -44,7 +44,7 @@ public class SpriteBehaviour : MonoBehaviour {
 
         transform.forward = new Vector3(player.forward.x, transform.forward.y, player.forward.z);
 
-        LightingType lightingType = gameBehaviour.GetMazeCell(transform.position.x, transform.position.z).GetLighting();
-        spriteRenderer.material.color = LightingColor.GetLightingColor(lightingType);
+        LightingType lightingType = gameBehaviour.GetMazeCell(transform.position.x, transform.position.z).GetLightingLower();
+        spriteRenderer.material.color = Lighting.GetColor(lightingType);
     }
 }

@@ -13,7 +13,6 @@ public class HandsBehaviour : MonoBehaviour {
     private Vector3 handsHiddenPosition;
 
     private GameObject player;
-    private GameBehaviour gameBehaviour;
 
     public Sprite handSprite;
     public Sprite handPreparedSprite;
@@ -40,13 +39,12 @@ public class HandsBehaviour : MonoBehaviour {
         );
 
         player = GameObject.Find("Player");
-        gameBehaviour = GameObject.Find("Controller").GetComponent<GameBehaviour>();
     }
 
     void Update() {
-        LightingType lightingType = gameBehaviour.GetMazeCell(player.transform.position.x, player.transform.position.z).GetLighting();
-        rightHand.GetComponent<Image>().color = LightingColor.GetLightingColor(lightingType);
-        leftHand.GetComponent<Image>().color = LightingColor.GetLightingColor(lightingType);
+        LightingType lightingType = player.GetComponent<PlayerBehaviour>().GetLighting();
+        rightHand.GetComponent<Image>().color = Lighting.GetColor(lightingType);
+        leftHand.GetComponent<Image>().color = Lighting.GetColor(lightingType);
     }
 
     public void ChangeHandSprite(Hand chosenHand, HandState newState) {
