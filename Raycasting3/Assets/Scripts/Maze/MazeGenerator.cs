@@ -302,10 +302,50 @@ public class MazeGenerator : MonoBehaviour {
                         }
 
                         foreach (Transform mazePiece in passage.transform.Find("Maze Pieces")) {
-                            if (mazePiece.name.Contains("Wall") && mazePiece.name.Contains("L0")) {
+                            if (mazePiece.name.Contains("Wall") && mazePiece.name.Contains("L0") && !mazePiece.name.Contains("Window")) {
                                 random = Random.Range(0, 100);
                                 if (random >=  0 && random < 10) {
                                     mazePiece.GetComponent<MeshRenderer>().material.mainTexture = banner;
+                                }
+                            }
+                        }
+
+                        if (x % 2 == 0) {
+                            if (y == 1 || y == size - 2) {
+                                AddLowerLightSource(passage.transform.Find("Maze Pieces").Find("Ceiling").gameObject, LightingType.LIGHT_SPELL_0);
+                                AddUpperLightSource(passage.transform.Find("Maze Pieces").Find("Floor").gameObject, LightingType.LIGHT_SPELL_0);
+
+                                if (y == 1) {
+                                    passage.transform.Find("Maze Pieces").Find("Wall-N-L0").gameObject.SetActive(false);
+                                    passage.transform.Find("Maze Pieces").Find("Wall-N-L1").gameObject.SetActive(false);
+                                    passage.transform.Find("Maze Pieces").Find("Wall-N-L0-Window").gameObject.SetActive(true);
+                                    passage.transform.Find("Maze Pieces").Find("Wall-N-L1-Window").gameObject.SetActive(true);
+                                }
+
+                                if (y == size - 2) {
+                                    passage.transform.Find("Maze Pieces").Find("Wall-S-L0").gameObject.SetActive(false);
+                                    passage.transform.Find("Maze Pieces").Find("Wall-S-L1").gameObject.SetActive(false);
+                                    passage.transform.Find("Maze Pieces").Find("Wall-S-L0-Window").gameObject.SetActive(true);
+                                    passage.transform.Find("Maze Pieces").Find("Wall-S-L1-Window").gameObject.SetActive(true);
+                                }
+                            }
+                        } else if (y % 2 == 0) {
+                            if (x == 1 || x == size - 2) {
+                                AddLowerLightSource(passage.transform.Find("Maze Pieces").Find("Ceiling").gameObject, LightingType.LIGHT_SPELL_0);
+                                AddUpperLightSource(passage.transform.Find("Maze Pieces").Find("Floor").gameObject, LightingType.LIGHT_SPELL_0);
+
+                                if (x == 1) {
+                                    passage.transform.Find("Maze Pieces").Find("Wall-W-L0").gameObject.SetActive(false);
+                                    passage.transform.Find("Maze Pieces").Find("Wall-W-L1").gameObject.SetActive(false);
+                                    passage.transform.Find("Maze Pieces").Find("Wall-W-L0-Window").gameObject.SetActive(true);
+                                    passage.transform.Find("Maze Pieces").Find("Wall-W-L1-Window").gameObject.SetActive(true);
+                                }
+
+                                if (x == size - 2) {
+                                    passage.transform.Find("Maze Pieces").Find("Wall-E-L0").gameObject.SetActive(false);
+                                    passage.transform.Find("Maze Pieces").Find("Wall-E-L1").gameObject.SetActive(false);
+                                    passage.transform.Find("Maze Pieces").Find("Wall-E-L0-Window").gameObject.SetActive(true);
+                                    passage.transform.Find("Maze Pieces").Find("Wall-E-L1-Window").gameObject.SetActive(true);
                                 }
                             }
                         }
