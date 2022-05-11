@@ -332,8 +332,14 @@ public class MazeGenerator : MonoBehaviour {
                             else if (hasPassageEastNeighbour && hasPassageSouthNeighbour && hasPassageWestNeighbour) floorMaterial.mainTexture = carpetESW;
                             else if (hasPassageSouthNeighbour && hasPassageWestNeighbour && hasPassageNorthNeighbour) floorMaterial.mainTexture = carpetNSW;
                             else if (hasPassageWestNeighbour && hasPassageNorthNeighbour && hasPassageEastNeighbour) floorMaterial.mainTexture = carpetNEW;
+
+                            passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject.SetActive(true);
+                            AddUpperLightSource(passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject, LightingType.TORCH_0);
                         } else if (passageNeighbourCount == 4) {
                             floorMaterial.mainTexture = carpetNESW;
+                            
+                            passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject.SetActive(true);
+                            AddUpperLightSource(passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject, LightingType.TORCH_0);
                         }
 
                         passage.transform.parent = passageParent.transform;
@@ -369,7 +375,7 @@ public class MazeGenerator : MonoBehaviour {
 
                         foreach (Transform mazePiece in deadEnd.transform.Find("Maze Pieces")) grid.GetCell(x, y).AddToMazePieces(mazePiece.gameObject);
                         
-                        AddLowerLightSource(deadEnd.transform.Find("Torch").gameObject, LightingType.TORCH_0);
+                        AddLowerLightSource(deadEnd.transform.Find("Maze Pieces").Find("Torch").gameObject, LightingType.TORCH_0);
                             
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
 

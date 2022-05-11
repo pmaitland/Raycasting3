@@ -47,25 +47,23 @@ public class MazeCell {
 
     public void SetLightingLower(LightingType newLighting) {
         lightingLower = newLighting;
-
-        foreach (GameObject mazePiece in mazePieces) {
-            Material material = mazePiece.GetComponent<MeshRenderer>().material;
-            if (!mazePiece.name.Contains("L1") && !mazePiece.name.Contains("Ceiling") && mazePiece.transform.position.y != 1)
-                material.color = Lighting.GetColor(lightingLower);
-            else if (Lighting.IsStronger(Lighting.GetDarker(lightingLower), lightingUpper))
-                material.color = Lighting.GetColor(Lighting.GetDarker(lightingLower));
-        }
+        if (Lighting.IsStronger(Lighting.GetDarker(lightingLower), lightingUpper)) lightingUpper = Lighting.GetDarker(lightingLower);
+        UpdateLighting();
     }
 
     public void SetLightingUpper(LightingType newLighting) {
         lightingUpper = newLighting;
+        if (Lighting.IsStronger(Lighting.GetDarker(lightingUpper), lightingLower)) lightingLower = Lighting.GetDarker(lightingUpper);
+        UpdateLighting();
+    }
 
+    private void UpdateLighting() {
         foreach (GameObject mazePiece in mazePieces) {
             Material material = mazePiece.GetComponent<MeshRenderer>().material;
             if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling") || mazePiece.transform.position.y == 1)
                 material.color = Lighting.GetColor(lightingUpper);
-            else if (Lighting.IsStronger(Lighting.GetDarker(lightingUpper), lightingLower))
-                material.color = Lighting.GetColor(Lighting.GetDarker(lightingUpper));
+            else
+                material.color = Lighting.GetColor(lightingLower);
         }
     }
 
