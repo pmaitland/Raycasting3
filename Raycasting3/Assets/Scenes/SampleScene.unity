@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4786386300367480000, guid: 63d3787fe2029ae719c9468f202328f5, type: 3}
+      propertyPath: showMinimap
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4786386300367480001, guid: 63d3787fe2029ae719c9468f202328f5, type: 3}
       propertyPath: m_Name
       value: Controller

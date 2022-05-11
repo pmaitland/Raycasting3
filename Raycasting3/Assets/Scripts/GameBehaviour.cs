@@ -6,6 +6,8 @@ public class GameBehaviour : MonoBehaviour {
     public GameObject mazePrefab;
     public GameObject canvasPrefab;
 
+    public bool showMinimap;
+
     private GameObject player;
     private GameObject maze;
     private GameObject canvas;
@@ -21,7 +23,9 @@ public class GameBehaviour : MonoBehaviour {
 
         canvas = Instantiate(canvasPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
         canvas.name = "Canvas";
-        minimapBehaviour = canvas.GetComponentInChildren<MinimapBehaviour>();
+
+        if (showMinimap) minimapBehaviour = canvas.GetComponentInChildren<MinimapBehaviour>();
+        else canvas.transform.Find("HUD").Find("Minimap").gameObject.SetActive(false);
 
         maze = Instantiate(mazePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
         maze.name = "Maze";
@@ -49,14 +53,14 @@ public class GameBehaviour : MonoBehaviour {
     }
 
     public void CreateMinimapCell(int x, int y, string name, Color color, bool active) {
-        minimapBehaviour.CreateMinimapCell(x, y, name, color, active);
+        if (showMinimap) minimapBehaviour.CreateMinimapCell(x, y, name, color, active);
     }
 
     public void ActivateMinimapCell(int x, int y) {
-        minimapBehaviour.ActivateMinimapCell(x, y);
+        if (showMinimap) minimapBehaviour.ActivateMinimapCell(x, y);
     }
 
     public void MovePlayerMinimapCell(int x, int y) {
-        minimapBehaviour.MovePlayerMinimapCell(x, y);
+        if (showMinimap) minimapBehaviour.MovePlayerMinimapCell(x, y);
     }
 }
