@@ -82,8 +82,10 @@ public class MazeGenerator : MonoBehaviour {
         foreach (KeyValuePair<GameObject, LightingType> entry in lowerLightSources) {
             GameObject lightSource = entry.Key;
             if (lightSource != null) {
-                MazeCell cell = grid.GetCell(lightSource.transform.position.x, lightSource.transform.position.z);
-                grid.SetLightingLower(cell, entry.Value);
+                if (Vector3.Distance(gameController.GetPlayer().transform.position, lightSource.transform.position) < 15) {
+                    MazeCell cell = grid.GetCell(lightSource.transform.position.x, lightSource.transform.position.z);
+                    grid.SetLightingLower(cell, entry.Value);
+                }
             } else {
                 lightSourcesToRemove.Add(lightSource);
             }
@@ -93,8 +95,10 @@ public class MazeGenerator : MonoBehaviour {
         foreach (KeyValuePair<GameObject, LightingType> entry in upperLightSources) {
             GameObject lightSource = entry.Key;
             if (lightSource != null) {
-                MazeCell cell = grid.GetCell(lightSource.transform.position.x, lightSource.transform.position.z);
-                grid.SetLightingUpper(cell, entry.Value);
+                if (Vector3.Distance(gameController.GetPlayer().transform.position, lightSource.transform.position) < 15) {
+                    MazeCell cell = grid.GetCell(lightSource.transform.position.x, lightSource.transform.position.z);
+                    grid.SetLightingUpper(cell, entry.Value);
+                }
             } else {
                 lightSourcesToRemove.Add(lightSource);
             }
