@@ -12,7 +12,7 @@ public class HandsBehaviour : MonoBehaviour {
     private Vector3 handsShownPosition;
     private Vector3 handsHiddenPosition;
 
-    private GameObject player;
+    private PlayerBehaviour playerBehaviour;
 
     public Sprite handSprite;
     public Sprite handPreparedSprite;
@@ -38,82 +38,54 @@ public class HandsBehaviour : MonoBehaviour {
             handsShownPosition.z
         );
 
-        player = GameObject.Find("Player");
+        playerBehaviour = GameObject.Find("Player").GetComponent<PlayerBehaviour>();
     }
 
     void Update() {
-        LightingType lightingType = player.GetComponent<PlayerBehaviour>().GetLighting();
+        LightingType lightingType = playerBehaviour.GetLighting();
         rightHand.GetComponent<Image>().color = Lighting.GetColor(lightingType);
         leftHand.GetComponent<Image>().color = Lighting.GetColor(lightingType);
     }
 
-    public void ChangeHandSprite(Hand chosenHand, HandState newState) {
-        GameObject hand = rightHand;
-
-        switch (chosenHand) {
-            case Hand.RIGHT:
-                hand = rightHand;
-                break;
-            case Hand.LEFT:
-                hand = leftHand;
-                break;
-            default:
-                break;
+    public void ChangeHandSprite(Hand hand, HandState state) {
+        if (hand == Hand.RIGHT) {
+            rightHand.GetComponent<Image>().sprite = GetHandSprite(state);
+            if (state == HandState.CASTING)
+                rightSpell.GetComponent<Image>().sprite = noSpellSprite;
+            else
+                rightSpell.GetComponent<Image>().sprite = GetSpellSprite(playerBehaviour.GetCurrentRightSpell());
+        } else if (hand == Hand.LEFT) {
+            leftHand.GetComponent<Image>().sprite = GetHandSprite(state);
+            if (state == HandState.CASTING)
+                leftSpell.GetComponent<Image>().sprite = noSpellSprite;
+            else
+                leftSpell.GetComponent<Image>().sprite = GetSpellSprite(playerBehaviour.GetCurrentLeftSpell());
         }
+    }
 
-        switch (newState) {
-            case HandState.NORMAL:
-                hand.GetComponent<Image>().sprite = handSprite;
-                if (chosenHand == Hand.RIGHT) rightSpell.GetComponent<Image>().sprite = noSpellSprite;
-                else if (chosenHand == Hand.LEFT) leftSpell.GetComponent<Image>().sprite = noSpellSprite;
-                break;
+    public Sprite GetHandSprite(HandState state) {
+        switch (state) {
             case HandState.PREPARED:
-                hand.GetComponent<Image>().sprite = handPreparedSprite;
-                if (chosenHand == Hand.RIGHT) {
-                    switch (player.GetComponent<PlayerBehaviour>().GetCurrentRightSpell()) {
-                        case Spell.LIGHT:
-                            rightSpell.GetComponent<Image>().sprite = lightSpellSprite;
-                            break;
-                        case Spell.FIREBALL:
-                            rightSpell.GetComponent<Image>().sprite = fireballSpellSprite;
-                            break;
-                        case Spell.HEAL:
-                            rightSpell.GetComponent<Image>().sprite = healSpellSprite;
-                            break;
-                        case Spell.MANA_HEAL:
-                            rightSpell.GetComponent<Image>().sprite = manaHealSpellSprite;
-                            break;
-                        default:
-                            rightSpell.GetComponent<Image>().sprite = noSpellSprite;
-                            break;
-                    }
-                } else if (chosenHand == Hand.LEFT) {
-                    switch (player.GetComponent<PlayerBehaviour>().GetCurrentLeftSpell()) {
-                        case Spell.LIGHT:
-                            leftSpell.GetComponent<Image>().sprite = lightSpellSprite;
-                            break;
-                        case Spell.FIREBALL:
-                            leftSpell.GetComponent<Image>().sprite = fireballSpellSprite;
-                            break;
-                        case Spell.HEAL:
-                            leftSpell.GetComponent<Image>().sprite = healSpellSprite;
-                            break;
-                        case Spell.MANA_HEAL:
-                            leftSpell.GetComponent<Image>().sprite = manaHealSpellSprite;
-                            break;
-                        default:
-                            leftSpell.GetComponent<Image>().sprite = noSpellSprite;
-                            break;
-                    }
-                }
-                break;
+                return handPreparedSprite;
             case HandState.CASTING:
-                hand.GetComponent<Image>().sprite = handCastingSprite;
-                if (chosenHand == Hand.RIGHT) rightSpell.GetComponent<Image>().sprite = noSpellSprite;
-                else if (chosenHand == Hand.LEFT) leftSpell.GetComponent<Image>().sprite = noSpellSprite;
-                break;
+                return handCastingSprite;
             default:
-                break;
+                return handSprite;
+        }
+    }
+
+    public Sprite GetSpellSprite(Spell spell) {
+        switch (spell) {
+            case Spell.LIGHT:
+                return lightSpellSprite;
+            case Spell.FIREBALL:
+                return fireballSpellSprite;
+            case Spell.HEAL:
+                return healSpellSprite;
+            case Spell.MANA_HEAL:
+                return manaHealSpellSprite;
+            default:
+                return noSpellSprite;
         }
     }
 
