@@ -1,5 +1,6 @@
 public enum HandState {
     NORMAL,
     PREPARED,
-    CASTING
+    CASTING,
+    PUNCHING
 }

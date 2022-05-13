@@ -18,6 +18,9 @@ public class PlayerBehaviour : MonoBehaviour {
 	private Camera playerCamera;
 	private CharacterController controller;
 
+	private GameObject rightFist;
+	private GameObject leftFist;
+
 	private GameBehaviour gameController;
 	private HandsBehaviour hands;
 	private Health health;
@@ -44,6 +47,9 @@ public class PlayerBehaviour : MonoBehaviour {
 	void Start() {
 		playerCamera = GetComponent<Camera>();
 		controller = GetComponent<CharacterController>();
+
+		rightFist = GameObject.Find("Right Fist");
+		leftFist = GameObject.Find("Left Fist");
 
 		gameController = GameObject.Find("Controller").GetComponent<GameBehaviour>();
 		hands = GameObject.Find("Hands").GetComponent<HandsBehaviour>();
@@ -138,6 +144,8 @@ public class PlayerBehaviour : MonoBehaviour {
 		if (currentLeftCastCooldown >= castRecoveryTime) {
 			leftCastOnCooldown = false;
 			currentLeftCastCooldown = 0.0f;
+			leftFist.GetComponent<BoxCollider>().enabled = false;
+			leftFist.GetComponent<FistBehaviour>().ResetObjectsHit();
 			if (currentLeftSpell != Spell.NONE) hands.ChangeHandSprite(Hand.LEFT, HandState.PREPARED);
 			else hands.ChangeHandSprite(Hand.LEFT, HandState.NORMAL);
 		}
@@ -146,6 +154,8 @@ public class PlayerBehaviour : MonoBehaviour {
 		if (currentRightCastCooldown >= castRecoveryTime) {
 			rightCastOnCooldown = false;
 			currentRightCastCooldown = 0.0f;
+			rightFist.GetComponent<BoxCollider>().enabled = false;
+			rightFist.GetComponent<FistBehaviour>().ResetObjectsHit();
 			if (currentRightSpell != Spell.NONE) hands.ChangeHandSprite(Hand.RIGHT, HandState.PREPARED);
 			else hands.ChangeHandSprite(Hand.RIGHT, HandState.NORMAL);
 		}
@@ -170,7 +180,11 @@ public class PlayerBehaviour : MonoBehaviour {
 				} 
 			}
 			
-			if (currentLeftSpell == Spell.MANA_HEAL && currentMana < maxMana) {
+			if (currentLeftSpell == Spell.NONE) {
+				hands.ChangeHandSprite(Hand.LEFT, HandState.PUNCHING);
+				leftFist.GetComponent<BoxCollider>().enabled = true;
+				leftCastOnCooldown = true;
+			} else if (currentLeftSpell == Spell.MANA_HEAL && currentMana < maxMana) {
 				currentMana += 1;
 				hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
 				leftCastOnCooldown = true;
@@ -198,7 +212,11 @@ public class PlayerBehaviour : MonoBehaviour {
 				}
 			}
 			
-			if (currentRightSpell == Spell.MANA_HEAL && currentMana < maxMana) {
+			if (currentRightSpell == Spell.NONE) {
+				hands.ChangeHandSprite(Hand.RIGHT, HandState.PUNCHING);
+				rightFist.GetComponent<BoxCollider>().enabled = true;
+				rightCastOnCooldown = true;
+			} else if (currentRightSpell == Spell.MANA_HEAL && currentMana < maxMana) {
 				currentMana += 1;
 				hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
 				rightCastOnCooldown = true;

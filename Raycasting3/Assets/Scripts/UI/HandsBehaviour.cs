@@ -17,6 +17,7 @@ public class HandsBehaviour : MonoBehaviour {
     public Sprite handSprite;
     public Sprite handPreparedSprite;
     public Sprite handCastingSprite;
+    public Sprite handPunchingSprite;
 
     public Sprite noSpellSprite;
     public Sprite lightSpellSprite;
@@ -50,16 +51,16 @@ public class HandsBehaviour : MonoBehaviour {
     public void ChangeHandSprite(Hand hand, HandState state) {
         if (hand == Hand.RIGHT) {
             rightHand.GetComponent<Image>().sprite = GetHandSprite(state);
-            if (state == HandState.CASTING)
-                rightSpell.GetComponent<Image>().sprite = noSpellSprite;
-            else
+            if (state == HandState.PREPARED)
                 rightSpell.GetComponent<Image>().sprite = GetSpellSprite(playerBehaviour.GetCurrentRightSpell());
+            else
+                rightSpell.GetComponent<Image>().sprite = noSpellSprite;
         } else if (hand == Hand.LEFT) {
             leftHand.GetComponent<Image>().sprite = GetHandSprite(state);
-            if (state == HandState.CASTING)
-                leftSpell.GetComponent<Image>().sprite = noSpellSprite;
-            else
+            if (state == HandState.PREPARED)
                 leftSpell.GetComponent<Image>().sprite = GetSpellSprite(playerBehaviour.GetCurrentLeftSpell());
+            else
+                leftSpell.GetComponent<Image>().sprite = noSpellSprite;
         }
     }
 
@@ -69,6 +70,8 @@ public class HandsBehaviour : MonoBehaviour {
                 return handPreparedSprite;
             case HandState.CASTING:
                 return handCastingSprite;
+            case HandState.PUNCHING:
+                return handPunchingSprite;
             default:
                 return handSprite;
         }

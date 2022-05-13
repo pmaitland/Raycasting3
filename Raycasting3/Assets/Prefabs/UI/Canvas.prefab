@@ -3763,6 +3763,7 @@ MonoBehaviour:
   handSprite: {fileID: 21300000, guid: ad8de3d0c6b70fcd8b6e916b01818201, type: 3}
   handPreparedSprite: {fileID: 21300000, guid: 4fa80cedb9001b661a53df625314fa32, type: 3}
   handCastingSprite: {fileID: 21300000, guid: 47ba80545ee714cc2964e081931ab151, type: 3}
+  handPunchingSprite: {fileID: 21300000, guid: 2dc213d712c863fc994b26f9b60fceb4, type: 3}
   noSpellSprite: {fileID: 21300000, guid: 42376d2b399fc46a4bc038b36e8e6dce, type: 3}
   lightSpellSprite: {fileID: 21300000, guid: fd402557c684833c1808ad7194665b12, type: 3}
   fireballSpellSprite: {fileID: 21300000, guid: 333650dde472d40cb8da14d13066a3b3, type: 3}
