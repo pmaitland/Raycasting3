@@ -39,7 +39,6 @@ public class PlayerBehaviour : MonoBehaviour {
 
 	private LightingType lighting = LightingType.DARKNESS;
 
-	private string pauseKey = "escape";
 	private string interactKey = "space";
 	private string changeLeftHandKey = "q";
 	private string changeRightHandKey = "e";
@@ -59,7 +58,7 @@ public class PlayerBehaviour : MonoBehaviour {
 	}
 	
 	void Update() {
-		if (Input.GetKey(pauseKey)) Application.Quit();
+    if (gameController.IsPaused()) return;
 
 		if (health.GetCurrentHealth() <= 0) {
 			Vector3 cameraPosition = playerCamera.transform.position;
@@ -76,11 +75,11 @@ public class PlayerBehaviour : MonoBehaviour {
 			return;
 		}
 
-	    float y = Input.GetAxis("Mouse X") * turnSpeed;
-	    transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + y, 0);
+        float y = Input.GetAxis("Mouse X") * turnSpeed;
+        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + y, 0);
 
-	    float horizontal = Input.GetAxis("Horizontal") * moveSpeed;
-		float vertical = Input.GetAxis("Vertical") * moveSpeed;
+        float horizontal = Input.GetAxis("Horizontal") * moveSpeed;
+        float vertical = Input.GetAxis("Vertical") * moveSpeed;
         controller.Move(transform.rotation * (Vector3.right * horizontal + Vector3.forward * vertical + Vector3.down * gravity) * Time.deltaTime);
 
 		gameController.ActivateMinimapCell(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));

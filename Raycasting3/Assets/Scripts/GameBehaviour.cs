@@ -8,6 +8,9 @@ public class GameBehaviour : MonoBehaviour {
 
     public bool showMinimap;
 
+    private bool paused;
+    private string pauseKey = "escape";
+
     private GameObject player;
     private GameObject maze;
     private GameObject canvas;
@@ -15,6 +18,7 @@ public class GameBehaviour : MonoBehaviour {
     private PlayerBehaviour playerBehaviour;
     private MazeGenerator mazeGenerator;
     private MinimapBehaviour minimapBehaviour;
+    private PauseScreenBehaviour pauseScreenBehaviour;
 
     void Awake() {
         player = Instantiate(playerPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
@@ -30,6 +34,36 @@ public class GameBehaviour : MonoBehaviour {
         maze = Instantiate(mazePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
         maze.name = "Maze";
         mazeGenerator = maze.GetComponent<MazeGenerator>();
+
+        pauseScreenBehaviour = canvas.transform.Find("Pause Screen").GetComponent<PauseScreenBehaviour>();
+        paused = false;
+    }
+
+    void Update () {
+        if (Input.GetKeyDown("space")) {
+            if (paused) Application.Quit();
+        }
+
+        if (Input.GetKeyDown(pauseKey)) {
+            if (paused) Unpause();
+            else Pause();
+        }
+    }
+
+    private void Pause() {
+        paused = true;
+        pauseScreenBehaviour.Pause();
+        Time.timeScale = 0;
+    }
+
+    private void Unpause() {
+        paused = false;
+        pauseScreenBehaviour.Unpause();
+        Time.timeScale = 1;
+    }
+
+    public bool IsPaused() {
+        return paused;
     }
 
     public GameObject GetPlayer() {
