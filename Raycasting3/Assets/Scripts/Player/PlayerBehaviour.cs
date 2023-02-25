@@ -163,6 +163,7 @@ public class PlayerBehaviour : MonoBehaviour {
 			if (currentMana > 0) {
 				if (currentLeftSpell == Spell.LIGHT) {
 					GameObject ballOfLight = Instantiate(ballOfLightPrefab, transform.position, transform.rotation);
+                    gameController.AddLowerLightSource(ballOfLight, LightingType.LIGHT_SPELL_0);
 					hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
 					leftCastOnCooldown = true;
 					currentMana -= 1;
@@ -195,6 +196,7 @@ public class PlayerBehaviour : MonoBehaviour {
 			if (currentMana > 0) {
 				if (currentRightSpell == Spell.LIGHT) {
 					GameObject ballOfLight = Instantiate(ballOfLightPrefab, transform.position, transform.rotation);
+                    gameController.AddLowerLightSource(ballOfLight, LightingType.LIGHT_SPELL_0);
 					hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
 					rightCastOnCooldown = true;
 					currentMana -= 1;

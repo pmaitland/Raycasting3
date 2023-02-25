@@ -78,6 +78,10 @@ public class GameBehaviour : MonoBehaviour {
         mazeGenerator.AddLowerLightSource(lightSource, lightingType);
     }
 
+    public void AddUpperLightSource(GameObject lightSource, LightingType lightingType) {
+        mazeGenerator.AddUpperLightSource(lightSource, lightingType);
+    }
+
     public int GetMazeSize() {
         return mazeGenerator.GetSize();
     }
