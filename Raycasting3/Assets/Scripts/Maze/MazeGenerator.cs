@@ -35,6 +35,10 @@ public class MazeGenerator : MonoBehaviour {
     public GameObject[] roomPrefabs5x3;
     public GameObject[] roomPrefabs5x5;
 
+    public GameObject knightPrefab;
+
+    private GameObject knightParent;
+
     private GameObject passageParent;
     private GameObject deadEndParent;
     private GameObject roomParent;
@@ -53,6 +57,9 @@ public class MazeGenerator : MonoBehaviour {
 
     void Start() {
         gameController = GameObject.Find("Controller").GetComponent<GameBehaviour>();
+
+        knightParent = new GameObject("Knights");
+        knightParent.transform.parent = transform;
 
         deadEndParent = new GameObject("Dead Ends");
         deadEndParent.transform.parent = transform;
@@ -425,6 +432,9 @@ public class MazeGenerator : MonoBehaviour {
 
                         deadEnds.Add(grid.GetCell(x, y));
 
+                        GameObject knight = Instantiate(knightPrefab, new Vector3(x, 0, y), rotation);
+                        knight.transform.parent = knightParent.transform;
+
                         break;
                     default:
                         break;
@@ -440,6 +450,10 @@ public class MazeGenerator : MonoBehaviour {
         deadEnds.Remove(playerStart);
 
         lowerLightSources.Add(gameController.GetPlayer(), gameController.GetPlayer().GetComponent<PlayerBehaviour>().GetLighting());
+
+        foreach (Transform knight in knightParent.transform) {
+            knight.Find("Body").gameObject.GetComponent<KnightBehaviour>().SetPlayer(gameController.GetPlayer());
+        }
     }
 
     private void MazeDepthFirstSearch(int x, int y) {

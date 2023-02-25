@@ -20,7 +20,7 @@ public class KnightBehaviour : MonoBehaviour {
         health = GetComponentInParent<Health>();
 
         pathfinding = GetComponentInParent<Pathfinding>();
-        pathfinding.SetTarget(player.transform);
+        pathfinding.SetTarget(player);
         pathfinding.SetIsPathfinding(true);
     }
 
