@@ -237,8 +237,12 @@ public class MazeGenerator : MonoBehaviour {
 
         grid.CleanUp();
 
-        string path = "Assets/maze.txt";
-        StreamWriter writer = new StreamWriter(path, false);
+        string path;
+        StreamWriter writer = null;
+        if (Application.isEditor) {
+            path = "Assets/maze.txt";
+            writer = new StreamWriter(path, false);
+        }
 
         List<MazeCell> deadEnds = new List<MazeCell>();
 
