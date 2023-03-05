@@ -13,6 +13,7 @@ public class HandsBehaviour : MonoBehaviour {
     private Vector3 handsHiddenPosition;
 
     private PlayerBehaviour playerBehaviour;
+    private MazeGenerator mazeGenerator;
 
     public Sprite handSprite;
     public Sprite handPreparedSprite;
@@ -40,10 +41,11 @@ public class HandsBehaviour : MonoBehaviour {
         );
 
         playerBehaviour = GameObject.Find("Player").GetComponent<PlayerBehaviour>();
+        mazeGenerator = GameObject.Find("Maze").GetComponent<MazeGenerator>();
     }
 
     void Update() {
-        LightingType lightingType = playerBehaviour.GetLighting();
+        LightingType lightingType = mazeGenerator.GetMazeCell(playerBehaviour.transform.position.x, playerBehaviour.transform.position.z).GetCurrentLightingLower();
         rightHand.GetComponent<Image>().color = Lighting.GetColor(lightingType);
         leftHand.GetComponent<Image>().color = Lighting.GetColor(lightingType);
     }

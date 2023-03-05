@@ -57,6 +57,10 @@ public class MazeCell {
         return temporaryLightingUpper;
     }
 
+    public LightingType GetCurrentLightingLower() {
+        return Lighting.GetStrongestLight(lightingLower, temporaryLightingLower);
+    }
+
     public void SetCellType(MazeCellType newType) {
         type = newType;
     }
