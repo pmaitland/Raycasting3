@@ -47,7 +47,7 @@ public class PlayerBehaviour : MonoBehaviour {
 	private string changeRightHandKey = "e";
 
 	void Start() {
-		playerCamera = GetComponent<Camera>();
+		playerCamera = GameObject.Find("Camera").GetComponent<Camera>();
 		controller = GetComponent<CharacterController>();
 
 		rightFist = GameObject.Find("Right Fist");
@@ -64,10 +64,9 @@ public class PlayerBehaviour : MonoBehaviour {
     if (gameController.IsPaused()) return;
 
 		if (health.GetCurrentHealth() <= 0) {
-			Vector3 cameraPosition = playerCamera.transform.position;
 			Vector3 killerPosition = health.GetKiller().transform.position;
-			Vector3 lookPosition = new Vector3(killerPosition.x, cameraPosition.y, killerPosition.z);
-			playerCamera.transform.rotation = Quaternion.Slerp(playerCamera.transform.rotation, Quaternion.LookRotation(lookPosition - cameraPosition), Time.deltaTime);
+			Vector3 lookPosition = new Vector3(killerPosition.x, transform.position.y, killerPosition.z);
+			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookPosition - transform.position), Time.deltaTime);
 
 			if (transform.position.y > 0.05) transform.position = new Vector3(transform.position.x, transform.position.y - 0.01f, transform.position.z);
 
