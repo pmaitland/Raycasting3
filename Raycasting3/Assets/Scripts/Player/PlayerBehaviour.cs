@@ -9,6 +9,9 @@ public class PlayerBehaviour : MonoBehaviour {
 	public float moveSpeed = 2.0f;
 	public float gravity = 10.0f;
 
+    private float horizontal;
+    private float vertical;
+
 	private float castRecoveryTime = 1.0f;
 	private bool rightCastOnCooldown = false;
 	private bool leftCastOnCooldown = false;
@@ -78,8 +81,8 @@ public class PlayerBehaviour : MonoBehaviour {
         float y = Input.GetAxis("Mouse X") * turnSpeed;
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + y, 0);
 
-        float horizontal = Input.GetAxis("Horizontal") * moveSpeed;
-        float vertical = Input.GetAxis("Vertical") * moveSpeed;
+        horizontal = Input.GetAxis("Horizontal") * moveSpeed;
+        vertical = Input.GetAxis("Vertical") * moveSpeed;
         controller.Move(transform.rotation * (Vector3.right * horizontal + Vector3.forward * vertical + Vector3.down * gravity) * Time.deltaTime);
 
 		gameController.ActivateMinimapCell(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
@@ -277,6 +280,14 @@ public class PlayerBehaviour : MonoBehaviour {
 			}
 		}
 	}
+
+    public float GetHorizontal() {
+        return horizontal;
+    }
+
+    public float GetVertical() {
+        return vertical;
+    }
 
 	public LightingType GetLighting() {
 		return lighting;

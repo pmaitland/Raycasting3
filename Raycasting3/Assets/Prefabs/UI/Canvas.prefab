@@ -159,6 +159,7 @@ GameObject:
   - component: {fileID: 8678372604447074425}
   - component: {fileID: 3058441937112602633}
   - component: {fileID: 5550612235466906322}
+  - component: {fileID: 2275907663100914886}
   m_Layer: 5
   m_Name: Left Hand
   m_TagString: Untagged
@@ -224,6 +225,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2275907663100914886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571443373417828467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25837a2f24c75b0d78b9b16024b7ad51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkingBobbingSpeed: 12
+  bobbingAmount: 2
 --- !u!1 &912681017607217275
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,6 +779,7 @@ GameObject:
   - component: {fileID: 4315280698738300492}
   - component: {fileID: 5340118666518221877}
   - component: {fileID: 8982886129740439992}
+  - component: {fileID: 9157920274829687307}
   m_Layer: 5
   m_Name: Right Hand
   m_TagString: Untagged
@@ -829,6 +845,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9157920274829687307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891024897244458417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25837a2f24c75b0d78b9b16024b7ad51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkingBobbingSpeed: 12
+  bobbingAmount: 2
 --- !u!1 &1919805882191820680
 GameObject:
   m_ObjectHideFlags: 0
