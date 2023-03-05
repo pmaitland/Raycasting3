@@ -51,6 +51,10 @@ public class MazeGenerator : MonoBehaviour {
     private Dictionary<GameObject, LightingType> lowerLightSources;
     private Dictionary<GameObject, LightingType> upperLightSources;
 
+    private Dictionary<GameObject, LightingType> temporaryLowerLightSources;
+
+    private List<Vector2> lowerLightSourcesToClear;
+
     void OnValidate() {
         if (size % 2 == 0) size -= 1;
     }
@@ -71,10 +75,43 @@ public class MazeGenerator : MonoBehaviour {
         lowerLightSources = new Dictionary<GameObject, LightingType>();
         upperLightSources = new Dictionary<GameObject, LightingType>();
 
+        temporaryLowerLightSources = new Dictionary<GameObject, LightingType>();
+
+        lowerLightSourcesToClear = new List<Vector2>();
+
         GenerateMaze();
+        SetInitialLighting();
     }
 
     void Update() {
+        foreach (Vector2 cellPosition in lowerLightSourcesToClear) {
+            for (int y = Mathf.Max(0, Mathf.FloorToInt(cellPosition.y) - 4); y < Mathf.Min(size, Mathf.FloorToInt(cellPosition.y) + 4); y++) {
+                for (int x = Mathf.Max(0, Mathf.FloorToInt(cellPosition.x) - 4); x < Mathf.Min(size, Mathf.FloorToInt(cellPosition.x) + 4); x++) {
+                    grid.GetCell(x, y).SetTemporaryLightingLower(LightingType.DARKNESS);
+                    grid.GetCell(x, y).SetTemporaryLightingUpper(LightingType.DARKNESS);
+                }
+            }
+        }
+        lowerLightSourcesToClear.Clear();
+
+        List<GameObject> lightSourcesToRemove = new List<GameObject>();
+        foreach (KeyValuePair<GameObject, LightingType> entry in temporaryLowerLightSources) {
+            GameObject lightSource = entry.Key;
+            if (lightSource != null) {
+                grid.SetTemporaryLightingLower(grid.GetCell(lightSource.transform.position.x, lightSource.transform.position.z), entry.Value);
+                lowerLightSourcesToClear.Add(new Vector2(lightSource.transform.position.x, lightSource.transform.position.z));
+            } else {
+                lightSourcesToRemove.Add(lightSource);
+            }
+        }
+        foreach (GameObject lightSource in lightSourcesToRemove) lowerLightSources.Remove(lightSource);
+
+        PlayerBehaviour player = gameController.GetPlayer().GetComponent<PlayerBehaviour>();
+        grid.SetTemporaryLightingLower(grid.GetCell(player.transform.position.x, player.transform.position.z), player.GetLighting());
+        lowerLightSourcesToClear.Add(new Vector2(player.transform.position.x, player.transform.position.z));
+    }
+
+    private void SetInitialLighting() {
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 grid.GetCell(x, y).SetLightingLower(LightingType.DARKNESS);
@@ -82,43 +119,20 @@ public class MazeGenerator : MonoBehaviour {
             }
         }
 
-        lowerLightSources[gameController.GetPlayer()] = gameController.GetPlayer().GetComponent<PlayerBehaviour>().GetLighting();
-
-        List<GameObject> lightSourcesToRemove = new List<GameObject>();
-
-        foreach (KeyValuePair<GameObject, LightingType> entry in lowerLightSources) {
-            GameObject lightSource = entry.Key;
-            if (lightSource != null) {
-                if (Vector3.Distance(gameController.GetPlayer().transform.position, lightSource.transform.position) < 15) {
-                    MazeCell cell = grid.GetCell(lightSource.transform.position.x, lightSource.transform.position.z);
-                    grid.SetLightingLower(cell, entry.Value);
-                }
-            } else {
-                lightSourcesToRemove.Add(lightSource);
-            }
-        }
-        foreach (GameObject lightSource in lightSourcesToRemove) lowerLightSources.Remove(lightSource);
-
-        foreach (KeyValuePair<GameObject, LightingType> entry in upperLightSources) {
-            GameObject lightSource = entry.Key;
-            if (lightSource != null) {
-                if (Vector3.Distance(gameController.GetPlayer().transform.position, lightSource.transform.position) < 15) {
-                    MazeCell cell = grid.GetCell(lightSource.transform.position.x, lightSource.transform.position.z);
-                    grid.SetLightingUpper(cell, entry.Value);
-                }
-            } else {
-                lightSourcesToRemove.Add(lightSource);
-            }
-        }
-        foreach (GameObject lightSource in lightSourcesToRemove) upperLightSources.Remove(lightSource);
+        foreach (KeyValuePair<GameObject, LightingType> entry in lowerLightSources) AddLowerLightSource(entry.Key, entry.Value);
+        foreach (KeyValuePair<GameObject, LightingType> entry in upperLightSources) AddUpperLightSource(entry.Key, entry.Value);
     }
 
     public void AddLowerLightSource(GameObject lightSource, LightingType lightingType) {
-        lowerLightSources.Add(lightSource, lightingType);
+        grid.SetLightingLower(grid.GetCell(lightSource.transform.position.x, lightSource.transform.position.z), lightingType);
     }
 
     public void AddUpperLightSource(GameObject lightSource, LightingType lightingType) {
-        upperLightSources.Add(lightSource, lightingType);
+        grid.SetLightingUpper(grid.GetCell(lightSource.transform.position.x, lightSource.transform.position.z), lightingType);
+    }
+
+    public void AddTemporaryLowerLightSource(GameObject lightSource, LightingType lightingType) {
+        temporaryLowerLightSources.Add(lightSource, lightingType);
     }
 
     private void GenerateMaze() {
@@ -194,8 +208,8 @@ public class MazeGenerator : MonoBehaviour {
 
                     foreach (Transform roomPiece in roomObject.transform) {
                         if (roomPiece.name.Contains("Torch") || roomPiece.name.Contains("Chandelier")) {
-                            if (roomPiece.position.y == 0) AddLowerLightSource(roomPiece.gameObject, LightingType.TORCH_0);
-                            else if (roomPiece.position.y == 1) AddUpperLightSource(roomPiece.gameObject, LightingType.TORCH_0);
+                            if (roomPiece.position.y == 0) lowerLightSources.Add(roomPiece.gameObject, LightingType.TORCH_0);
+                            else if (roomPiece.position.y == 1) upperLightSources.Add(roomPiece.gameObject, LightingType.TORCH_0);
                         } else if (roomPiece.name.Contains("Door")) {
                             string[] details = roomPiece.name.Split('-');
 
@@ -327,8 +341,8 @@ public class MazeGenerator : MonoBehaviour {
 
                         if (x % 2 == 0) {
                             if (y == 1 || y == size - 2) {
-                                AddLowerLightSource(passage.transform.Find("Maze Pieces").Find("Ceiling").gameObject, LightingType.LIGHT_SPELL_0);
-                                AddUpperLightSource(passage.transform.Find("Maze Pieces").Find("Floor").gameObject, LightingType.LIGHT_SPELL_0);
+                                lowerLightSources.Add(passage.transform.Find("Maze Pieces").Find("Ceiling").gameObject, LightingType.LIGHT_SPELL_0);
+                                upperLightSources.Add(passage.transform.Find("Maze Pieces").Find("Floor").gameObject, LightingType.LIGHT_SPELL_0);
 
                                 if (y == 1) {
                                     passage.transform.Find("Maze Pieces").Find("Wall-N-L0").gameObject.SetActive(false);
@@ -346,8 +360,8 @@ public class MazeGenerator : MonoBehaviour {
                             }
                         } else if (y % 2 == 0) {
                             if (x == 1 || x == size - 2) {
-                                AddLowerLightSource(passage.transform.Find("Maze Pieces").Find("Ceiling").gameObject, LightingType.LIGHT_SPELL_0);
-                                AddUpperLightSource(passage.transform.Find("Maze Pieces").Find("Floor").gameObject, LightingType.LIGHT_SPELL_0);
+                                lowerLightSources.Add(passage.transform.Find("Maze Pieces").Find("Ceiling").gameObject, LightingType.LIGHT_SPELL_0);
+                                upperLightSources.Add(passage.transform.Find("Maze Pieces").Find("Floor").gameObject, LightingType.LIGHT_SPELL_0);
 
                                 if (x == 1) {
                                     passage.transform.Find("Maze Pieces").Find("Wall-W-L0").gameObject.SetActive(false);
@@ -389,12 +403,12 @@ public class MazeGenerator : MonoBehaviour {
                             else if (hasPassageWestNeighbour && hasPassageNorthNeighbour && hasPassageEastNeighbour) floorMaterial.mainTexture = carpetNEW;
 
                             passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject.SetActive(true);
-                            AddUpperLightSource(passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject, LightingType.TORCH_0);
+                            upperLightSources.Add(passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject, LightingType.TORCH_0);
                         } else if (passageNeighbourCount == 4) {
                             floorMaterial.mainTexture = carpetNESW;
                             
                             passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject.SetActive(true);
-                            AddUpperLightSource(passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject, LightingType.TORCH_0);
+                            upperLightSources.Add(passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject, LightingType.TORCH_0);
                         }
 
                         passage.transform.parent = passageParent.transform;
@@ -430,14 +444,11 @@ public class MazeGenerator : MonoBehaviour {
 
                         foreach (Transform mazePiece in deadEnd.transform.Find("Maze Pieces")) grid.GetCell(x, y).AddToMazePieces(mazePiece.gameObject);
                         
-                        AddLowerLightSource(deadEnd.transform.Find("Maze Pieces").Find("Torch").gameObject, LightingType.TORCH_0);
+                        lowerLightSources.Add(deadEnd.transform.Find("Maze Pieces").Find("Torch").gameObject, LightingType.TORCH_0);
                             
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
 
                         deadEnds.Add(grid.GetCell(x, y));
-
-                        GameObject knight = Instantiate(knightPrefab, new Vector3(x, 0, y), rotation);
-                        knight.transform.parent = knightParent.transform;
 
                         break;
                     default:

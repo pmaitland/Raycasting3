@@ -162,6 +162,34 @@ public class MazeGrid {
         }
     }
 
+    public void SetTemporaryLightingLower(MazeCell mazeCell, LightingType lightingType) {
+        if (Lighting.IsStronger(mazeCell.GetTemporaryLightingLower(), lightingType)) return;
+
+        mazeCell.SetTemporaryLightingLower(lightingType);
+        foreach (MazeCell neighbour in GetNeighboursNotOfType(mazeCell, MazeCellType.WALL)) {
+            if (neighbour is HiddenDoorMazeCell) {
+                HiddenDoorMazeCell hiddenDoorMazeCell = (HiddenDoorMazeCell) neighbour;
+                if (hiddenDoorMazeCell.IsDoorOpen()) SetTemporaryLightingLower(neighbour, Lighting.GetDarker(lightingType));
+            } else {
+                SetTemporaryLightingLower(neighbour, Lighting.GetDarker(lightingType));
+            }
+        }
+    }
+
+    public void SetTemporaryLightingUpper(MazeCell mazeCell, LightingType lightingType) {
+        if (Lighting.IsStronger(mazeCell.GetTemporaryLightingUpper(), lightingType)) return;
+
+        mazeCell.SetTemporaryLightingUpper(lightingType);
+        foreach (MazeCell neighbour in GetNeighboursNotOfType(mazeCell, MazeCellType.WALL)) {
+            if (neighbour is HiddenDoorMazeCell) {
+                HiddenDoorMazeCell hiddenDoorMazeCell = (HiddenDoorMazeCell) neighbour;
+                if (hiddenDoorMazeCell.IsDoorOpen()) SetTemporaryLightingUpper(neighbour, Lighting.GetDarker(lightingType));
+            } else {
+                SetTemporaryLightingUpper(neighbour, Lighting.GetDarker(lightingType));
+            }
+        }
+    }
+
     public void CleanUp() {
         MazeCellType cellType;
         for (int i = 1; i < size - 1; i++) {

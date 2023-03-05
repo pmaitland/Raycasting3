@@ -320,7 +320,7 @@ public class PlayerBehaviour : MonoBehaviour {
 		fireballPosition -= transform.up * 0.25f;
 		GameObject fireball = Instantiate(fireballPrefab, fireballPosition, transform.rotation);
 		fireball.GetComponent<ProjectileBehaviour>().SetCreator(gameObject);
-		gameController.AddLowerLightSource(fireball, LightingType.FIREBALL_SPELL_0);
+		gameController.AddTemporaryLowerLightSource(fireball, LightingType.FIREBALL_SPELL_0);
 		return fireball;
 	}
 
