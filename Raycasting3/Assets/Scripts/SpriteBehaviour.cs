@@ -5,6 +5,8 @@ public class SpriteBehaviour : MonoBehaviour {
     public Sprite[] sprites;
     public Sprite destroyedSprite;
 
+    public bool useLighting;
+
     private Transform player;
     private Transform body;
     private SpriteRenderer spriteRenderer;
@@ -44,7 +46,11 @@ public class SpriteBehaviour : MonoBehaviour {
 
         transform.forward = new Vector3(player.forward.x, transform.forward.y, player.forward.z);
 
-        LightingType lightingType = gameBehaviour.GetMazeCell(transform.position.x, transform.position.z).GetLightingLower();
-        spriteRenderer.material.color = Lighting.GetColor(lightingType);
+        if (useLighting) {
+            LightingType lightingType = gameBehaviour.GetMazeCell(transform.position.x, transform.position.z).GetLightingLower();
+            spriteRenderer.material.color = Lighting.GetColor(lightingType);
+        } else {
+            spriteRenderer.material.color = Color.white;
+        }
     }
 }

@@ -175,3 +175,4 @@ MonoBehaviour:
   sprites:
   - {fileID: 21300000, guid: 5f46adf5884d9a2a4a174482b84a07e1, type: 3}
   destroyedSprite: {fileID: 0}
+  useLighting: 0

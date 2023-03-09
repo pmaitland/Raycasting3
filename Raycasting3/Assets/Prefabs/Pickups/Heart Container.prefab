@@ -100,6 +100,7 @@ MonoBehaviour:
   sprites:
   - {fileID: 21300000, guid: 3dc45cbb0a0d234fc9027c8ad262f1e5, type: 3}
   destroyedSprite: {fileID: 0}
+  useLighting: 0
 --- !u!1 &1991074582244863436
 GameObject:
   m_ObjectHideFlags: 0
