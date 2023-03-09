@@ -27,6 +27,7 @@ public class PlayerBehaviour : MonoBehaviour {
 	private GameBehaviour gameController;
 	private HandsBehaviour hands;
 	private Health health;
+    private Flash flash;
 
 	private const int MAX_MAX_MANA = 20;
     private int maxMana = 5;
@@ -56,6 +57,7 @@ public class PlayerBehaviour : MonoBehaviour {
 		gameController = GameObject.Find("Controller").GetComponent<GameBehaviour>();
 		hands = GameObject.Find("Hands").GetComponent<HandsBehaviour>();
 		health = GetComponent<Health>();
+        flash = GameObject.Find("Flash").GetComponent<Flash>();
 
 		Cursor.lockState = CursorLockMode.Locked;
 	}
@@ -179,6 +181,7 @@ public class PlayerBehaviour : MonoBehaviour {
 					hands.ChangeHandSprite(Hand.LEFT, HandState.CASTING);
 					leftCastOnCooldown = true;
 					currentMana -= 1;
+                    flash.Health();
 				} 
 			}
 			
@@ -212,6 +215,7 @@ public class PlayerBehaviour : MonoBehaviour {
 					hands.ChangeHandSprite(Hand.RIGHT, HandState.CASTING);
 					rightCastOnCooldown = true;
 					currentMana -= 1;
+                    flash.Health();
 				}
 			}
 			
@@ -233,17 +237,20 @@ public class PlayerBehaviour : MonoBehaviour {
 			if (health.GetCurrentHealth() < health.GetMaxHealth()) {
 				health.IncreaseHealth(other.gameObject.GetComponent<HealthPickup>().GetHealingAmount());
 				Destroy(other.gameObject);
+                flash.Health();
 			}
 		} else if (other.gameObject.GetComponent<HeartContainer>() != null) {
 			if (health.GetMaxHealth() < health.GetMaxMaxHealth()) {
 				health.IncreaseMaxHealth(other.gameObject.GetComponent<HeartContainer>().GetMaxHealthIncreaseAmount());
 				Destroy(other.gameObject);
+                flash.Health();
 			}
 		} else if (other.gameObject.GetComponent<ManaPickup>() != null) {
 			if (currentMana < maxMana) {
 				currentMana += other.gameObject.GetComponent<ManaPickup>().GetManaAmount();
 				if (currentMana > maxMana) currentMana = maxMana;
 				Destroy(other.gameObject);
+                flash.Mana();
 			}
 		} else if (other.gameObject.GetComponent<ManaContainer>() != null) {
 			if (maxMana < MAX_MAX_MANA) {
@@ -252,6 +259,7 @@ public class PlayerBehaviour : MonoBehaviour {
 				currentMana += other.gameObject.GetComponent<ManaContainer>().GetMaxManaIncreaseAmount();
 				if (currentMana > maxMana) currentMana = maxMana;
 				Destroy(other.gameObject);
+                flash.Mana();
 			}
 		} 
 
@@ -333,5 +341,9 @@ public class PlayerBehaviour : MonoBehaviour {
 		gameController.AddTemporaryLowerLightSource(fireball, LightingType.FIREBALL_SPELL_0);
 		return fireball;
 	}
+
+    public void FlashDamage() {
+        flash.Damage();
+    }
 
 }

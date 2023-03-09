@@ -44,7 +44,10 @@ public class Health : MonoBehaviour {
 
     public void ReduceHealth(GameObject attacker, int amount) {
         if (destroyed) return;
+
         currentHealth -= amount;
+        if (GetComponent<PlayerBehaviour>() != null) GetComponent<PlayerBehaviour>().FlashDamage();
+
         if (currentHealth <= 0) {
             Destroy(GetComponent<Rigidbody>());
             if (GetComponent<UnityEngine.AI.NavMeshAgent>() != null) GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
