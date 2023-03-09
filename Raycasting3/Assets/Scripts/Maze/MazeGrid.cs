@@ -197,7 +197,17 @@ public class MazeGrid {
                 cellType = grid[j][i].GetCellType();
                 if (cellType == MazeCellType.PASSAGE) {
                     if (GetNeighboursOfType(i, j, MazeCellType.WALL).Count == 3 && GetNeighboursOfType(i, j, MazeCellType.PASSAGE).Count == 1) {
-                        grid[j][i].SetCellType(MazeCellType.DEAD_END);
+                        if (GetNorthNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE && GetSecondSouthNeighbour(i, j) != null && GetSecondSouthNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE) {
+                            grid[j+1][i].SetCellType(MazeCellType.PASSAGE);
+                        } else if (GetSouthNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE && GetSecondNorthNeighbour(i, j) != null && GetSecondNorthNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE) {
+                            grid[j-1][i].SetCellType(MazeCellType.PASSAGE);
+                        } else if (GetEastNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE && GetSecondWestNeighbour(i, j) != null && GetSecondWestNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE) {
+                            grid[j][i-1].SetCellType(MazeCellType.PASSAGE);
+                        } else if (GetWestNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE && GetSecondEastNeighbour(i, j) != null && GetSecondEastNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE) {
+                            grid[j][i+1].SetCellType(MazeCellType.PASSAGE);
+                        } else {
+                            grid[j][i].SetCellType(MazeCellType.DEAD_END);
+                        }
                     }
                 } else if (cellType == MazeCellType.DISCONNECTED_DOOR) {
                     grid[j][i].SetCellType(MazeCellType.DOOR);
