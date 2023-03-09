@@ -76,6 +76,10 @@ public class PlayerBehaviour : MonoBehaviour {
 			hands.ChangeHandSprite(Hand.LEFT, HandState.NORMAL);
 			hands.ChangeHandSprite(Hand.RIGHT, HandState.NORMAL);
 			hands.HideHands();
+
+            horizontal = 0;
+            vertical = 0;
+
 			return;
 		}
 
