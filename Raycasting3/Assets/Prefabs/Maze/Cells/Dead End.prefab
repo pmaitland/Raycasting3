@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1153438478107299573}
+  - component: {fileID: -6443703914548869966}
   m_Layer: 0
   m_Name: Dead End
   m_TagString: Untagged
@@ -32,6 +33,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-6443703914548869966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849009846854788362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53df36093998df7eb8234b4136101911, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  carpetN: {fileID: 2800000, guid: d9fa3f6592d8b56c78347c2182d8e022, type: 3}
+  carpetE: {fileID: 2800000, guid: 5f8fa08ba70cb3e4bb6497e120521d9b, type: 3}
+  carpetS: {fileID: 2800000, guid: fc951ff2e3e83c4f98ded77c297cbe97, type: 3}
+  carpetW: {fileID: 2800000, guid: f6d2a5639c90580dc9e38e3ba31b3eb0, type: 3}
 --- !u!1 &1922498826399347614
 GameObject:
   m_ObjectHideFlags: 0

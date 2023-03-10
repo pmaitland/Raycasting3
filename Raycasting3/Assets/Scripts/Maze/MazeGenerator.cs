@@ -419,28 +419,13 @@ public class MazeGenerator : MonoBehaviour {
 
                         break;
                     case MazeCellType.DEAD_END:
-                        float rotationAmount = 0;
-                        if (grid.GetEastNeighbour(x, y).GetCellType() != MazeCellType.WALL) rotationAmount = 270;
-                        else if (grid.GetNorthNeighbour(x, y).GetCellType() != MazeCellType.WALL) rotationAmount = 180;
-                        else if (grid.GetWestNeighbour(x, y).GetCellType() != MazeCellType.WALL) rotationAmount = 90;
-
-                        Quaternion rotation = Quaternion.Euler(0, rotationAmount, 0);
-
-                        GameObject deadEnd = Instantiate(deadEndPrefab, new Vector3(x, 0, y), rotation);
+                        GameObject deadEnd = Instantiate(deadEndPrefab, new Vector3(x, 0, y), Quaternion.identity);
                         deadEnd.transform.parent = deadEndParent.transform;
 
-                        Transform floor = deadEnd.transform.Find("Maze Pieces").Find("Floor");
-                        floor.Rotate(0, 0, rotationAmount);
-                        Material material = floor.GetComponent<MeshRenderer>().material;
-                        if (grid.GetNorthNeighbour(x, y).GetCellType() == MazeCellType.PASSAGE) {
-                            material.mainTexture = carpetN;
-                        } else if (grid.GetEastNeighbour(x, y).GetCellType() == MazeCellType.PASSAGE) {
-                            material.mainTexture = carpetE;
-                        } else if (grid.GetSouthNeighbour(x, y).GetCellType() == MazeCellType.PASSAGE) {
-                            material.mainTexture = carpetS;
-                        } else if (grid.GetWestNeighbour(x, y).GetCellType() == MazeCellType.PASSAGE) {
-                            material.mainTexture = carpetW;
-                        }
+                        if (grid.GetNorthNeighbour(x, y).GetCellType() != MazeCellType.WALL) deadEnd.GetComponent<DeadEnd>().SetDirectionNorth();
+                        else if (grid.GetEastNeighbour(x, y).GetCellType() != MazeCellType.WALL) deadEnd.GetComponent<DeadEnd>().SetDirectionEast();
+                        else if (grid.GetSouthNeighbour(x, y).GetCellType() != MazeCellType.WALL) deadEnd.GetComponent<DeadEnd>().SetDirectionSouth();
+                        else if (grid.GetWestNeighbour(x, y).GetCellType() != MazeCellType.WALL) deadEnd.GetComponent<DeadEnd>().SetDirectionWest();
 
                         foreach (Transform mazePiece in deadEnd.transform.Find("Maze Pieces")) grid.GetCell(x, y).AddToMazePieces(mazePiece.gameObject);
                         
