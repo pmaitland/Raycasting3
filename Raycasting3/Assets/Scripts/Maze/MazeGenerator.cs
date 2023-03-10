@@ -344,14 +344,14 @@ public class MazeGenerator : MonoBehaviour {
                                 lowerLightSources.Add(passage.transform.Find("Maze Pieces").Find("Ceiling").gameObject, LightingType.LIGHT_SPELL_0);
                                 upperLightSources.Add(passage.transform.Find("Maze Pieces").Find("Floor").gameObject, LightingType.LIGHT_SPELL_0);
 
-                                if (y == 1) {
+                                if (y == size - 2) {
                                     passage.transform.Find("Maze Pieces").Find("Wall-N-L0").gameObject.SetActive(false);
                                     passage.transform.Find("Maze Pieces").Find("Wall-N-L1").gameObject.SetActive(false);
                                     passage.transform.Find("Maze Pieces").Find("Wall-N-L0-Window").gameObject.SetActive(true);
                                     passage.transform.Find("Maze Pieces").Find("Wall-N-L1-Window").gameObject.SetActive(true);
                                 }
 
-                                if (y == size - 2) {
+                                if (y == 1) {
                                     passage.transform.Find("Maze Pieces").Find("Wall-S-L0").gameObject.SetActive(false);
                                     passage.transform.Find("Maze Pieces").Find("Wall-S-L1").gameObject.SetActive(false);
                                     passage.transform.Find("Maze Pieces").Find("Wall-S-L0-Window").gameObject.SetActive(true);
@@ -421,7 +421,7 @@ public class MazeGenerator : MonoBehaviour {
                     case MazeCellType.DEAD_END:
                         float rotationAmount = 0;
                         if (grid.GetEastNeighbour(x, y).GetCellType() != MazeCellType.WALL) rotationAmount = 270;
-                        else if (grid.GetSouthNeighbour(x, y).GetCellType() != MazeCellType.WALL) rotationAmount = 180;
+                        else if (grid.GetNorthNeighbour(x, y).GetCellType() != MazeCellType.WALL) rotationAmount = 180;
                         else if (grid.GetWestNeighbour(x, y).GetCellType() != MazeCellType.WALL) rotationAmount = 90;
 
                         Quaternion rotation = Quaternion.Euler(0, rotationAmount, 0);
@@ -479,22 +479,22 @@ public class MazeGenerator : MonoBehaviour {
         while (availableNeighbours.Count != 0) {
             MazeCell chosenNeighbour = availableNeighbours[Random.Range(0, availableNeighbours.Count)];
             if (chosenNeighbour.GetCellType() == MazeCellType.WALL) {
-                if      (chosenNeighbour == grid.GetSecondNorthNeighbour(x, y)) grid.SetCellType(x,     y - 1, MazeCellType.PASSAGE);
+                if      (chosenNeighbour == grid.GetSecondNorthNeighbour(x, y)) grid.SetCellType(x,     y + 1, MazeCellType.PASSAGE);
                 else if (chosenNeighbour == grid.GetSecondEastNeighbour(x, y))  grid.SetCellType(x + 1, y,     MazeCellType.PASSAGE);
-                else if (chosenNeighbour == grid.GetSecondSouthNeighbour(x, y)) grid.SetCellType(x,     y + 1, MazeCellType.PASSAGE);
+                else if (chosenNeighbour == grid.GetSecondSouthNeighbour(x, y)) grid.SetCellType(x,     y - 1, MazeCellType.PASSAGE);
                 else if (chosenNeighbour == grid.GetSecondWestNeighbour(x, y))  grid.SetCellType(x - 1, y,     MazeCellType.PASSAGE);
                 grid.SetCellType(chosenNeighbour.GetX(), chosenNeighbour.GetY(), MazeCellType.PASSAGE);
                 MazeDepthFirstSearch(chosenNeighbour.GetX(), chosenNeighbour.GetY());
             } else if (chosenNeighbour.GetCellType() == MazeCellType.DISCONNECTED_DOOR) {
-                if      (chosenNeighbour == grid.GetSecondNorthNeighbour(x, y)) grid.SetCellType(x,     y - 1, MazeCellType.DOOR);
+                if      (chosenNeighbour == grid.GetSecondNorthNeighbour(x, y)) grid.SetCellType(x,     y + 1, MazeCellType.DOOR);
                 else if (chosenNeighbour == grid.GetSecondEastNeighbour(x, y))  grid.SetCellType(x + 1, y,     MazeCellType.DOOR);
-                else if (chosenNeighbour == grid.GetSecondSouthNeighbour(x, y)) grid.SetCellType(x,     y + 1, MazeCellType.DOOR);
+                else if (chosenNeighbour == grid.GetSecondSouthNeighbour(x, y)) grid.SetCellType(x,     y - 1, MazeCellType.DOOR);
                 else if (chosenNeighbour == grid.GetSecondWestNeighbour(x, y))  grid.SetCellType(x - 1, y,     MazeCellType.DOOR);
                 grid.SetCellType(chosenNeighbour.GetX(), chosenNeighbour.GetY(), MazeCellType.ROOM);
             } else if (chosenNeighbour.GetCellType() == MazeCellType.DISCONNECTED_HIDDEN_DOOR) {
-                if      (chosenNeighbour == grid.GetSecondNorthNeighbour(x, y)) grid.SetCellType(x,     y - 1, MazeCellType.HIDDEN_DOOR);
+                if      (chosenNeighbour == grid.GetSecondNorthNeighbour(x, y)) grid.SetCellType(x,     y + 1, MazeCellType.HIDDEN_DOOR);
                 else if (chosenNeighbour == grid.GetSecondEastNeighbour(x, y))  grid.SetCellType(x + 1, y,     MazeCellType.HIDDEN_DOOR);
-                else if (chosenNeighbour == grid.GetSecondSouthNeighbour(x, y)) grid.SetCellType(x,     y + 1, MazeCellType.HIDDEN_DOOR);
+                else if (chosenNeighbour == grid.GetSecondSouthNeighbour(x, y)) grid.SetCellType(x,     y - 1, MazeCellType.HIDDEN_DOOR);
                 else if (chosenNeighbour == grid.GetSecondWestNeighbour(x, y))  grid.SetCellType(x - 1, y,     MazeCellType.HIDDEN_DOOR);
                 grid.SetCellType(chosenNeighbour.GetX(), chosenNeighbour.GetY(), MazeCellType.HIDDEN_ROOM);
             }

@@ -28,19 +28,19 @@ public class MazeGrid {
     }
 
     public MazeCell GetNorthNeighbour(int x, int y) {
-        return y > 0 ? grid[y - 1][x] : null;
-    }
-
-    public MazeCell GetNorthNeighbour(MazeCell cell) {
-        return cell.GetY() > 0 ? grid[cell.GetY() - 1][cell.GetX()] : null;
-    }
-
-    public MazeCell GetSouthNeighbour(int x, int y) {
         return y < size - 1 ? grid[y + 1][x] : null;
     }
 
-    public MazeCell GetSouthNeighbour(MazeCell cell) {
+    public MazeCell GetNorthNeighbour(MazeCell cell) {
         return cell.GetY() < size - 1 ? grid[cell.GetY() + 1][cell.GetX()] : null;
+    }
+
+    public MazeCell GetSouthNeighbour(int x, int y) {
+        return y > 0 ? grid[y - 1][x] : null;
+    }
+
+    public MazeCell GetSouthNeighbour(MazeCell cell) {
+        return cell.GetY() > 0 ? grid[cell.GetY() - 1][cell.GetX()] : null;
     }
 
     public MazeCell GetEastNeighbour(int x, int y) {
@@ -94,11 +94,11 @@ public class MazeGrid {
     }
 
     public MazeCell GetSecondNorthNeighbour(int x, int y) {
-        return y > 1 ? grid[y - 2][x] : null;
+        return y < size - 2 ? grid[y + 2][x] : null;
     }
 
     public MazeCell GetSecondSouthNeighbour(int x, int y) {
-        return y < size - 2 ? grid[y + 2][x] : null;
+        return y > 1 ? grid[y - 2][x] : null;
     }
 
     public MazeCell GetSecondEastNeighbour(int x, int y) {
@@ -198,9 +198,9 @@ public class MazeGrid {
                 if (cellType == MazeCellType.PASSAGE) {
                     if (GetNeighboursOfType(i, j, MazeCellType.WALL).Count == 3 && GetNeighboursOfType(i, j, MazeCellType.PASSAGE).Count == 1) {
                         if (GetNorthNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE && GetSecondSouthNeighbour(i, j) != null && GetSecondSouthNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE) {
-                            grid[j+1][i].SetCellType(MazeCellType.PASSAGE);
-                        } else if (GetSouthNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE && GetSecondNorthNeighbour(i, j) != null && GetSecondNorthNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE) {
                             grid[j-1][i].SetCellType(MazeCellType.PASSAGE);
+                        } else if (GetSouthNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE && GetSecondNorthNeighbour(i, j) != null && GetSecondNorthNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE) {
+                            grid[j+1][i].SetCellType(MazeCellType.PASSAGE);
                         } else if (GetEastNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE && GetSecondWestNeighbour(i, j) != null && GetSecondWestNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE) {
                             grid[j][i-1].SetCellType(MazeCellType.PASSAGE);
                         } else if (GetWestNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE && GetSecondEastNeighbour(i, j) != null && GetSecondEastNeighbour(i, j).GetCellType() == MazeCellType.PASSAGE) {
