@@ -9,6 +9,8 @@ public class MazeGenerator : MonoBehaviour {
     [Range(0, 50)]
     public int roomCount = 6;
 
+    public Texture2D stoneBrick;
+
     public Texture2D banner;
 
     public Texture2D carpetN;
@@ -379,37 +381,40 @@ public class MazeGenerator : MonoBehaviour {
                             }
                         }
 
-                        Material floorMaterial = passage.transform.Find("Maze Pieces").Find("Floor").GetComponent<MeshRenderer>().material;
+                        Material carpetMaterial = passage.transform.Find("Maze Pieces").Find("Carpet").GetComponent<MeshRenderer>().material;
                         if (passageNeighbourCount == 1) {
-                            if (hasPassageNorthNeighbour) floorMaterial.mainTexture = carpetN;
-                            else if (hasPassageEastNeighbour) floorMaterial.mainTexture = carpetE;
-                            else if (hasPassageSouthNeighbour) floorMaterial.mainTexture = carpetS;
-                            else if (hasPassageWestNeighbour) floorMaterial.mainTexture = carpetW;
+                            if (hasPassageNorthNeighbour) carpetMaterial.mainTexture = carpetN;
+                            else if (hasPassageEastNeighbour) carpetMaterial.mainTexture = carpetE;
+                            else if (hasPassageSouthNeighbour) carpetMaterial.mainTexture = carpetS;
+                            else if (hasPassageWestNeighbour) carpetMaterial.mainTexture = carpetW;
                         } else if (passageNeighbourCount == 2) {
                             if (hasPassageNorthNeighbour) {
-                                if (hasPassageEastNeighbour) floorMaterial.mainTexture = carpetNE;
-                                else if (hasPassageSouthNeighbour) floorMaterial.mainTexture = carpetNS;
-                                else if (hasPassageWestNeighbour) floorMaterial.mainTexture = carpetNW;
+                                if (hasPassageEastNeighbour) carpetMaterial.mainTexture = carpetNE;
+                                else if (hasPassageSouthNeighbour) carpetMaterial.mainTexture = carpetNS;
+                                else if (hasPassageWestNeighbour) carpetMaterial.mainTexture = carpetNW;
                             } else if (hasPassageEastNeighbour) {
-                                if (hasPassageSouthNeighbour) floorMaterial.mainTexture = carpetES;
-                                else if (hasPassageWestNeighbour) floorMaterial.mainTexture = carpetEW;
+                                if (hasPassageSouthNeighbour) carpetMaterial.mainTexture = carpetES;
+                                else if (hasPassageWestNeighbour) carpetMaterial.mainTexture = carpetEW;
                             } else if (hasPassageSouthNeighbour) {
-                                if (hasPassageWestNeighbour) floorMaterial.mainTexture = carpetSW;
+                                if (hasPassageWestNeighbour) carpetMaterial.mainTexture = carpetSW;
                             }
                         } else if (passageNeighbourCount == 3) {
-                            if (hasPassageNorthNeighbour && hasPassageEastNeighbour && hasPassageSouthNeighbour) floorMaterial.mainTexture = carpetNES;
-                            else if (hasPassageEastNeighbour && hasPassageSouthNeighbour && hasPassageWestNeighbour) floorMaterial.mainTexture = carpetESW;
-                            else if (hasPassageSouthNeighbour && hasPassageWestNeighbour && hasPassageNorthNeighbour) floorMaterial.mainTexture = carpetNSW;
-                            else if (hasPassageWestNeighbour && hasPassageNorthNeighbour && hasPassageEastNeighbour) floorMaterial.mainTexture = carpetNEW;
+                            if (hasPassageNorthNeighbour && hasPassageEastNeighbour && hasPassageSouthNeighbour) carpetMaterial.mainTexture = carpetNES;
+                            else if (hasPassageEastNeighbour && hasPassageSouthNeighbour && hasPassageWestNeighbour) carpetMaterial.mainTexture = carpetESW;
+                            else if (hasPassageSouthNeighbour && hasPassageWestNeighbour && hasPassageNorthNeighbour) carpetMaterial.mainTexture = carpetNSW;
+                            else if (hasPassageWestNeighbour && hasPassageNorthNeighbour && hasPassageEastNeighbour) carpetMaterial.mainTexture = carpetNEW;
 
                             passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject.SetActive(true);
                             upperLightSources.Add(passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject, LightingType.TORCH_0);
                         } else if (passageNeighbourCount == 4) {
-                            floorMaterial.mainTexture = carpetNESW;
+                            carpetMaterial.mainTexture = carpetNESW;
                             
                             passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject.SetActive(true);
                             upperLightSources.Add(passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject, LightingType.TORCH_0);
                         }
+
+                        Material floorMaterial = passage.transform.Find("Maze Pieces").Find("Floor").GetComponent<MeshRenderer>().material;
+                        floorMaterial.mainTexture = stoneBrick;
 
                         passage.transform.parent = passageParent.transform;
 

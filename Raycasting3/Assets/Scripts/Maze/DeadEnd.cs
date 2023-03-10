@@ -4,36 +4,43 @@ using UnityEngine;
 
 public class DeadEnd : MonoBehaviour {
 
+    public Texture2D floorTexture;
     public Texture2D carpetN;
     public Texture2D carpetE;
     public Texture2D carpetS;
     public Texture2D carpetW;
 
+    Transform carpet;
+    Transform floor;
+
+    void Awake() {
+        carpet = transform.Find("Maze Pieces").Find("Carpet");
+        floor = transform.Find("Maze Pieces").Find("Floor");
+        floor.GetComponent<MeshRenderer>().material.mainTexture = floorTexture;
+    }
+
     public void SetDirectionNorth() {
-        Transform floor = transform.Find("Maze Pieces").Find("Floor");
-        floor.GetComponent<MeshRenderer>().material.mainTexture = carpetN;
-        Rotate(floor, 180);
+        carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetN;
+        Rotate(180);
     }
 
     public void SetDirectionEast() {
-        Transform floor = transform.Find("Maze Pieces").Find("Floor");
-        floor.GetComponent<MeshRenderer>().material.mainTexture = carpetE;
-        Rotate(floor, 270);
+        carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetE;
+        Rotate(270);
     }
 
     public void SetDirectionSouth() {
-        Transform floor = transform.Find("Maze Pieces").Find("Floor");
-        floor.GetComponent<MeshRenderer>().material.mainTexture = carpetS;
+        carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetS;
     }
 
     public void SetDirectionWest() {
-        Transform floor = transform.Find("Maze Pieces").Find("Floor");
-        floor.GetComponent<MeshRenderer>().material.mainTexture = carpetW;
-        Rotate(floor, 90);
+        carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetW;
+        Rotate(90);
     }
 
-    private void Rotate(Transform floor, float amount) {
+    private void Rotate(float amount) {
         transform.Rotate(0, amount, 0);
+        carpet.Rotate(0, 0, amount);
         floor.Rotate(0, 0, amount);
     }
 
