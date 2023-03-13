@@ -11,8 +11,6 @@ public class Passage : MonoBehaviour {
         OPEN,
         WINDOW
     }
-
-    public Texture2D banner;
     
     public Texture2D carpetN;
     public Texture2D carpetE;
@@ -34,22 +32,15 @@ public class Passage : MonoBehaviour {
 
     Transform maze;
 
+    Color colour;
+
     void Awake() {
         carpet = transform.Find("Maze Pieces").Find("Carpet");
-
-        int random;
-        foreach (Transform mazePiece in transform.Find("Maze Pieces")) {
-            if (mazePiece.name.Contains("Wall") && mazePiece.name.Contains("L0") && !mazePiece.name.Contains("Window")) {
-                random = Random.Range(0, 100);
-                if (random >=  0 && random < 10) {
-                    mazePiece.GetComponent<MeshRenderer>().material.mainTexture = banner;
-                }
-            }
-        }
     }
 
-    public void Setup(Transform maze, WallState northState, WallState eastState, WallState southState, WallState westState) {
+    public void Setup(Transform maze, WallState northState, WallState eastState, WallState southState, WallState westState, Color colour) {
         this.maze = maze;
+        this.colour = colour;
 
         int openNeighbourCount = 0;
 
@@ -57,21 +48,25 @@ public class Passage : MonoBehaviour {
         else if (northState == WallState.LOWER_OPEN) { OpenNorthLower(); }
         else if (northState == WallState.UPPER_OPEN) { OpenNorthUpper(); }
         else if (northState == WallState.WINDOW) { PlaceNorthWindow(); }
+        else if (Random.Range(0, 100) < 10) { transform.Find("Maze Pieces").Find("Banner-N").gameObject.SetActive(true); }
 
         if (eastState == WallState.OPEN) { OpenEast(); openNeighbourCount++; }
         else if (eastState == WallState.LOWER_OPEN) { OpenEastLower(); }
         else if (eastState == WallState.UPPER_OPEN) { OpenEastUpper(); }
         else if (eastState == WallState.WINDOW) { PlaceEastWindow(); }
+        else if (Random.Range(0, 100) < 10) { transform.Find("Maze Pieces").Find("Banner-E").gameObject.SetActive(true); }
 
         if (southState == WallState.OPEN) { OpenSouth(); openNeighbourCount++; }
         else if (southState == WallState.LOWER_OPEN) { OpenSouthLower(); }
         else if (southState == WallState.UPPER_OPEN) { OpenSouthUpper(); }
         else if (southState == WallState.WINDOW) { PlaceSouthWindow(); }
+        else if (Random.Range(0, 100) < 10) { transform.Find("Maze Pieces").Find("Banner-S").gameObject.SetActive(true); }
 
         if (westState == WallState.OPEN) { OpenWest(); openNeighbourCount++; }
         else if (westState == WallState.LOWER_OPEN) { OpenWestLower(); }
         else if (westState == WallState.UPPER_OPEN) { OpenWestUpper(); }
         else if (westState == WallState.WINDOW) { PlaceWestWindow(); }
+        else if (Random.Range(0, 100) < 10) { transform.Find("Maze Pieces").Find("Banner-W").gameObject.SetActive(true); }
 
 
         if (openNeighbourCount == 1) {
@@ -204,6 +199,7 @@ public class Passage : MonoBehaviour {
 
     private void PlaceCarpet(Texture2D texture) {
         carpet.GetComponent<MeshRenderer>().material.mainTexture = texture;
+        carpet.GetComponent<MeshRenderer>().material.color = colour;
     }
 
     private void PlaceChandelier() {

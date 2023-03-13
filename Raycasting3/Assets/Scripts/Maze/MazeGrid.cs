@@ -8,13 +8,13 @@ public class MazeGrid {
     private int size;
     private List<List<MazeCell>> grid;
 
-    public MazeGrid(int size) {
+    public MazeGrid(int size, Color colour) {
         this.size = size;
         grid = new List<List<MazeCell>>();
         for (int i = 0; i < size; i++) {
             grid.Add(new List<MazeCell>());
             for (int j = 0; j < size; j++) {
-                grid[i].Add(new MazeCell(j, i, MazeCellType.WALL));
+                grid[i].Add(new MazeCell(j, i, MazeCellType.WALL, colour));
             }
         }
     }

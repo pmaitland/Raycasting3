@@ -15,10 +15,13 @@ public class MazeCell {
     private LightingType temporaryLightingLower;
     private LightingType temporaryLightingUpper;
 
-    public MazeCell(int x, int y, MazeCellType type) {
+    private Color detailColour;
+
+    public MazeCell(int x, int y, MazeCellType type, Color detailColour) {
         this.x = x;
         this.y = y;
         this.type = type;
+        this.detailColour = detailColour;
 
         this.mazePieces = new List<GameObject>();
 
@@ -94,11 +97,15 @@ public class MazeCell {
         LightingType lower = Lighting.GetStrongestLight(lightingLower, temporaryLightingLower);
 
         foreach (GameObject mazePiece in mazePieces) {
-            Material material = mazePiece.GetComponent<MeshRenderer>().material;
-            if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling") || mazePiece.transform.position.y == 1)
+            Material material = mazePiece.GetComponent<MeshRenderer>().materials[0];
+            if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling") || mazePiece.transform.position.y == 1) {
                 material.color = Lighting.GetColor(upper);
-            else
+            } else if (mazePiece.name.Contains("Carpet") || mazePiece.name.Contains("Banner")) {
+                material.color = detailColour;
+                material.color += Lighting.GetColor(lower);
+            } else {
                 material.color = Lighting.GetColor(lower);
+            }
         }
     }
 

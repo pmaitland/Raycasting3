@@ -37,6 +37,8 @@ public class MazeGenerator : MonoBehaviour {
 
     private List<Vector2> lowerLightSourcesToClear;
 
+    private Color colour;
+
     void OnValidate() {
         if (size % 2 == 0) size -= 1;
     }
@@ -60,6 +62,8 @@ public class MazeGenerator : MonoBehaviour {
         temporaryLowerLightSources = new Dictionary<GameObject, LightingType>();
 
         lowerLightSourcesToClear = new List<Vector2>();
+
+        colour = PickColour();
 
         GenerateMaze();
         SetInitialLighting();
@@ -126,7 +130,7 @@ public class MazeGenerator : MonoBehaviour {
     }
 
     private void GenerateMaze() {
-        grid = new MazeGrid(size);
+        grid = new MazeGrid(size, colour);
 
         int[] roomDimensions = new int[] { 3, 5 };
 
@@ -302,7 +306,7 @@ public class MazeGenerator : MonoBehaviour {
                             else if (x == size - 2) { eastState = Passage.WallState.WINDOW; }
                         }
 
-                        passage.transform.GetComponent<Passage>().Setup(transform, northState, eastState, southState, westState);
+                        passage.transform.GetComponent<Passage>().Setup(transform, northState, eastState, southState, westState, colour);
 
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
 
@@ -383,4 +387,14 @@ public class MazeGenerator : MonoBehaviour {
     public MazeCell GetMazeCell(float x, float y) {
         return grid.GetCell(x, y);
     }
+
+    private Color PickColour() {
+        Color[] colours = {
+            Color.red,
+            Color.magenta,
+            Color.blue
+        };
+        return colours[Random.Range(0, colours.Length)];
+    }
+
 }
