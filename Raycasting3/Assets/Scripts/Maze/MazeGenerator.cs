@@ -9,26 +9,6 @@ public class MazeGenerator : MonoBehaviour {
     [Range(0, 50)]
     public int roomCount = 6;
 
-    public Texture2D stoneBrick;
-
-    public Texture2D banner;
-
-    public Texture2D carpetN;
-    public Texture2D carpetE;
-    public Texture2D carpetS;
-    public Texture2D carpetW; 
-    public Texture2D carpetNS;
-    public Texture2D carpetEW;
-    public Texture2D carpetNE;
-    public Texture2D carpetES;
-    public Texture2D carpetSW;
-    public Texture2D carpetNW;
-    public Texture2D carpetNES;
-    public Texture2D carpetESW;
-    public Texture2D carpetNSW;
-    public Texture2D carpetNEW;
-    public Texture2D carpetNESW;
-
     public GameObject passagePrefab;
     public GameObject deadEndPrefab;
 
@@ -129,8 +109,16 @@ public class MazeGenerator : MonoBehaviour {
         grid.SetLightingLower(grid.GetCell(lightSource.transform.position.x, lightSource.transform.position.z), lightingType);
     }
 
+    public void AddToLowerLightSources(GameObject lightSource, LightingType lightingType) {
+        lowerLightSources.Add(lightSource, lightingType);
+    }
+
     public void AddUpperLightSource(GameObject lightSource, LightingType lightingType) {
         grid.SetLightingUpper(grid.GetCell(lightSource.transform.position.x, lightSource.transform.position.z), lightingType);
+    }
+
+    public void AddToUpperLightSources(GameObject lightSource, LightingType lightingType) {
+        upperLightSources.Add(lightSource, lightingType);
     }
 
     public void AddTemporaryLowerLightSource(GameObject lightSource, LightingType lightingType) {
@@ -262,7 +250,6 @@ public class MazeGenerator : MonoBehaviour {
 
         List<MazeCell> deadEnds = new List<MazeCell>();
 
-        int random = 0;
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 MazeCell currentCell = grid.GetCell(x, y);
@@ -270,155 +257,52 @@ public class MazeGenerator : MonoBehaviour {
                     case MazeCellType.PASSAGE:
                         GameObject passage = Instantiate(passagePrefab, new Vector3(x, 0, y), passagePrefab.transform.rotation);
 
-                        int passageNeighbourCount = 0;
-                        bool hasPassageNorthNeighbour = false;
-                        bool hasPassageEastNeighbour = false;
-                        bool hasPassageSouthNeighbour = false;
-                        bool hasPassageWestNeighbour = false;
+                        passage.transform.parent = passageParent.transform;
+
+                        foreach (Transform mazePiece in passage.transform.Find("Maze Pieces")) grid.GetCell(x, y).AddToMazePieces(mazePiece.gameObject);
+
+                        Passage.WallState northState = Passage.WallState.CLOSED;
+                        Passage.WallState eastState = Passage.WallState.CLOSED;
+                        Passage.WallState southState = Passage.WallState.CLOSED;
+                        Passage.WallState westState = Passage.WallState.CLOSED;
 
                         MazeCellType neighbourType = grid.GetNorthNeighbour(x, y).GetCellType();
                         if (neighbourType == MazeCellType.DOOR || neighbourType == MazeCellType.HIDDEN_DOOR) {
-                            foreach (Transform mazePiece in passage.transform.Find("Maze Pieces")) {
-                                if (mazePiece.name == "Wall-N-L0") mazePiece.gameObject.SetActive(false);
-                            }
+                            northState = Passage.WallState.LOWER_OPEN;
                         } else if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) {
-                            foreach (Transform mazePiece in passage.transform.Find("Maze Pieces")) {
-                                if (mazePiece.name == "Wall-N-L0") mazePiece.gameObject.SetActive(false);
-                                if (mazePiece.name == "Wall-N-L1") mazePiece.gameObject.SetActive(false);
-                            }
-                            passageNeighbourCount++;
-                            hasPassageNorthNeighbour = true;
+                            northState = Passage.WallState.OPEN;
                         }
 
                         neighbourType = grid.GetEastNeighbour(x, y).GetCellType();
                         if (neighbourType == MazeCellType.DOOR || neighbourType == MazeCellType.HIDDEN_DOOR) {
-                            foreach (Transform mazePiece in passage.transform.Find("Maze Pieces")) {
-                                if (mazePiece.name == "Wall-E-L0") mazePiece.gameObject.SetActive(false);
-                            }
+                            eastState = Passage.WallState.LOWER_OPEN;
                         } else if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) {
-                            foreach (Transform mazePiece in passage.transform.Find("Maze Pieces")) {
-                                if (mazePiece.name == "Wall-E-L0") mazePiece.gameObject.SetActive(false);
-                                if (mazePiece.name == "Wall-E-L1") mazePiece.gameObject.SetActive(false);
-                            }
-                            passageNeighbourCount++;
-                            hasPassageEastNeighbour = true;
+                            eastState = Passage.WallState.OPEN;
                         }
 
                         neighbourType = grid.GetSouthNeighbour(x, y).GetCellType();
                         if (neighbourType == MazeCellType.DOOR || neighbourType == MazeCellType.HIDDEN_DOOR) {
-                            foreach (Transform mazePiece in passage.transform.Find("Maze Pieces")) {
-                                if (mazePiece.name == "Wall-S-L0") mazePiece.gameObject.SetActive(false);
-                            }
+                            southState = Passage.WallState.LOWER_OPEN;
                         } else if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) {
-                            foreach (Transform mazePiece in passage.transform.Find("Maze Pieces")) {
-                                if (mazePiece.name == "Wall-S-L0") mazePiece.gameObject.SetActive(false);
-                                if (mazePiece.name == "Wall-S-L1") mazePiece.gameObject.SetActive(false);
-                            }
-                            passageNeighbourCount++;
-                            hasPassageSouthNeighbour = true;
+                            southState = Passage.WallState.OPEN;
                         }
 
                         neighbourType = grid.GetWestNeighbour(x, y).GetCellType();
                         if (neighbourType == MazeCellType.DOOR || neighbourType == MazeCellType.HIDDEN_DOOR) {
-                            foreach (Transform mazePiece in passage.transform.Find("Maze Pieces")) {
-                                if (mazePiece.name == "Wall-W-L0") mazePiece.gameObject.SetActive(false);
-                            }
+                            westState = Passage.WallState.LOWER_OPEN;
                         } else if (neighbourType == MazeCellType.PASSAGE || neighbourType == MazeCellType.DEAD_END) {
-                            foreach (Transform mazePiece in passage.transform.Find("Maze Pieces")) {
-                                if (mazePiece.name == "Wall-W-L0") mazePiece.gameObject.SetActive(false);
-                                if (mazePiece.name == "Wall-W-L1") mazePiece.gameObject.SetActive(false);
-                            }
-                            passageNeighbourCount++;
-                            hasPassageWestNeighbour = true;
-                        }
-
-                        foreach (Transform mazePiece in passage.transform.Find("Maze Pieces")) {
-                            if (mazePiece.name.Contains("Wall") && mazePiece.name.Contains("L0") && !mazePiece.name.Contains("Window")) {
-                                random = Random.Range(0, 100);
-                                if (random >=  0 && random < 10) {
-                                    mazePiece.GetComponent<MeshRenderer>().material.mainTexture = banner;
-                                }
-                            }
+                            westState = Passage.WallState.OPEN;
                         }
 
                         if (x % 2 == 0) {
-                            if (y == 1 || y == size - 2) {
-                                lowerLightSources.Add(passage.transform.Find("Maze Pieces").Find("Ceiling").gameObject, LightingType.LIGHT_SPELL_0);
-                                upperLightSources.Add(passage.transform.Find("Maze Pieces").Find("Floor").gameObject, LightingType.LIGHT_SPELL_0);
-
-                                if (y == size - 2) {
-                                    passage.transform.Find("Maze Pieces").Find("Wall-N-L0").gameObject.SetActive(false);
-                                    passage.transform.Find("Maze Pieces").Find("Wall-N-L1").gameObject.SetActive(false);
-                                    passage.transform.Find("Maze Pieces").Find("Wall-N-L0-Window").gameObject.SetActive(true);
-                                    passage.transform.Find("Maze Pieces").Find("Wall-N-L1-Window").gameObject.SetActive(true);
-                                }
-
-                                if (y == 1) {
-                                    passage.transform.Find("Maze Pieces").Find("Wall-S-L0").gameObject.SetActive(false);
-                                    passage.transform.Find("Maze Pieces").Find("Wall-S-L1").gameObject.SetActive(false);
-                                    passage.transform.Find("Maze Pieces").Find("Wall-S-L0-Window").gameObject.SetActive(true);
-                                    passage.transform.Find("Maze Pieces").Find("Wall-S-L1-Window").gameObject.SetActive(true);
-                                }
-                            }
+                            if (y == size - 2) { northState = Passage.WallState.WINDOW; }
+                            else if (y == 1) { southState = Passage.WallState.WINDOW; }
                         } else if (y % 2 == 0) {
-                            if (x == 1 || x == size - 2) {
-                                lowerLightSources.Add(passage.transform.Find("Maze Pieces").Find("Ceiling").gameObject, LightingType.LIGHT_SPELL_0);
-                                upperLightSources.Add(passage.transform.Find("Maze Pieces").Find("Floor").gameObject, LightingType.LIGHT_SPELL_0);
-
-                                if (x == 1) {
-                                    passage.transform.Find("Maze Pieces").Find("Wall-W-L0").gameObject.SetActive(false);
-                                    passage.transform.Find("Maze Pieces").Find("Wall-W-L1").gameObject.SetActive(false);
-                                    passage.transform.Find("Maze Pieces").Find("Wall-W-L0-Window").gameObject.SetActive(true);
-                                    passage.transform.Find("Maze Pieces").Find("Wall-W-L1-Window").gameObject.SetActive(true);
-                                }
-
-                                if (x == size - 2) {
-                                    passage.transform.Find("Maze Pieces").Find("Wall-E-L0").gameObject.SetActive(false);
-                                    passage.transform.Find("Maze Pieces").Find("Wall-E-L1").gameObject.SetActive(false);
-                                    passage.transform.Find("Maze Pieces").Find("Wall-E-L0-Window").gameObject.SetActive(true);
-                                    passage.transform.Find("Maze Pieces").Find("Wall-E-L1-Window").gameObject.SetActive(true);
-                                }
-                            }
+                            if (x == 1) { westState = Passage.WallState.WINDOW; }
+                            else if (x == size - 2) { eastState = Passage.WallState.WINDOW; }
                         }
 
-                        Material carpetMaterial = passage.transform.Find("Maze Pieces").Find("Carpet").GetComponent<MeshRenderer>().material;
-                        if (passageNeighbourCount == 1) {
-                            if (hasPassageNorthNeighbour) carpetMaterial.mainTexture = carpetN;
-                            else if (hasPassageEastNeighbour) carpetMaterial.mainTexture = carpetE;
-                            else if (hasPassageSouthNeighbour) carpetMaterial.mainTexture = carpetS;
-                            else if (hasPassageWestNeighbour) carpetMaterial.mainTexture = carpetW;
-                        } else if (passageNeighbourCount == 2) {
-                            if (hasPassageNorthNeighbour) {
-                                if (hasPassageEastNeighbour) carpetMaterial.mainTexture = carpetNE;
-                                else if (hasPassageSouthNeighbour) carpetMaterial.mainTexture = carpetNS;
-                                else if (hasPassageWestNeighbour) carpetMaterial.mainTexture = carpetNW;
-                            } else if (hasPassageEastNeighbour) {
-                                if (hasPassageSouthNeighbour) carpetMaterial.mainTexture = carpetES;
-                                else if (hasPassageWestNeighbour) carpetMaterial.mainTexture = carpetEW;
-                            } else if (hasPassageSouthNeighbour) {
-                                if (hasPassageWestNeighbour) carpetMaterial.mainTexture = carpetSW;
-                            }
-                        } else if (passageNeighbourCount == 3) {
-                            if (hasPassageNorthNeighbour && hasPassageEastNeighbour && hasPassageSouthNeighbour) carpetMaterial.mainTexture = carpetNES;
-                            else if (hasPassageEastNeighbour && hasPassageSouthNeighbour && hasPassageWestNeighbour) carpetMaterial.mainTexture = carpetESW;
-                            else if (hasPassageSouthNeighbour && hasPassageWestNeighbour && hasPassageNorthNeighbour) carpetMaterial.mainTexture = carpetNSW;
-                            else if (hasPassageWestNeighbour && hasPassageNorthNeighbour && hasPassageEastNeighbour) carpetMaterial.mainTexture = carpetNEW;
-
-                            passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject.SetActive(true);
-                            upperLightSources.Add(passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject, LightingType.TORCH_0);
-                        } else if (passageNeighbourCount == 4) {
-                            carpetMaterial.mainTexture = carpetNESW;
-                            
-                            passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject.SetActive(true);
-                            upperLightSources.Add(passage.transform.Find("Maze Pieces").Find("Chandelier").gameObject, LightingType.TORCH_0);
-                        }
-
-                        Material floorMaterial = passage.transform.Find("Maze Pieces").Find("Floor").GetComponent<MeshRenderer>().material;
-                        floorMaterial.mainTexture = stoneBrick;
-
-                        passage.transform.parent = passageParent.transform;
-
-                        foreach (Transform mazePiece in passage.transform.Find("Maze Pieces")) grid.GetCell(x, y).AddToMazePieces(mazePiece.gameObject);
+                        passage.transform.GetComponent<Passage>().Setup(transform, northState, eastState, southState, westState);
 
                         gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
 

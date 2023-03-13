@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class DeadEnd : MonoBehaviour {
 
-    public Texture2D floorTexture;
     public Texture2D carpetN;
     public Texture2D carpetE;
     public Texture2D carpetS;
@@ -16,7 +15,6 @@ public class DeadEnd : MonoBehaviour {
     void Awake() {
         carpet = transform.Find("Maze Pieces").Find("Carpet");
         floor = transform.Find("Maze Pieces").Find("Floor");
-        floor.GetComponent<MeshRenderer>().material.mainTexture = floorTexture;
     }
 
     public void SetDirectionNorth() {
