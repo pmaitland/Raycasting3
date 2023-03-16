@@ -12,6 +12,7 @@ public class MazeGenerator : MonoBehaviour {
     public GameObject passagePrefab;
     public GameObject deadEndPrefab;
 
+    public GameObject roomPlayerStart;
     public GameObject[] roomPrefabs3x3;
     public GameObject[] roomPrefabs3x5;
     public GameObject[] roomPrefabs5x3;
@@ -134,6 +135,8 @@ public class MazeGenerator : MonoBehaviour {
 
         int[] roomDimensions = new int[] { 3, 5 };
 
+        bool playerStartCreated = false;
+
         List<MazeRoom> existingRooms = new List<MazeRoom>();
         for (int i = 0; i < roomCount; i++) {
 
@@ -189,8 +192,15 @@ public class MazeGenerator : MonoBehaviour {
                         default:
                             break;
                     }
-                    
-                    GameObject roomObject = Instantiate(chosenRoom, new Vector3(roomX, 0, roomY), chosenRoom.transform.rotation);
+
+                    GameObject roomObject;
+                    if (!playerStartCreated) {
+                        roomObject = Instantiate(roomPlayerStart, new Vector3(roomX, 0, roomY), roomPlayerStart.transform.rotation);
+                        playerStartCreated = true;
+                        playerStart = grid.GetCell(roomX + 1, roomY + 1);
+                    } else {
+                        roomObject = Instantiate(chosenRoom, new Vector3(roomX, 0, roomY), chosenRoom.transform.rotation);
+                    }
                     roomObject.transform.parent = roomParent.transform;
 
                     for (int x = roomX; x < roomX + roomWidth; x++) {
@@ -338,7 +348,6 @@ public class MazeGenerator : MonoBehaviour {
         }
         if (Application.isEditor) writer.Close();
 
-        playerStart = deadEnds[Random.Range(0, deadEnds.Count)];
         gameController.SetPlayerPosition(new Vector3(playerStart.GetX(), 1, playerStart.GetY()));
         deadEnds.Remove(playerStart);
 
