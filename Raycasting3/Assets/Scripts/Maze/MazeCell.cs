@@ -102,7 +102,7 @@ public class MazeCell {
                 material.color = Lighting.GetColor(upper);
             } else if (mazePiece.name.Contains("Carpet") || mazePiece.name.Contains("Banner")) {
                 material.color = detailColour;
-                material.color += Lighting.GetColor(lower);
+                material.color += (Lighting.GetColor(lower) / 2f);
             } else {
                 material.color = Lighting.GetColor(lower);
             }
