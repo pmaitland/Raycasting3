@@ -273,17 +273,14 @@ public class PlayerBehaviour : MonoBehaviour {
 
 			if (other.transform.parent.name.Contains("Hidden Door")) {
 				other.transform.parent.GetComponent<HiddenDoorBehaviour>().Open();
-			}
-
-			else if (other.transform.parent.parent != null) {
-
+			} else if (other.transform.name.Contains("Ladder")) {
+                gameController.GenerateMaze();
+            } else if (other.transform.parent.parent != null) {
 				if (other.transform.name.Contains("Face 1")) {
 					other.transform.parent.parent.GetComponent<DoorBehaviour>().Open(true);
 				} else if (other.transform.name.Contains("Face 2")) {
 					other.transform.parent.parent.GetComponent<DoorBehaviour>().Open(false);
-				}
-
-				else if (other.transform.parent.parent.parent != null) {
+				} else if (other.transform.parent.parent.parent != null) {
 					if (other.transform.parent.parent.parent.name.Contains("Chest")) {
 						other.transform.parent.parent.parent.GetComponent<ChestBehaviour>().Open();
 					}

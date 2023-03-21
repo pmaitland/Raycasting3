@@ -12,7 +12,9 @@ public class MazeGenerator : MonoBehaviour {
     public GameObject passagePrefab;
     public GameObject deadEndPrefab;
 
-    public GameObject roomPlayerStart;
+    public GameObject startRoom;
+    public GameObject exitRoom;
+
     public GameObject[] roomPrefabs3x3;
     public GameObject[] roomPrefabs3x5;
     public GameObject[] roomPrefabs5x3;
@@ -64,7 +66,7 @@ public class MazeGenerator : MonoBehaviour {
 
         lowerLightSourcesToClear = new List<Vector2>();
 
-        colour = PickColour();
+        colour = gameController.GetMazeColour();
 
         GenerateMaze();
         SetInitialLighting();
@@ -135,7 +137,8 @@ public class MazeGenerator : MonoBehaviour {
 
         int[] roomDimensions = new int[] { 3, 5 };
 
-        bool playerStartCreated = false;
+        bool startRoomCreated = false;
+        bool exitRoomCreated = false;
 
         List<MazeRoom> existingRooms = new List<MazeRoom>();
         for (int i = 0; i < roomCount; i++) {
@@ -194,10 +197,17 @@ public class MazeGenerator : MonoBehaviour {
                     }
 
                     GameObject roomObject;
-                    if (!playerStartCreated) {
-                        roomObject = Instantiate(roomPlayerStart, new Vector3(roomX, 0, roomY), roomPlayerStart.transform.rotation);
-                        playerStartCreated = true;
+                    if (!startRoomCreated) {
+                        roomObject = Instantiate(startRoom, new Vector3(roomX, 0, roomY), startRoom.transform.rotation);
+                        roomHeight = 3;
+                        roomWidth = 3;
+                        startRoomCreated = true;
                         playerStart = grid.GetCell(roomX + 1, roomY + 1);
+                    } else if (!exitRoomCreated) {
+                        roomObject = Instantiate(exitRoom, new Vector3(roomX, 0, roomY), exitRoom.transform.rotation);
+                        roomHeight = 3;
+                        roomWidth = 3;
+                        exitRoomCreated = true;
                     } else {
                         roomObject = Instantiate(chosenRoom, new Vector3(roomX, 0, roomY), chosenRoom.transform.rotation);
                     }
@@ -395,15 +405,6 @@ public class MazeGenerator : MonoBehaviour {
 
     public MazeCell GetMazeCell(float x, float y) {
         return grid.GetCell(x, y);
-    }
-
-    private Color PickColour() {
-        Color[] colours = {
-            Color.red,
-            Color.magenta,
-            Color.blue
-        };
-        return colours[Random.Range(0, colours.Length)];
     }
 
 }

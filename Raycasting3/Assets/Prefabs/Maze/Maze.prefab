@@ -48,7 +48,8 @@ MonoBehaviour:
   roomCount: 25
   passagePrefab: {fileID: 9201763936282855289, guid: 822cd19ac778aa1448f1d5fbf12dedc4, type: 3}
   deadEndPrefab: {fileID: 1849009846854788362, guid: 6b28c6087969813628055092234eea39, type: 3}
-  roomPlayerStart: {fileID: 5812835802137397256, guid: 28dece26be3116b40a1005d05f2d8eb3, type: 3}
+  startRoom: {fileID: 5812835802137397256, guid: 28dece26be3116b40a1005d05f2d8eb3, type: 3}
+  exitRoom: {fileID: 5812835802137397256, guid: a3ef99de0a46e4b6387c1a6e01c80080, type: 3}
   roomPrefabs3x3:
   - {fileID: 5587744587614525102, guid: 40ea23138ceb6a151b7401f569f8a1b1, type: 3}
   - {fileID: 5812835802137397256, guid: a25d89cd12d7a10529ace1907aa725a2, type: 3}

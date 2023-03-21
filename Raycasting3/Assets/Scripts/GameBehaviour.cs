@@ -20,6 +20,8 @@ public class GameBehaviour : MonoBehaviour {
     private MinimapBehaviour minimapBehaviour;
     private PauseScreenBehaviour pauseScreenBehaviour;
 
+    private Color mazeColour;
+
     void Awake() {
         player = Instantiate(playerPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
         player.name = "Player";
@@ -31,9 +33,8 @@ public class GameBehaviour : MonoBehaviour {
         if (showMinimap) minimapBehaviour = canvas.GetComponentInChildren<MinimapBehaviour>();
         else canvas.transform.Find("HUD").Find("Minimap").gameObject.SetActive(false);
 
-        maze = Instantiate(mazePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
-        maze.name = "Maze";
-        mazeGenerator = maze.GetComponent<MazeGenerator>();
+        PickColour();
+        GenerateMaze();
 
         pauseScreenBehaviour = canvas.transform.Find("Pause Screen").GetComponent<PauseScreenBehaviour>();
         paused = false;
@@ -48,6 +49,15 @@ public class GameBehaviour : MonoBehaviour {
             if (paused) Unpause();
             else Pause();
         }
+    }
+
+    public void GenerateMaze() {
+        if (maze != null) {
+            Destroy(maze);
+        }
+        maze = Instantiate(mazePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        maze.name = "Maze";
+        mazeGenerator = maze.GetComponent<MazeGenerator>();
     }
 
     private void Pause() {
@@ -90,6 +100,10 @@ public class GameBehaviour : MonoBehaviour {
         return mazeGenerator.GetSize();
     }
 
+    public Color GetMazeColour() {
+        return mazeColour;
+    }
+
     public MazeCell GetMazeCell(float x, float y) {
         return mazeGenerator.GetMazeCell(x, y);
     }
@@ -104,5 +118,14 @@ public class GameBehaviour : MonoBehaviour {
 
     public void MovePlayerMinimapCell(int x, int y) {
         if (showMinimap) minimapBehaviour.MovePlayerMinimapCell(x, y);
+    }
+
+    private void PickColour() {
+        Color[] colours = {
+            Color.red,
+            Color.magenta,
+            Color.blue
+        };
+        mazeColour = colours[Random.Range(0, colours.Length)];
     }
 }
