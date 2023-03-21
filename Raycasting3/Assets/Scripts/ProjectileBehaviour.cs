@@ -8,6 +8,10 @@ public class ProjectileBehaviour : MonoBehaviour {
 
     void Update() {
         GetComponent<Rigidbody>().velocity = transform.forward * moveSpeed;
+
+        if (Mathf.Abs(transform.position.x) > 100 || Mathf.Abs(transform.position.z) > 100) {
+            Destroy(gameObject);
+        }
     }
 
     void OnTriggerEnter(Collider other) {
