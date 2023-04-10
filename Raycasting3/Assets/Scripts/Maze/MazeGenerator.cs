@@ -12,6 +12,8 @@ public class MazeGenerator : MonoBehaviour {
     public GameObject passagePrefab;
     public GameObject deadEndPrefab;
 
+    public bool generateRooms;
+
     public GameObject startRoom;
     public GameObject exitRoom;
 
@@ -137,126 +139,211 @@ public class MazeGenerator : MonoBehaviour {
 
         int[] roomDimensions = new int[] { 3, 5 };
 
-        bool startRoomCreated = false;
-        bool exitRoomCreated = false;
-
         List<MazeRoom> existingRooms = new List<MazeRoom>();
-        for (int i = 0; i < roomCount; i++) {
 
-            bool canBeCreated = false;
-            int attemptCount = 0;
+        int startRoomX = Random.Range(3, (size - 3) - 1);
+        int startRoomY = Random.Range(3, (size - 3) - 1);
+        if (startRoomX % 2 == 0) startRoomX -= 1;
+        if (startRoomY % 2 == 0) startRoomY -= 1;
+        GameObject start = Instantiate(startRoom, new Vector3(startRoomX, 0, startRoomY), startRoom.transform.rotation);
+        playerStart = grid.GetCell(startRoomX + 1, startRoomY + 1);
+        start.transform.parent = roomParent.transform;
+        for (int x = startRoomX; x < startRoomX + 3; x++) {
+            for (int y = startRoomY; y < startRoomY + 3; y++) {
+                grid.SetCellType(x, y, MazeCellType.ROOM);
+                gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
+            }
+        }
+        foreach (Transform roomPiece in start.transform) {
+            if (roomPiece.name.Contains("Torch") || roomPiece.name.Contains("Chandelier")) {
+                if (roomPiece.position.y == 0) lowerLightSources.Add(roomPiece.gameObject, LightingType.TORCH_0);
+                else if (roomPiece.position.y == 1) upperLightSources.Add(roomPiece.gameObject, LightingType.TORCH_0);
+            } else if (roomPiece.name.Contains("Door")) {
+                string[] details = roomPiece.name.Split('-');
 
-            while (!canBeCreated && attemptCount < 10) {
-                canBeCreated = true;
-                attemptCount++;
+                int doorX = startRoomX + int.Parse(details[1]);
+                int doorY = startRoomY + int.Parse(details[2]);
 
-                int roomWidth = roomDimensions[Random.Range(0, roomDimensions.Length)];
-                int roomHeight = roomDimensions[Random.Range(0, roomDimensions.Length)];
-
-                int roomX = Random.Range(3, (size - roomWidth) - 1);
-                int roomY = Random.Range(3, (size - roomHeight) - 1);
-                if (roomX % 2 == 0) roomX -= 1;
-                if (roomY % 2 == 0) roomY -= 1;
-
-                MazeRoom room = new MazeRoom(roomX, roomY, roomWidth, roomHeight);
-
-                foreach (MazeRoom existingRoom in existingRooms) {
-                    if (MazeRoom.Overlap(room, existingRoom)) canBeCreated = false;
+                switch (details[3]) {
+                    case "N":
+                        doorX -= 1;
+                        break;
+                    case "E":
+                        doorY += 1;
+                        break;
+                    case "S":
+                        doorX += 1;
+                        break;
+                    case "W":
+                        doorY -= 1;
+                        break;
+                    default:
+                        break;
                 }
 
-                if (canBeCreated) {
-                    GameObject chosenRoom = roomPrefabs3x3[Random.Range(0, roomPrefabs3x3.Length)];
-                    
-                    switch (roomWidth) {
-                        case 3:
-                            switch (roomHeight) {
-                                case 3:
-                                    chosenRoom = roomPrefabs3x3[Random.Range(0, roomPrefabs3x3.Length)];
-                                    break;
-                                case 5:
-                                    chosenRoom = roomPrefabs3x5[Random.Range(0, roomPrefabs3x5.Length)];
-                                    break;
-                                default:
-                                    break;
-                            }
-                            break;
-                        case 5:
-                            switch (roomHeight) {
-                                case 3:
-                                    chosenRoom = roomPrefabs5x3[Random.Range(0, roomPrefabs5x3.Length)];
-                                    break;
-                                case 5:
-                                    chosenRoom = roomPrefabs5x5[Random.Range(0, roomPrefabs5x5.Length)];
-                                    break;
-                                default:
-                                    break;
-                            }
-                            break;
-                        default:
-                            break;
+                grid.GetCell(doorX, doorY).AddToMazePieces(roomPiece.gameObject);
+
+                grid.SetCellType(doorX, doorY, MazeCellType.DISCONNECTED_DOOR);
+                gameController.CreateMinimapCell(doorX, doorY, doorX + "," + doorY, Color.white, false);
+            } else {
+                grid.GetCell(roomPiece.position.x, roomPiece.position.z).AddToMazePieces(roomPiece.gameObject);
+            }
+        }
+        existingRooms.Add(new MazeRoom(startRoomX, startRoomY, 3, 3));
+        
+        int exitRoomX = Random.Range(3, (size - 3) - 1);
+        int exitRoomY = Random.Range(3, (size - 3) - 1);
+        if (exitRoomX % 2 == 0) exitRoomX -= 1;
+        if (exitRoomY % 2 == 0) exitRoomY -= 1;
+        GameObject exit = Instantiate(exitRoom, new Vector3(exitRoomX, 0, exitRoomY), exitRoom.transform.rotation);
+        exit.transform.parent = roomParent.transform;
+        for (int x = exitRoomX; x < exitRoomX + 3; x++) {
+            for (int y = exitRoomY; y < exitRoomY + 3; y++) {
+                grid.SetCellType(x, y, MazeCellType.ROOM);
+                gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
+            }
+        }
+        foreach (Transform roomPiece in exit.transform) {
+            if (roomPiece.name.Contains("Torch") || roomPiece.name.Contains("Chandelier")) {
+                if (roomPiece.position.y == 0) lowerLightSources.Add(roomPiece.gameObject, LightingType.TORCH_0);
+                else if (roomPiece.position.y == 1) upperLightSources.Add(roomPiece.gameObject, LightingType.TORCH_0);
+            } else if (roomPiece.name.Contains("Door")) {
+                string[] details = roomPiece.name.Split('-');
+
+                int doorX = exitRoomX + int.Parse(details[1]);
+                int doorY = exitRoomY + int.Parse(details[2]);
+
+                switch (details[3]) {
+                    case "N":
+                        doorX -= 1;
+                        break;
+                    case "E":
+                        doorY += 1;
+                        break;
+                    case "S":
+                        doorX += 1;
+                        break;
+                    case "W":
+                        doorY -= 1;
+                        break;
+                    default:
+                        break;
+                }
+
+                grid.GetCell(doorX, doorY).AddToMazePieces(roomPiece.gameObject);
+
+                grid.SetCellType(doorX, doorY, MazeCellType.DISCONNECTED_DOOR);
+                gameController.CreateMinimapCell(doorX, doorY, doorX + "," + doorY, Color.white, false);
+            } else {
+                grid.GetCell(roomPiece.position.x, roomPiece.position.z).AddToMazePieces(roomPiece.gameObject);
+            }
+        }
+        existingRooms.Add(new MazeRoom(exitRoomX, exitRoomY, 3, 3));
+
+        if (generateRooms) {
+            for (int i = 0; i < roomCount; i++) {
+
+                bool canBeCreated = false;
+                int attemptCount = 0;
+
+                while (!canBeCreated && attemptCount < 10) {
+                    canBeCreated = true;
+                    attemptCount++;
+
+                    int roomWidth = roomDimensions[Random.Range(0, roomDimensions.Length)];
+                    int roomHeight = roomDimensions[Random.Range(0, roomDimensions.Length)];
+
+                    int roomX = Random.Range(3, (size - roomWidth) - 1);
+                    int roomY = Random.Range(3, (size - roomHeight) - 1);
+                    if (roomX % 2 == 0) roomX -= 1;
+                    if (roomY % 2 == 0) roomY -= 1;
+
+                    MazeRoom room = new MazeRoom(roomX, roomY, roomWidth, roomHeight);
+
+                    foreach (MazeRoom existingRoom in existingRooms) {
+                        if (MazeRoom.Overlap(room, existingRoom)) canBeCreated = false;
                     }
 
-                    GameObject roomObject;
-                    if (!startRoomCreated) {
-                        roomObject = Instantiate(startRoom, new Vector3(roomX, 0, roomY), startRoom.transform.rotation);
-                        roomHeight = 3;
-                        roomWidth = 3;
-                        startRoomCreated = true;
-                        playerStart = grid.GetCell(roomX + 1, roomY + 1);
-                    } else if (!exitRoomCreated) {
-                        roomObject = Instantiate(exitRoom, new Vector3(roomX, 0, roomY), exitRoom.transform.rotation);
-                        roomHeight = 3;
-                        roomWidth = 3;
-                        exitRoomCreated = true;
-                    } else {
-                        roomObject = Instantiate(chosenRoom, new Vector3(roomX, 0, roomY), chosenRoom.transform.rotation);
-                    }
-                    roomObject.transform.parent = roomParent.transform;
-
-                    for (int x = roomX; x < roomX + roomWidth; x++) {
-                        for (int y = roomY; y < roomY + roomHeight; y++) {
-                            grid.SetCellType(x, y, MazeCellType.ROOM);
-                            gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
+                    if (canBeCreated) {
+                        GameObject chosenRoom = roomPrefabs3x3[Random.Range(0, roomPrefabs3x3.Length)];
+                        
+                        switch (roomWidth) {
+                            case 3:
+                                switch (roomHeight) {
+                                    case 3:
+                                        chosenRoom = roomPrefabs3x3[Random.Range(0, roomPrefabs3x3.Length)];
+                                        break;
+                                    case 5:
+                                        chosenRoom = roomPrefabs3x5[Random.Range(0, roomPrefabs3x5.Length)];
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case 5:
+                                switch (roomHeight) {
+                                    case 3:
+                                        chosenRoom = roomPrefabs5x3[Random.Range(0, roomPrefabs5x3.Length)];
+                                        break;
+                                    case 5:
+                                        chosenRoom = roomPrefabs5x5[Random.Range(0, roomPrefabs5x5.Length)];
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            default:
+                                break;
                         }
-                    }
 
-                    foreach (Transform roomPiece in roomObject.transform) {
-                        if (roomPiece.name.Contains("Torch") || roomPiece.name.Contains("Chandelier")) {
-                            if (roomPiece.position.y == 0) lowerLightSources.Add(roomPiece.gameObject, LightingType.TORCH_0);
-                            else if (roomPiece.position.y == 1) upperLightSources.Add(roomPiece.gameObject, LightingType.TORCH_0);
-                        } else if (roomPiece.name.Contains("Door")) {
-                            string[] details = roomPiece.name.Split('-');
+                        GameObject roomObject = Instantiate(chosenRoom, new Vector3(roomX, 0, roomY), chosenRoom.transform.rotation);
+                        roomObject.transform.parent = roomParent.transform;
 
-                            int doorX = roomX + int.Parse(details[1]);
-                            int doorY = roomY + int.Parse(details[2]);
-
-                            switch (details[3]) {
-                                case "N":
-                                    doorX -= 1;
-                                    break;
-                                case "E":
-                                    doorY += 1;
-                                    break;
-                                case "S":
-                                    doorX += 1;
-                                    break;
-                                case "W":
-                                    doorY -= 1;
-                                    break;
-                                default:
-                                    break;
+                        for (int x = roomX; x < roomX + roomWidth; x++) {
+                            for (int y = roomY; y < roomY + roomHeight; y++) {
+                                grid.SetCellType(x, y, MazeCellType.ROOM);
+                                gameController.CreateMinimapCell(x, y, x + "," + y, Color.white, false);
                             }
-
-                            grid.GetCell(doorX, doorY).AddToMazePieces(roomPiece.gameObject);
-
-                            grid.SetCellType(doorX, doorY, MazeCellType.DISCONNECTED_DOOR);
-                            gameController.CreateMinimapCell(doorX, doorY, doorX + "," + doorY, Color.white, false);
-                        } else {
-                            grid.GetCell(roomPiece.position.x, roomPiece.position.z).AddToMazePieces(roomPiece.gameObject);
                         }
-                    }
 
-                    existingRooms.Add(room);
+                        foreach (Transform roomPiece in roomObject.transform) {
+                            if (roomPiece.name.Contains("Torch") || roomPiece.name.Contains("Chandelier")) {
+                                if (roomPiece.position.y == 0) lowerLightSources.Add(roomPiece.gameObject, LightingType.TORCH_0);
+                                else if (roomPiece.position.y == 1) upperLightSources.Add(roomPiece.gameObject, LightingType.TORCH_0);
+                            } else if (roomPiece.name.Contains("Door")) {
+                                string[] details = roomPiece.name.Split('-');
+
+                                int doorX = roomX + int.Parse(details[1]);
+                                int doorY = roomY + int.Parse(details[2]);
+
+                                switch (details[3]) {
+                                    case "N":
+                                        doorX -= 1;
+                                        break;
+                                    case "E":
+                                        doorY += 1;
+                                        break;
+                                    case "S":
+                                        doorX += 1;
+                                        break;
+                                    case "W":
+                                        doorY -= 1;
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                grid.GetCell(doorX, doorY).AddToMazePieces(roomPiece.gameObject);
+
+                                grid.SetCellType(doorX, doorY, MazeCellType.DISCONNECTED_DOOR);
+                                gameController.CreateMinimapCell(doorX, doorY, doorX + "," + doorY, Color.white, false);
+                            } else {
+                                grid.GetCell(roomPiece.position.x, roomPiece.position.z).AddToMazePieces(roomPiece.gameObject);
+                            }
+                        }
+
+                        existingRooms.Add(room);
+                    }
                 }
             }
         }
@@ -359,7 +446,6 @@ public class MazeGenerator : MonoBehaviour {
         if (Application.isEditor) writer.Close();
 
         gameController.SetPlayerPosition(new Vector3(playerStart.GetX(), 1, playerStart.GetY()));
-        deadEnds.Remove(playerStart);
 
         lowerLightSources.Add(gameController.GetPlayer(), gameController.GetPlayer().GetComponent<PlayerBehaviour>().GetLighting());
 
@@ -404,7 +490,7 @@ public class MazeGenerator : MonoBehaviour {
     }
 
     public MazeCell GetMazeCell(float x, float y) {
-        return grid.GetCell(x, y);
+        return grid?.GetCell(x, y);
     }
 
 }

@@ -46,8 +46,8 @@ public class SpriteBehaviour : MonoBehaviour {
 
         transform.forward = new Vector3(player.forward.x, transform.forward.y, player.forward.z);
 
-        if (useLighting) {
-            LightingType lightingType = gameBehaviour.GetMazeCell(transform.position.x, transform.position.z).GetLightingLower();
+        if (useLighting && !gameBehaviour.IsGeneratingMaze()) {
+            LightingType? lightingType = gameBehaviour.GetMazeCell(transform.position.x, transform.position.z)?.GetLightingLower();
             spriteRenderer.material.color = Lighting.GetColor(lightingType);
         } else {
             spriteRenderer.material.color = Color.white;

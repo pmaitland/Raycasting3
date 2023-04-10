@@ -43,6 +43,8 @@ public class PlayerBehaviour : MonoBehaviour {
 
 	private LightingType lighting = LightingType.DARKNESS;
 
+    private bool interactingWithLadder = false;
+
 	private string interactKey = "space";
 	private string changeLeftHandKey = "q";
 	private string changeRightHandKey = "e";
@@ -63,25 +65,30 @@ public class PlayerBehaviour : MonoBehaviour {
 	}
 	
 	void Update() {
-    if (gameController.IsPaused()) return;
+        if (gameController.IsPaused()) { return; }
 
-		if (health.GetCurrentHealth() <= 0) {
-			Vector3 killerPosition = health.GetKiller().transform.position;
-			Vector3 lookPosition = new Vector3(killerPosition.x, transform.position.y, killerPosition.z);
-			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookPosition - transform.position), Time.deltaTime);
+        if (interactingWithLadder) {
+            gameController.GenerateMaze();
+            interactingWithLadder = false;
+        }
 
-			if (transform.position.y > 0.05) transform.position = new Vector3(transform.position.x, transform.position.y - 0.01f, transform.position.z);
+        if (health.GetCurrentHealth() <= 0) {
+            Vector3 killerPosition = health.GetKiller().transform.position;
+            Vector3 lookPosition = new Vector3(killerPosition.x, transform.position.y, killerPosition.z);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookPosition - transform.position), Time.deltaTime);
 
-			lighting = LightingType.DARKNESS;
-			hands.ChangeHandSprite(Hand.LEFT, HandState.NORMAL);
-			hands.ChangeHandSprite(Hand.RIGHT, HandState.NORMAL);
-			hands.HideHands();
+            if (transform.position.y > 0.05) transform.position = new Vector3(transform.position.x, transform.position.y - 0.01f, transform.position.z);
+
+            lighting = LightingType.DARKNESS;
+            hands.ChangeHandSprite(Hand.LEFT, HandState.NORMAL);
+            hands.ChangeHandSprite(Hand.RIGHT, HandState.NORMAL);
+            hands.HideHands();
 
             horizontal = 0;
             vertical = 0;
 
-			return;
-		}
+            return;
+        }
 
         float y = Input.GetAxis("Mouse X") * turnSpeed;
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + y, 0);
@@ -265,17 +272,16 @@ public class PlayerBehaviour : MonoBehaviour {
 				Destroy(other.gameObject);
                 flash.Mana();
 			}
-		} 
+		}
 
 		if (!Input.GetKey(interactKey)) return;
 
-		if (other.transform.parent != null) {
-
+        if (other.transform.name.Contains("Ladder")) {
+            interactingWithLadder = true;
+        } else if (other.transform.parent != null) {
 			if (other.transform.parent.name.Contains("Hidden Door")) {
 				other.transform.parent.GetComponent<HiddenDoorBehaviour>().Open();
-			} else if (other.transform.name.Contains("Ladder")) {
-                gameController.GenerateMaze();
-            } else if (other.transform.parent.parent != null) {
+			} else if (other.transform.parent.parent != null) {
 				if (other.transform.name.Contains("Face 1")) {
 					other.transform.parent.parent.GetComponent<DoorBehaviour>().Open(true);
 				} else if (other.transform.name.Contains("Face 2")) {

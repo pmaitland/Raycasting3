@@ -98,7 +98,7 @@ public class MazeCell {
 
         foreach (GameObject mazePiece in mazePieces) {
             Material material = mazePiece.GetComponent<MeshRenderer>().materials[0];
-            if (mazePiece.name.Contains("L1") || mazePiece.name.Contains("Ceiling") || mazePiece.transform.position.y == 1) {
+            if (mazePiece.name.Contains("L1")) {
                 material.color = Lighting.GetColor(upper);
             } else if (mazePiece.name.Contains("Carpet") || mazePiece.name.Contains("Banner")) {
                 material.color = detailColour;

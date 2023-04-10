@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1979202703222069090}
   - component: {fileID: 7336146730104814102}
   m_Layer: 0
-  m_Name: Maze
+  m_Name: Castle Maze
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,3 +61,4 @@ MonoBehaviour:
   - {fileID: 3938249054364353216, guid: 2b2801eac8533ebd3886e5543e9b42a1, type: 3}
   - {fileID: 8341543722268653101, guid: 2e885d32c270839ee991536eadfe4884, type: 3}
   knightPrefab: {fileID: 7925531397398036891, guid: 90a6e85750b4607f6a3ca5135d2ea299, type: 3}
+  generateRooms: 1

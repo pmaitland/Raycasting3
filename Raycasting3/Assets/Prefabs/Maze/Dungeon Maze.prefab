@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1979202703222069088
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1979202703222069090}
+  - component: {fileID: 7336146730104814102}
+  m_Layer: 0
+  m_Name: Dungeon Maze
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1979202703222069090
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979202703222069088}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7336146730104814102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979202703222069088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3f66af20dbd654a9834c8a5789aab99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: 49
+  roomCount: 25
+  passagePrefab: {fileID: 9201763936282855289, guid: a1e15177d05b90d2fb47fac9e8946f29, type: 3}
+  deadEndPrefab: {fileID: 1849009846854788362, guid: 303cf37822aba0c429382efdfe8b5407, type: 3}
+  generateRooms: 0
+  startRoom: {fileID: 5812835802137397256, guid: 28dece26be3116b40a1005d05f2d8eb3, type: 3}
+  exitRoom: {fileID: 5812835802137397256, guid: a3ef99de0a46e4b6387c1a6e01c80080, type: 3}
+  roomPrefabs3x3: []
+  roomPrefabs3x5: []
+  roomPrefabs5x3: []
+  roomPrefabs5x5: []
+  knightPrefab: {fileID: 7925531397398036891, guid: 90a6e85750b4607f6a3ca5135d2ea299, type: 3}

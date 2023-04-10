@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffcd939b95afe792d8af7db72044de5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasWindows: 1
   carpetN: {fileID: 2800000, guid: d9fa3f6592d8b56c78347c2182d8e022, type: 3}
   carpetE: {fileID: 2800000, guid: 5f8fa08ba70cb3e4bb6497e120521d9b, type: 3}
   carpetS: {fileID: 2800000, guid: fc951ff2e3e83c4f98ded77c297cbe97, type: 3}
@@ -444,7 +445,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3890000064965853165, guid: a28d95da66c26a2d7bf46f13bc3145d8, type: 3}
       propertyPath: m_Name
-      value: Ceiling
+      value: Ceiling-L1
       objectReference: {fileID: 0}
     - target: {fileID: 5961049443203413435, guid: a28d95da66c26a2d7bf46f13bc3145d8, type: 3}
       propertyPath: m_Materials.Array.data[0]

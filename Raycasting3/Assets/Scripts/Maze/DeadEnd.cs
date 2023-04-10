@@ -18,27 +18,27 @@ public class DeadEnd : MonoBehaviour {
     }
 
     public void SetDirectionNorth() {
-        carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetN;
+        if (carpet != null) { carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetN; }
         Rotate(180);
     }
 
     public void SetDirectionEast() {
-        carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetE;
+        if (carpet != null) { carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetE; }
         Rotate(270);
     }
 
     public void SetDirectionSouth() {
-        carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetS;
+        if (carpet != null) { carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetS; }
     }
 
     public void SetDirectionWest() {
-        carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetW;
+        if (carpet != null) { carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetW; }
         Rotate(90);
     }
 
     private void Rotate(float amount) {
         transform.Rotate(0, amount, 0);
-        carpet.Rotate(0, 0, amount);
+        carpet?.Rotate(0, 0, amount);
         floor.Rotate(0, 0, amount);
     }
 

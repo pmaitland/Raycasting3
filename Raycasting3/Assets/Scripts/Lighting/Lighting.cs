@@ -89,7 +89,7 @@ public static class Lighting {
         return LightingType.DARKNESS; 
     }
 
-    public static Color GetColor(LightingType type) {
+    public static Color GetColor(LightingType? type) {
         switch (type) {
             case LightingType.DARKNESS: return DARKNESS;
 

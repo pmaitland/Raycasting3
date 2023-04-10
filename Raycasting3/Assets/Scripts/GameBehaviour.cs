@@ -3,7 +3,8 @@ using UnityEngine;
 public class GameBehaviour : MonoBehaviour {
 
     public GameObject playerPrefab;
-    public GameObject mazePrefab;
+    public GameObject dungeonMazePrefab;
+    public GameObject castleMazePrefab;
     public GameObject canvasPrefab;
 
     public bool showMinimap;
@@ -21,6 +22,10 @@ public class GameBehaviour : MonoBehaviour {
     private PauseScreenBehaviour pauseScreenBehaviour;
 
     private Color mazeColour;
+
+    private int currentLevel = 0;
+
+    private bool generatingMaze = false;
 
     void Awake() {
         player = Instantiate(playerPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
@@ -52,12 +57,24 @@ public class GameBehaviour : MonoBehaviour {
     }
 
     public void GenerateMaze() {
+        generatingMaze = true;
+
+        currentLevel++;
+
         if (maze != null) {
             Destroy(maze);
         }
-        maze = Instantiate(mazePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+
+        if (currentLevel <= 5) {
+            maze = Instantiate(dungeonMazePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        } else {
+            maze = Instantiate(castleMazePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        }
+
         maze.name = "Maze";
         mazeGenerator = maze.GetComponent<MazeGenerator>();
+
+        generatingMaze = false;
     }
 
     private void Pause() {
@@ -127,5 +144,9 @@ public class GameBehaviour : MonoBehaviour {
             Color.blue
         };
         mazeColour = colours[Random.Range(0, colours.Length)];
+    }
+
+    public bool IsGeneratingMaze() {
+        return generatingMaze;
     }
 }
