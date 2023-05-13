@@ -44,21 +44,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f66af20dbd654a9834c8a5789aab99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 49
-  roomCount: 25
-  passagePrefab: {fileID: 9201763936282855289, guid: 822cd19ac778aa1448f1d5fbf12dedc4, type: 3}
-  deadEndPrefab: {fileID: 1849009846854788362, guid: 6b28c6087969813628055092234eea39, type: 3}
-  startRoom: {fileID: 5812835802137397256, guid: 28dece26be3116b40a1005d05f2d8eb3, type: 3}
-  exitRoom: {fileID: 5812835802137397256, guid: a3ef99de0a46e4b6387c1a6e01c80080, type: 3}
-  roomPrefabs3x3:
+  Size: 49
+  RoomCount: 25
+  PassagePrefab: {fileID: 9201763936282855289, guid: 822cd19ac778aa1448f1d5fbf12dedc4, type: 3}
+  DeadEndPrefab: {fileID: 1849009846854788362, guid: 6b28c6087969813628055092234eea39, type: 3}
+  GenerateRooms: 1
+  StartRoom: {fileID: 5812835802137397256, guid: 28dece26be3116b40a1005d05f2d8eb3, type: 3}
+  ExitRoom: {fileID: 5812835802137397256, guid: a3ef99de0a46e4b6387c1a6e01c80080, type: 3}
+  RoomPrefabs3x3:
   - {fileID: 5587744587614525102, guid: 40ea23138ceb6a151b7401f569f8a1b1, type: 3}
-  - {fileID: 5812835802137397256, guid: a25d89cd12d7a10529ace1907aa725a2, type: 3}
-  roomPrefabs3x5:
+  RoomPrefabs3x5:
   - {fileID: 6520085494793106296, guid: cfd4c14aaad68b9a6bb4a13cf0a5d419, type: 3}
-  roomPrefabs5x3:
+  RoomPrefabs5x3:
   - {fileID: 8155670373908778622, guid: 9f8cebe05da2ea989986c2126d3c60da, type: 3}
-  roomPrefabs5x5:
-  - {fileID: 3938249054364353216, guid: 2b2801eac8533ebd3886e5543e9b42a1, type: 3}
+  RoomPrefabs5x5:
   - {fileID: 8341543722268653101, guid: 2e885d32c270839ee991536eadfe4884, type: 3}
-  knightPrefab: {fileID: 7925531397398036891, guid: 90a6e85750b4607f6a3ca5135d2ea299, type: 3}
-  generateRooms: 1
+  - {fileID: 3938249054364353216, guid: 2b2801eac8533ebd3886e5543e9b42a1, type: 3}

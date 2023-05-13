@@ -1,17 +1,15 @@
 using UnityEngine;
 
-public class HiddenDoorMazeCell : MazeCell {
+public class HiddenDoorMazeCell : MazeCell
+{
 
-    private GameObject hiddenDoor;
+    protected GameObject HiddenDoor { private get; set; }
 
-    public HiddenDoorMazeCell(int x, int y) : base(x, y, MazeCellType.HIDDEN_DOOR, Color.clear) { }
+    public HiddenDoorMazeCell(int x, int y) : base(x, y, Type.HIDDEN_DOOR, Color.clear) { }
 
-    public void SetHiddenDoor(GameObject hiddenDoor) {
-        this.hiddenDoor = hiddenDoor;
-    }
-
-    public bool IsDoorOpen() {
-        return hiddenDoor.GetComponent<HiddenDoorBehaviour>().IsOpen();
+    public bool IsDoorOpen()
+    {
+        return HiddenDoor.GetComponent<HiddenDoorBehaviour>().IsOpen();
     }
 
 }

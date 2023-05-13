@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dfdff72148592db2932a8b67e8ebdae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 4
+  MoveSpeed: 4
 --- !u!54 &7323450077240293133
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a942a911f804c1873b0bc1b5551b2901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprites:
+  Sprites:
   - {fileID: 21300000, guid: ebddcc8f977f8919e860f279e6f6010e, type: 3}
-  destroyedSprite: {fileID: 0}
-  useLighting: 1
+  DestroyedSprite: {fileID: 0}
+  UseLighting: 1

@@ -1,56 +1,66 @@
 using UnityEngine;
 
-public class SpriteBehaviour : MonoBehaviour {
+public class SpriteBehaviour : MonoBehaviour
+{
 
-    public Sprite[] sprites;
-    public Sprite destroyedSprite;
+    public Sprite[] Sprites;
+    public Sprite DestroyedSprite;
 
-    public bool useLighting;
+    public bool UseLighting;
 
-    private Transform player;
-    private Transform body;
-    private SpriteRenderer spriteRenderer;
-    private Health health;
+    private Transform _player;
+    private Transform _body;
+    private SpriteRenderer _spriteRenderer;
+    private Health _health;
 
-    private bool usingDestroyedSprite;
+    private bool _usingDestroyedSprite;
 
-    private GameBehaviour gameBehaviour;
+    private GameBehaviour _gameBehaviour;
 
-    void Start() {
-        player = GameObject.FindWithTag("Player").transform;
+    void Start()
+    {
+        _player = GameObject.FindWithTag("Player").transform;
 
-        body = transform.parent.Find("Body");
-        if (body == null) body = transform;
+        _body = transform.parent.Find("Body");
+        if (_body == null) _body = transform;
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
 
-        health = GetComponentInParent<Health>();
+        _health = GetComponentInParent<Health>();
 
-        usingDestroyedSprite = false;
+        _usingDestroyedSprite = false;
 
-        gameBehaviour = GameObject.Find("Controller").GetComponent<GameBehaviour>();
+        _gameBehaviour = GameObject.Find("Controller").GetComponent<GameBehaviour>();
     }
 
-    void Update() {
-        if (!usingDestroyedSprite) {
-            if (health != null && health.GetCurrentHealth() <= 0) {
-                spriteRenderer.sprite = destroyedSprite;
-                usingDestroyedSprite = true;
-            } else {
-                float angle = Vector3.SignedAngle(body.position - player.position, body.forward, Vector3.up) + 180 + ((360 / sprites.Length) / 2);
+    void Update()
+    {
+        if (!_usingDestroyedSprite)
+        {
+            if (_health != null && _health.CurrentHealth <= 0)
+            {
+                _spriteRenderer.sprite = DestroyedSprite;
+                _usingDestroyedSprite = true;
+            }
+            else
+            {
+                float angle = Vector3.SignedAngle(_body.position - _player.position, _body.forward, Vector3.up) + 180 + (360 / Sprites.Length / 2);
                 if (angle > 360) angle -= 360;
-                int spriteIndex = (int) (angle / 360 * sprites.Length);
-                spriteRenderer.sprite = sprites[spriteIndex];
+                int spriteIndex = (int)(angle / 360 * Sprites.Length);
+                _spriteRenderer.sprite = Sprites[spriteIndex];
             }
         }
 
-        transform.forward = new Vector3(player.forward.x, transform.forward.y, player.forward.z);
+        transform.forward = new Vector3(_player.forward.x, transform.forward.y, _player.forward.z);
 
-        if (useLighting && !gameBehaviour.IsGeneratingMaze()) {
-            LightingType? lightingType = gameBehaviour.GetMazeCell(transform.position.x, transform.position.z)?.GetLightingLower();
-            spriteRenderer.material.color = Lighting.GetColor(lightingType);
-        } else {
-            spriteRenderer.material.color = Color.white;
+        if (UseLighting && !_gameBehaviour.GeneratingMaze)
+        {
+            Lighting.Type? lightingType = _gameBehaviour.GetMazeCell(transform.position.x, transform.position.z)?.LightingLower;
+            _spriteRenderer.material.color = Lighting.GetColor(lightingType);
+        }
+        else
+        {
+            _spriteRenderer.material.color = Color.white;
         }
     }
 }

@@ -1,21 +1,24 @@
 using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
-public class Hover : MonoBehaviour {
+public class Hover : MonoBehaviour
+{
 
-    public float bobbingSpeed = 14f;
-    public float bobbingAmount = 0.05f;
+    public float BobbingSpeed = 14f;
+    public float BobbingAmount = 0.05f;
 
-    float defaultPosY = 0;
-    float timer = 0;
+    private float _defaultPosY = 0;
+    private float _timer = 0;
 
-    void Start() {
-        defaultPosY = transform.localPosition.y;
+    void Start()
+    {
+        _defaultPosY = transform.localPosition.y;
     }
 
-    void Update() {
-        timer += Time.deltaTime * bobbingSpeed;
-        transform.localPosition = new Vector3(transform.localPosition.x, defaultPosY + Mathf.Sin(timer) * bobbingAmount, transform.localPosition.z);
+    void Update()
+    {
+        _timer += Time.deltaTime * BobbingSpeed;
+        transform.localPosition = new Vector3(transform.localPosition.x, _defaultPosY + Mathf.Sin(_timer) * BobbingAmount, transform.localPosition.z);
     }
 }

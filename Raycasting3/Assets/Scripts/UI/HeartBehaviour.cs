@@ -1,31 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HeartBehaviour : MonoBehaviour {
+public class HeartBehaviour : MonoBehaviour
+{
 
-    public Sprite heartSprite;
-    public Sprite emptyHeartSprite;
-    public Sprite noHeartSprite;
+    public Sprite HeartSprite;
+    public Sprite EmptyHeartSprite;
+    public Sprite NoHeartSprite;
 
-    private Health playerHealth;
+    private Health _playerHealth;
 
-    void Start() {
-        playerHealth = GameObject.Find("Player").GetComponent<Health>();
+    void Start()
+    {
+        _playerHealth = GameObject.Find("Player").GetComponent<Health>();
     }
 
-    void Update() {
-        int playerMaxHealth = playerHealth.GetMaxHealth();
-        int playerCurrentHealth = playerHealth.GetCurrentHealth();
+    void Update()
+    {
+        int playerMaxHealth = _playerHealth.MaxHealth;
+        int playerCurrentHealth = _playerHealth.CurrentHealth;
 
-        foreach (Transform heart in transform) {
+        foreach (Transform heart in transform)
+        {
             Image heartImage = heart.GetComponent<Image>();
             int heartNumber = int.Parse(heart.name.Split(' ')[1]);
 
-            if (heartNumber > playerMaxHealth) heartImage.sprite = noHeartSprite;
-            else if (heartNumber > playerCurrentHealth) heartImage.sprite = emptyHeartSprite;
-            else heartImage.sprite = heartSprite;
+            if (heartNumber > playerMaxHealth) { heartImage.sprite = NoHeartSprite; }
+            else if (heartNumber > playerCurrentHealth) { heartImage.sprite = EmptyHeartSprite; }
+            else { heartImage.sprite = HeartSprite; }
         }
     }
 }

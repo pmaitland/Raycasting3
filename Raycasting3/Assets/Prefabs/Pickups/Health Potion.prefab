@@ -60,7 +60,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b281f4abb6aa536908af5b4fb5e51f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healingAmount: 1
 --- !u!114 &-6064511871208166394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,8 +72,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d730b8a2967b0b35adb2f4d92bd25c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bobbingSpeed: 2
-  bobbingAmount: 0.05
+  BobbingSpeed: 2
+  BobbingAmount: 0.05
 --- !u!1 &927191241863671747
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a942a911f804c1873b0bc1b5551b2901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprites:
+  Sprites:
   - {fileID: 21300000, guid: 5f46adf5884d9a2a4a174482b84a07e1, type: 3}
-  destroyedSprite: {fileID: 0}
-  useLighting: 0
+  DestroyedSprite: {fileID: 0}
+  UseLighting: 0

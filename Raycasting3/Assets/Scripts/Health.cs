@@ -1,61 +1,50 @@
 using UnityEngine;
 
-public class Health : MonoBehaviour {
+public class Health : MonoBehaviour
+{
 
-    private const int MAX_MAX_HEALTH = 20;
-    public int maxHealth;
+    public int MAX_MAX_HEALTH { get; private set; } = 20;
+    public int MaxHealth;
 
-    private int currentHealth;
-    private bool destroyed;
-    private GameObject killer;
+    public int CurrentHealth { get; private set; }
+    private bool _destroyed = false;
+    public GameObject Killer { get; private set; }
 
-    void Start() {
-        currentHealth = maxHealth;
-        destroyed = false;
+    void Start()
+    {
+        CurrentHealth = MaxHealth;
     }
 
-    public int GetMaxHealth() {
-        return maxHealth;
+    public void IncreaseHealth(int amount)
+    {
+        CurrentHealth += amount;
+        if (CurrentHealth > MaxHealth) CurrentHealth = MaxHealth;
     }
 
-    public int GetMaxMaxHealth() {
-        return MAX_MAX_HEALTH;
+    public void IncreaseMaxHealth(int amount)
+    {
+        MaxHealth += amount;
+        if (MaxHealth > MAX_MAX_HEALTH) MaxHealth = MAX_MAX_HEALTH;
+        CurrentHealth += amount;
+        if (CurrentHealth > MaxHealth) CurrentHealth = MaxHealth;
     }
 
-    public int GetCurrentHealth() {
-        return currentHealth;
-    }
+    public void ReduceHealth(GameObject attacker, int amount)
+    {
+        if (_destroyed) return;
 
-    public GameObject GetKiller() {
-        return killer;
-    }
-
-    public void IncreaseHealth(int amount) {
-        currentHealth += amount;
-        if (currentHealth > maxHealth) currentHealth = maxHealth;
-    }
-
-    public void IncreaseMaxHealth(int amount) {
-        maxHealth += amount;
-        if (maxHealth > MAX_MAX_HEALTH) maxHealth = MAX_MAX_HEALTH;
-        currentHealth += amount;
-        if (currentHealth > maxHealth) currentHealth = maxHealth;
-    }
-
-    public void ReduceHealth(GameObject attacker, int amount) {
-        if (destroyed) return;
-
-        currentHealth -= amount;
+        CurrentHealth -= amount;
         if (GetComponent<PlayerBehaviour>() != null) GetComponent<PlayerBehaviour>().FlashDamage();
 
-        if (currentHealth <= 0) {
+        if (CurrentHealth <= 0)
+        {
             Destroy(GetComponent<Rigidbody>());
             if (GetComponent<UnityEngine.AI.NavMeshAgent>() != null) GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
             if (GetComponentInChildren<Collider>() != null) GetComponentInChildren<Collider>().enabled = false;
             if (GetComponentInChildren<MeshCollider>() != null) GetComponentInChildren<MeshCollider>().enabled = false;
             if (GetComponent<Pathfinding>() != null) GetComponent<Pathfinding>().enabled = false;
-            destroyed = true;
-            killer = attacker;
+            _destroyed = true;
+            Killer = attacker;
         }
     }
 }

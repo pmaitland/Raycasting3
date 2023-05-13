@@ -1,32 +1,39 @@
-using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
-public class FistBehaviour : MonoBehaviour {
+public class FistBehaviour : MonoBehaviour
+{
 
-    private GameObject player;
-    
-    private List<GameObject> objectsHit;
-    
-    void Start() {
-        player = GameObject.Find("Player");
+    private GameObject _player;
 
-        objectsHit = new List<GameObject>();
+    private List<GameObject> _objectsHit;
+
+    void Start()
+    {
+        _player = GameObject.Find("Player");
+        _objectsHit = new List<GameObject>();
     }
 
-    void OnTriggerEnter(Collider other) {
-        if (objectsHit.Contains(other.gameObject)) return;
-        if (other.gameObject.name == player.name) return;
-        
+    void OnTriggerEnter(Collider other)
+    {
+        if (_objectsHit.Contains(other.gameObject)) { return; }
+        if (other.gameObject.name == _player.name) { return; }
+
         if (other.gameObject.GetComponent<Health>() != null)
-            other.gameObject.GetComponent<Health>().ReduceHealth(player, 1);
-        else if (other.transform.parent.gameObject.GetComponent<Health>() != null)
-            other.transform.parent.gameObject.GetComponent<Health>().ReduceHealth(player, 1);
+        {
+            other.gameObject.GetComponent<Health>().ReduceHealth(_player, 1);
+        }
+        else
+        {
+            other.transform.parent.gameObject.GetComponent<Health>()?.ReduceHealth(_player, 1);
+        }
 
-        objectsHit.Add(other.gameObject);   
+        _objectsHit.Add(other.gameObject);
     }
 
-    public void ResetObjectsHit() {
-        objectsHit = new List<GameObject>();
+    public void ResetObjectsHit()
+    {
+        _objectsHit = new List<GameObject>();
     }
 }

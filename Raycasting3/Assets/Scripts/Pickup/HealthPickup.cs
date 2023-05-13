@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class HealthPickup : MonoBehaviour {
-    
-    public int healingAmount = 1;
+public class HealthPickup : MonoBehaviour
+{
 
-    public int GetHealingAmount() {
-        return healingAmount;
-    }
+    public int HealingAmount { get; private set; } = 1;
+
 }

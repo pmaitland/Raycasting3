@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Passage : MonoBehaviour {
+public class Passage : MonoBehaviour
+{
 
-    public enum WallState {
+    public enum WallState
+    {
         CLOSED,
         LOWER_OPEN,
         UPPER_OPEN,
@@ -12,44 +12,37 @@ public class Passage : MonoBehaviour {
         WINDOW
     }
 
-    public bool hasWindows;
-    
-    public Texture2D carpetN;
-    public Texture2D carpetE;
-    public Texture2D carpetS;
-    public Texture2D carpetW; 
-    public Texture2D carpetNS;
-    public Texture2D carpetEW;
-    public Texture2D carpetNE;
-    public Texture2D carpetES;
-    public Texture2D carpetSW;
-    public Texture2D carpetNW;
-    public Texture2D carpetNES;
-    public Texture2D carpetESW;
-    public Texture2D carpetNSW;
-    public Texture2D carpetNEW;
-    public Texture2D carpetNESW;
+    public Texture2D CarpetN;
+    public Texture2D CarpetE;
+    public Texture2D CarpetS;
+    public Texture2D CarpetW;
+    public Texture2D CarpetNS;
+    public Texture2D CarpetEW;
+    public Texture2D CarpetNE;
+    public Texture2D CarpetES;
+    public Texture2D CarpetSW;
+    public Texture2D CarpetNW;
+    public Texture2D CarpetNES;
+    public Texture2D CarpetESW;
+    public Texture2D CarpetNSW;
+    public Texture2D CarpetNEW;
+    public Texture2D CarpetNESW;
 
-    Transform carpet;
+    private Transform _carpet;
 
-    Transform maze;
+    private Transform _maze;
 
-    Color colour;
+    private Color _colour;
 
-    void Awake() {
-        carpet = transform.Find("Maze Pieces").Find("Carpet");
+    void Awake()
+    {
+        _carpet = transform.Find("Maze Pieces").Find("Carpet");
     }
 
-    public void Setup(Transform maze, WallState northState, WallState eastState, WallState southState, WallState westState, Color colour) {
-        this.maze = maze;
-        this.colour = colour;
-
-        if (!hasWindows) {
-            if (northState == WallState.WINDOW) { northState = WallState.CLOSED; }
-            if (eastState == WallState.WINDOW) { eastState = WallState.CLOSED; }
-            if (southState == WallState.WINDOW) { southState = WallState.CLOSED; }
-            if (westState == WallState.WINDOW) { westState = WallState.CLOSED; }
-        }
+    public void Setup(Transform maze, WallState northState, WallState eastState, WallState southState, WallState westState, Color colour)
+    {
+        _maze = maze;
+        _colour = colour;
 
         int openNeighbourCount = 0;
 
@@ -78,153 +71,195 @@ public class Passage : MonoBehaviour {
         else if (Random.Range(0, 100) < 10) { transform.Find("Maze Pieces").Find("Banner-W")?.gameObject.SetActive(true); }
 
 
-        if (openNeighbourCount == 1) {
-            if (northState == WallState.OPEN) { PlaceCarpet(carpetN); }
-            else if (eastState == WallState.OPEN) { PlaceCarpet(carpetE); }
-            else if (southState == WallState.OPEN) { PlaceCarpet(carpetS); }
-            else if (westState == WallState.OPEN) { PlaceCarpet(carpetW); }
-        } else if (openNeighbourCount == 2) {
-            if (northState == WallState.OPEN) {
-                if (eastState == WallState.OPEN) { PlaceCarpet(carpetNE); }
-                else if (southState == WallState.OPEN) { PlaceCarpet(carpetNS); }
-                else if (westState == WallState.OPEN) { PlaceCarpet(carpetNW); }
-            } else if (eastState == WallState.OPEN) {
-                if (southState == WallState.OPEN) { PlaceCarpet(carpetES); }
-                else if (westState == WallState.OPEN) { PlaceCarpet(carpetEW); }
-            } else if (southState == WallState.OPEN) {
-                if (westState == WallState.OPEN) { PlaceCarpet(carpetSW); }
+        if (openNeighbourCount == 1)
+        {
+            if (northState == WallState.OPEN) { PlaceCarpet(CarpetN); }
+            else if (eastState == WallState.OPEN) { PlaceCarpet(CarpetE); }
+            else if (southState == WallState.OPEN) { PlaceCarpet(CarpetS); }
+            else if (westState == WallState.OPEN) { PlaceCarpet(CarpetW); }
+        }
+        else if (openNeighbourCount == 2)
+        {
+            if (northState == WallState.OPEN)
+            {
+                if (eastState == WallState.OPEN) { PlaceCarpet(CarpetNE); }
+                else if (southState == WallState.OPEN) { PlaceCarpet(CarpetNS); }
+                else if (westState == WallState.OPEN) { PlaceCarpet(CarpetNW); }
             }
-        } else if (openNeighbourCount == 3) {
-            if (northState == WallState.OPEN && eastState == WallState.OPEN && southState == WallState.OPEN) { PlaceCarpet(carpetNES); }
-            else if (eastState == WallState.OPEN && southState == WallState.OPEN && westState == WallState.OPEN) { PlaceCarpet(carpetESW); }
-            else if (northState == WallState.OPEN && southState == WallState.OPEN && westState == WallState.OPEN) { PlaceCarpet(carpetNSW); }
-            else if (northState == WallState.OPEN && eastState == WallState.OPEN && westState == WallState.OPEN) { PlaceCarpet(carpetNEW); }
+            else if (eastState == WallState.OPEN)
+            {
+                if (southState == WallState.OPEN) { PlaceCarpet(CarpetES); }
+                else if (westState == WallState.OPEN) { PlaceCarpet(CarpetEW); }
+            }
+            else if (southState == WallState.OPEN)
+            {
+                if (westState == WallState.OPEN) { PlaceCarpet(CarpetSW); }
+            }
+        }
+        else if (openNeighbourCount == 3)
+        {
+            if (northState == WallState.OPEN && eastState == WallState.OPEN && southState == WallState.OPEN) { PlaceCarpet(CarpetNES); }
+            else if (eastState == WallState.OPEN && southState == WallState.OPEN && westState == WallState.OPEN) { PlaceCarpet(CarpetESW); }
+            else if (northState == WallState.OPEN && southState == WallState.OPEN && westState == WallState.OPEN) { PlaceCarpet(CarpetNSW); }
+            else if (northState == WallState.OPEN && eastState == WallState.OPEN && westState == WallState.OPEN) { PlaceCarpet(CarpetNEW); }
             PlaceChandelier();
-        } else if (openNeighbourCount == 4) {
-            PlaceCarpet(carpetNESW);
+        }
+        else if (openNeighbourCount == 4)
+        {
+            PlaceCarpet(CarpetNESW);
             PlaceChandelier();
         }
     }
 
-    private void OpenNorth() {
+    private void OpenNorth()
+    {
         OpenNorthLower();
         OpenNorthUpper();
     }
 
-    private void OpenNorthLower() {
-        foreach (Transform mazePiece in transform.Find("Maze Pieces")) {
+    private void OpenNorthLower()
+    {
+        foreach (Transform mazePiece in transform.Find("Maze Pieces"))
+        {
             if (mazePiece.name == "Wall-N-L0") mazePiece.gameObject.SetActive(false);
         }
     }
 
-    private void OpenNorthUpper() {
-        foreach (Transform mazePiece in transform.Find("Maze Pieces")) {
+    private void OpenNorthUpper()
+    {
+        foreach (Transform mazePiece in transform.Find("Maze Pieces"))
+        {
             if (mazePiece.name == "Wall-N-L1") mazePiece.gameObject.SetActive(false);
         }
     }
 
-    private void PlaceNorthWindow() {
-        PlaceWindow();
+    private void PlaceNorthWindow()
+    {
+        SetWindowLighting();
         transform.Find("Maze Pieces").Find("Wall-N-L0").gameObject.SetActive(false);
         transform.Find("Maze Pieces").Find("Wall-N-L1")?.gameObject.SetActive(false);
         transform.Find("Maze Pieces").Find("Wall-N-L0-Window")?.gameObject.SetActive(true);
         transform.Find("Maze Pieces").Find("Wall-N-L1-Window")?.gameObject.SetActive(true);
     }
 
-    private void OpenEast() {
+    private void OpenEast()
+    {
         OpenEastLower();
         OpenEastUpper();
     }
 
-    private void OpenEastLower() {
-        foreach (Transform mazePiece in transform.Find("Maze Pieces")) {
+    private void OpenEastLower()
+    {
+        foreach (Transform mazePiece in transform.Find("Maze Pieces"))
+        {
             if (mazePiece.name == "Wall-E-L0") mazePiece.gameObject.SetActive(false);
         }
     }
 
-    private void OpenEastUpper() {
-        foreach (Transform mazePiece in transform.Find("Maze Pieces")) {
+    private void OpenEastUpper()
+    {
+        foreach (Transform mazePiece in transform.Find("Maze Pieces"))
+        {
             if (mazePiece.name == "Wall-E-L1") mazePiece.gameObject.SetActive(false);
         }
     }
 
-    private void PlaceEastWindow() {
-        PlaceWindow();
+    private void PlaceEastWindow()
+    {
+        SetWindowLighting();
         transform.Find("Maze Pieces").Find("Wall-E-L0").gameObject.SetActive(false);
         transform.Find("Maze Pieces").Find("Wall-E-L1")?.gameObject.SetActive(false);
         transform.Find("Maze Pieces").Find("Wall-E-L0-Window")?.gameObject.SetActive(true);
         transform.Find("Maze Pieces").Find("Wall-E-L1-Window")?.gameObject.SetActive(true);
     }
 
-    private void OpenSouth() {
+    private void OpenSouth()
+    {
         OpenSouthLower();
         OpenSouthUpper();
     }
 
-    private void OpenSouthLower() {
-        foreach (Transform mazePiece in transform.Find("Maze Pieces")) {
+    private void OpenSouthLower()
+    {
+        foreach (Transform mazePiece in transform.Find("Maze Pieces"))
+        {
             if (mazePiece.name == "Wall-S-L0") mazePiece.gameObject.SetActive(false);
         }
     }
 
-    private void OpenSouthUpper() {
-        foreach (Transform mazePiece in transform.Find("Maze Pieces")) {
+    private void OpenSouthUpper()
+    {
+        foreach (Transform mazePiece in transform.Find("Maze Pieces"))
+        {
             if (mazePiece.name == "Wall-S-L1") mazePiece.gameObject.SetActive(false);
         }
     }
 
-    private void PlaceSouthWindow() {
-        PlaceWindow();
+    private void PlaceSouthWindow()
+    {
+        SetWindowLighting();
         transform.Find("Maze Pieces").Find("Wall-S-L0").gameObject.SetActive(false);
         transform.Find("Maze Pieces").Find("Wall-S-L1")?.gameObject.SetActive(false);
         transform.Find("Maze Pieces").Find("Wall-S-L0-Window")?.gameObject.SetActive(true);
         transform.Find("Maze Pieces").Find("Wall-S-L1-Window")?.gameObject.SetActive(true);
     }
 
-    private void OpenWest() {
+    private void OpenWest()
+    {
         OpenWestLower();
         OpenWestUpper();
     }
 
-    private void OpenWestLower() {
-        foreach (Transform mazePiece in transform.Find("Maze Pieces")) {
+    private void OpenWestLower()
+    {
+        foreach (Transform mazePiece in transform.Find("Maze Pieces"))
+        {
             if (mazePiece.name == "Wall-W-L0") mazePiece.gameObject.SetActive(false);
         }
     }
 
-    private void OpenWestUpper() {
-        foreach (Transform mazePiece in transform.Find("Maze Pieces")) {
+    private void OpenWestUpper()
+    {
+        foreach (Transform mazePiece in transform.Find("Maze Pieces"))
+        {
             if (mazePiece.name == "Wall-W-L1") mazePiece.gameObject.SetActive(false);
         }
     }
 
-    private void PlaceWestWindow() {
-        PlaceWindow();
+    private void PlaceWestWindow()
+    {
+        SetWindowLighting();
         transform.Find("Maze Pieces").Find("Wall-W-L0").gameObject.SetActive(false);
         transform.Find("Maze Pieces").Find("Wall-W-L1")?.gameObject.SetActive(false);
         transform.Find("Maze Pieces").Find("Wall-W-L0-Window")?.gameObject.SetActive(true);
         transform.Find("Maze Pieces").Find("Wall-W-L1-Window")?.gameObject.SetActive(true);
     }
 
-    private void PlaceCarpet(Texture2D texture) {
-        if (carpet != null) {
-            carpet.GetComponent<MeshRenderer>().material.mainTexture = texture;
-            carpet.GetComponent<MeshRenderer>().material.color = colour;
+    private void PlaceCarpet(Texture2D texture)
+    {
+        if (_carpet != null)
+        {
+            _carpet.GetComponent<MeshRenderer>().material.mainTexture = texture;
+            _carpet.GetComponent<MeshRenderer>().material.color = _colour;
         }
     }
 
-    private void PlaceChandelier() {
-        if (transform.Find("Maze Pieces").Find("Chandelier") != null) {
+    private void PlaceChandelier()
+    {
+        if (transform.Find("Maze Pieces").Find("Chandelier") != null)
+        {
             transform.Find("Maze Pieces").Find("Chandelier").gameObject.SetActive(true);
-            maze.GetComponent<MazeGenerator>().AddToUpperLightSources(transform.Find("Maze Pieces").Find("Chandelier").gameObject, LightingType.TORCH_0);
+            _maze.GetComponent<MazeGenerator>().AddToUpperLightSources(transform.Find("Maze Pieces").Find("Chandelier").gameObject, Lighting.Type.TORCH_0);
         }
     }
 
-    private void PlaceWindow() {
-        if (transform.Find("Maze Pieces").Find("Ceiling") != null) {
-            maze.GetComponent<MazeGenerator>().AddToLowerLightSources(transform.Find("Maze Pieces").Find("Ceiling").gameObject, LightingType.LIGHT_SPELL_0);
+    private void SetWindowLighting()
+    {
+        if (transform.Find("Maze Pieces").Find("Ceiling") != null)
+        {
+            _maze.GetComponent<MazeGenerator>().AddToLowerLightSources(transform.Find("Maze Pieces").Find("Ceiling").gameObject, Lighting.Type.LIGHT_SPELL_0);
         }
-        maze.GetComponent<MazeGenerator>().AddToUpperLightSources(transform.Find("Maze Pieces").Find("Floor").gameObject, LightingType.LIGHT_SPELL_0);
+        _maze.GetComponent<MazeGenerator>().AddToUpperLightSources(transform.Find("Maze Pieces").Find("Floor").gameObject, Lighting.Type.LIGHT_SPELL_0);
     }
 
 }

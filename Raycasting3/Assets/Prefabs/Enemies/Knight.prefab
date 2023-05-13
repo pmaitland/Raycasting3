@@ -97,10 +97,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a942a911f804c1873b0bc1b5551b2901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprites:
+  Sprites:
   - {fileID: -5711848221618334454, guid: b724cb8f85e1e9e5bae5dd0eb4498c73, type: 3}
-  destroyedSprite: {fileID: -8985680732576350864, guid: b724cb8f85e1e9e5bae5dd0eb4498c73, type: 3}
-  useLighting: 1
+  DestroyedSprite: {fileID: -8985680732576350864, guid: b724cb8f85e1e9e5bae5dd0eb4498c73, type: 3}
+  UseLighting: 1
 --- !u!1 &7731043587355661568
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f52695d15347afd8a6933ff77894aaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 5
+  MaxHealth: 5
 --- !u!114 &9090716993776051674
 MonoBehaviour:
   m_ObjectHideFlags: 0

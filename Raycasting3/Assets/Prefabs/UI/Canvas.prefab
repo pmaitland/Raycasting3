@@ -69,9 +69,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1113df6070c65daa595d04f872d34f6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heartSprite: {fileID: 21300000, guid: 2fedf558eefb3586e8a91b817d5d59e5, type: 3}
-  emptyHeartSprite: {fileID: 21300000, guid: b691d1c5b395e74c5b701757f78ddc29, type: 3}
-  noHeartSprite: {fileID: 21300000, guid: 8480426da92bea45aa1f2d1495dfae5e, type: 3}
+  HeartSprite: {fileID: 21300000, guid: 2fedf558eefb3586e8a91b817d5d59e5, type: 3}
+  EmptyHeartSprite: {fileID: 21300000, guid: b691d1c5b395e74c5b701757f78ddc29, type: 3}
+  NoHeartSprite: {fileID: 21300000, guid: 8480426da92bea45aa1f2d1495dfae5e, type: 3}
 --- !u!1 &168674009390333061
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,8 +237,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25837a2f24c75b0d78b9b16024b7ad51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkingBobbingSpeed: 12
-  bobbingAmount: 2
+  WalkingBobbingSpeed: 14
+  BobbingAmount: 0.05
 --- !u!1 &912681017607217275
 GameObject:
   m_ObjectHideFlags: 0
@@ -857,8 +857,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25837a2f24c75b0d78b9b16024b7ad51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkingBobbingSpeed: 12
-  bobbingAmount: 2
+  WalkingBobbingSpeed: 14
+  BobbingAmount: 0.05
 --- !u!1 &1919805882191820680
 GameObject:
   m_ObjectHideFlags: 0
@@ -1100,7 +1100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ec5369294ce4ffe9aa890a129c9069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellPrefab: {fileID: 8948935079609002558, guid: 44e35f31423c3aae59f50d32c31116e1, type: 3}
+  CellPrefab: {fileID: 0}
 --- !u!1 &2438901498485215530
 GameObject:
   m_ObjectHideFlags: 0
@@ -2102,8 +2102,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d730b8a2967b0b35adb2f4d92bd25c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bobbingSpeed: 2.5
-  bobbingAmount: 5
+  BobbingSpeed: 1
+  BobbingAmount: 5
 --- !u!1 &4599877273056856726
 GameObject:
   m_ObjectHideFlags: 0
@@ -2645,9 +2645,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3185ab5ae72221206beb6f3db9797685, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manaSprite: {fileID: 21300000, guid: e86e8f4818f8e2bd7bf0ae704c1ccc4b, type: 3}
-  emptyManaSprite: {fileID: 21300000, guid: 9ebf06f4060fa080093020cc553ff0cc, type: 3}
-  noManaSprite: {fileID: 21300000, guid: 54d8347fba64eb85cb96a7f06fb4a6dd, type: 3}
+  ManaSprite: {fileID: 21300000, guid: e86e8f4818f8e2bd7bf0ae704c1ccc4b, type: 3}
+  EmptyManaSprite: {fileID: 21300000, guid: 9ebf06f4060fa080093020cc553ff0cc, type: 3}
+  NoManaSprite: {fileID: 21300000, guid: 54d8347fba64eb85cb96a7f06fb4a6dd, type: 3}
 --- !u!1 &5840104514325405544
 GameObject:
   m_ObjectHideFlags: 0
@@ -3843,8 +3843,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d730b8a2967b0b35adb2f4d92bd25c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bobbingSpeed: 2.5
-  bobbingAmount: 5
+  BobbingSpeed: 1
+  BobbingAmount: 5
 --- !u!1 &8903306785714716309
 GameObject:
   m_ObjectHideFlags: 0
@@ -4050,15 +4050,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 213b343a482f6f278bb50657d85610b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handSprite: {fileID: 21300000, guid: ad8de3d0c6b70fcd8b6e916b01818201, type: 3}
-  handPreparedSprite: {fileID: 21300000, guid: 4fa80cedb9001b661a53df625314fa32, type: 3}
-  handCastingSprite: {fileID: 21300000, guid: 47ba80545ee714cc2964e081931ab151, type: 3}
-  handPunchingSprite: {fileID: 21300000, guid: 2dc213d712c863fc994b26f9b60fceb4, type: 3}
-  noSpellSprite: {fileID: 21300000, guid: 42376d2b399fc46a4bc038b36e8e6dce, type: 3}
-  lightSpellSprite: {fileID: 21300000, guid: fd402557c684833c1808ad7194665b12, type: 3}
-  fireballSpellSprite: {fileID: 21300000, guid: 333650dde472d40cb8da14d13066a3b3, type: 3}
-  healSpellSprite: {fileID: 21300000, guid: cae0407974640cd15a97883359e3dfc7, type: 3}
-  manaHealSpellSprite: {fileID: 21300000, guid: 87e3f6b235189e2738bf711e86790528, type: 3}
+  HandSprite: {fileID: 21300000, guid: ad8de3d0c6b70fcd8b6e916b01818201, type: 3}
+  HandPreparedSprite: {fileID: 21300000, guid: 4fa80cedb9001b661a53df625314fa32, type: 3}
+  HandCastingSprite: {fileID: 21300000, guid: 47ba80545ee714cc2964e081931ab151, type: 3}
+  HandPunchingSprite: {fileID: 21300000, guid: 2dc213d712c863fc994b26f9b60fceb4, type: 3}
+  NoSpellSprite: {fileID: 21300000, guid: 42376d2b399fc46a4bc038b36e8e6dce, type: 3}
+  LightSpellSprite: {fileID: 21300000, guid: fd402557c684833c1808ad7194665b12, type: 3}
+  FireballSpellSprite: {fileID: 21300000, guid: 333650dde472d40cb8da14d13066a3b3, type: 3}
+  HealSpellSprite: {fileID: 21300000, guid: cae0407974640cd15a97883359e3dfc7, type: 3}
+  ManaHealSpellSprite: {fileID: 21300000, guid: 87e3f6b235189e2738bf711e86790528, type: 3}
 --- !u!1 &9182018653323538555
 GameObject:
   m_ObjectHideFlags: 0

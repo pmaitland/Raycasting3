@@ -1,53 +1,63 @@
 using UnityEngine;
 
-public class TurretBehaviour : MonoBehaviour {
+public class TurretBehaviour : MonoBehaviour
+{
 
-    private enum State {
+    private enum State
+    {
         TURNING,
         READYINGSHOT,
         READYINGTURN,
         DESTROYED
     }
 
-    private State currentState = State.READYINGTURN;
-    private float timeToReadyShot = 3;
-    private float timeToReadyTurn = 1;
-    private float elapsedTime = 0;
-    private float degreesTurned = 0;
-    
-    private Health health;
+    private Health _health;
 
-    public GameObject projectilePrefab;
+    private State _currentState = State.READYINGTURN;
 
-    void Start() {
-        health = GetComponentInParent<Health>();
+    private const float TIME_TO_READY_SHOT = 3;
+    private const float TIME_TO_READY_TURN = 1;
+
+    private float _elapsedTime = 0;
+    private float _degreesTurned = 0;
+
+    public GameObject ProjectilePrefab;
+
+    void Start()
+    {
+        _health = GetComponentInParent<Health>();
     }
 
-    void Update() {
-        elapsedTime += Time.deltaTime;
+    void Update()
+    {
+        _elapsedTime += Time.deltaTime;
 
-        if (health.GetCurrentHealth() <= 0) currentState = State.DESTROYED;
+        if (_health.CurrentHealth <= 0) _currentState = State.DESTROYED;
 
-        switch (currentState) {
+        switch (_currentState)
+        {
             case State.TURNING:
                 transform.Rotate(0, 1, 0, Space.Self);
-                degreesTurned += 1;
-                if (degreesTurned >= 90) {
-                    currentState = State.READYINGSHOT;
-                    degreesTurned = 0;
+                _degreesTurned += 1;
+                if (_degreesTurned >= 90)
+                {
+                    _currentState = State.READYINGSHOT;
+                    _degreesTurned = 0;
                 }
                 break;
             case State.READYINGSHOT:
-                if (elapsedTime > timeToReadyShot) {
+                if (_elapsedTime > TIME_TO_READY_SHOT)
+                {
                     Shoot();
-                    currentState = State.READYINGTURN;
-                    elapsedTime = 0;
+                    _currentState = State.READYINGTURN;
+                    _elapsedTime = 0;
                 }
                 break;
             case State.READYINGTURN:
-                if (elapsedTime > timeToReadyTurn) {
-                    currentState = State.TURNING;
-                    elapsedTime = 0;
+                if (_elapsedTime > TIME_TO_READY_TURN)
+                {
+                    _currentState = State.TURNING;
+                    _elapsedTime = 0;
                 }
                 break;
             case State.DESTROYED:
@@ -57,12 +67,14 @@ public class TurretBehaviour : MonoBehaviour {
         }
     }
 
-    private void Shoot() {
+    private void Shoot()
+    {
         Vector3 projectilePosition = transform.position;
-        projectilePosition += transform.forward * projectilePrefab.GetComponent<SphereCollider>().radius;
+        projectilePosition += transform.forward * ProjectilePrefab.GetComponent<SphereCollider>().radius;
         projectilePosition += transform.forward * 0.3f;
         projectilePosition += transform.up * 0.4f;
-        GameObject projectile = Instantiate(projectilePrefab, projectilePosition, transform.rotation);
-        projectile.GetComponent<ProjectileBehaviour>().SetCreator(gameObject);
+
+        GameObject projectile = Instantiate(ProjectilePrefab, projectilePosition, transform.rotation);
+        projectile.GetComponent<ProjectileBehaviour>().Creator = gameObject;
     }
 }

@@ -1,29 +1,27 @@
 using UnityEngine;
 
-public class ProjectileBehaviour : MonoBehaviour {
+public class ProjectileBehaviour : MonoBehaviour
+{
 
-    public float moveSpeed = 4.0f;
+    public float MoveSpeed = 4.0f;
 
-    private GameObject creator;
+    public GameObject Creator { private get; set; }
 
-    void Update() {
-        GetComponent<Rigidbody>().velocity = transform.forward * moveSpeed;
+    void Update()
+    {
+        GetComponent<Rigidbody>().velocity = transform.forward * MoveSpeed;
 
-        if (Mathf.Abs(transform.position.x) > 100 || Mathf.Abs(transform.position.z) > 100) {
+        if (Mathf.Abs(transform.position.x) > 100 || Mathf.Abs(transform.position.z) > 100)
+        {
             Destroy(gameObject);
         }
     }
 
-    void OnTriggerEnter(Collider other) {
-        if (other.transform.name == creator.name) return;
-        
-        Health otherHealth = other.GetComponentInParent<Health>();
-        if (otherHealth != null) otherHealth.ReduceHealth(creator, 1);
-
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.name == Creator.name) { return; }
+        other.GetComponentInParent<Health>()?.ReduceHealth(Creator, 1);
         Destroy(gameObject);
     }
 
-    public void SetCreator(GameObject c) {
-        creator = c;
-    }
 }

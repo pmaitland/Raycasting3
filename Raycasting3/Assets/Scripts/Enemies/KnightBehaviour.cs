@@ -1,56 +1,58 @@
 using UnityEngine;
-using UnityEngine.AI;
 
-public class KnightBehaviour : MonoBehaviour {
+public class KnightBehaviour : MonoBehaviour
+{
 
-    private enum State {
+    private enum State
+    {
         CHASING,
         STOPPED,
         DESTROYED
     }
 
-    private State currentState = State.CHASING;
-    
-    private Health health;
-    private Pathfinding pathfinding;
+    private Health _health;
+    private Pathfinding _pathfinding;
 
-    private Transform player;
+    private State _currentState = State.CHASING;
+    public Transform Target { get; set; }
 
-    void Start() {
-        health = GetComponentInParent<Health>();
+    void Start()
+    {
+        _health = GetComponentInParent<Health>();
 
-        pathfinding = GetComponentInParent<Pathfinding>();
-        pathfinding.SetTarget(player);
-        pathfinding.SetIsPathfinding(true);
+        _pathfinding = GetComponentInParent<Pathfinding>();
+        _pathfinding.Target = Target;
+        _pathfinding.IsPathfinding = true;
     }
 
-    void Update() {
-        if (health.GetCurrentHealth() <= 0) currentState = State.DESTROYED;
+    void Update()
+    {
+        if (_health.CurrentHealth <= 0) _currentState = State.DESTROYED;
 
-        float distanceToPlayer = Vector3.Distance(transform.parent.position, player.position);
+        float distanceToTarget = Vector3.Distance(transform.parent.position, Target.position);
 
-        switch (currentState) {
+        switch (_currentState)
+        {
             case State.CHASING:
-                if (distanceToPlayer <= 1) {
-                    currentState = State.STOPPED;
-                    pathfinding.SetIsPathfinding(false);
+                if (distanceToTarget <= 1)
+                {
+                    _currentState = State.STOPPED;
+                    _pathfinding.IsPathfinding = false;
                 }
                 break;
             case State.STOPPED:
-                if (distanceToPlayer > 1) {
-                    currentState = State.CHASING;
-                    pathfinding.SetIsPathfinding(true);
+                if (distanceToTarget > 1)
+                {
+                    _currentState = State.CHASING;
+                    _pathfinding.IsPathfinding = true;
                 }
                 break;
             case State.DESTROYED:
-                pathfinding.SetIsPathfinding(false);
+                _pathfinding.IsPathfinding = false;
                 break;
             default:
                 break;
         }
     }
 
-    public void SetPlayer(GameObject player) {
-        this.player = player.transform;
-    }
 }

@@ -1,4 +1,5 @@
-public enum Spell {
+public enum Spell
+{
     NONE,
     LIGHT,
     FIREBALL,

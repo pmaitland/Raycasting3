@@ -175,10 +175,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a942a911f804c1873b0bc1b5551b2901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprites:
+  Sprites:
   - {fileID: -8553596595128423742, guid: 35762834dc29da99cb7a6698457f79bb, type: 3}
   - {fileID: 330400763883709057, guid: 35762834dc29da99cb7a6698457f79bb, type: 3}
   - {fileID: 6950709768184568528, guid: 35762834dc29da99cb7a6698457f79bb, type: 3}
   - {fileID: 837017221450738011, guid: 35762834dc29da99cb7a6698457f79bb, type: 3}
-  destroyedSprite: {fileID: 0}
-  useLighting: 1
+  DestroyedSprite: {fileID: 0}
+  UseLighting: 1

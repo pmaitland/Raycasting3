@@ -1,41 +1,50 @@
 using UnityEngine;
 
-public class DoorBehaviour : MonoBehaviour {
+public class DoorBehaviour : MonoBehaviour
+{
 
-    private Transform door1;
-    private Transform door2;
+    private Transform _door1;
+    private Transform _door2;
 
-    private float rotation = 0.0f;
+    private float _rotation = 0.0f;
 
-    private bool open = false;
-    private bool opening = false;
-    private bool openInOppositeDirection;
+    private bool _open = false;
+    private bool _opening = false;
+    private bool _openInOppositeDirection;
 
-    void Start() {
-        door1 = transform.Find("Door 1");
-        door2 = transform.Find("Door 2");
+    void Start()
+    {
+        _door1 = transform.Find("Door 1");
+        _door2 = transform.Find("Door 2");
     }
 
-    void Update() {
+    void Update()
+    {
         float angle = 5;
-        if (opening) {
-            if (openInOppositeDirection) {
-                door1.RotateAround(door1.Find("Hinge").position, -Vector3.up, angle);
-                door2.RotateAround(door2.Find("Hinge").position, Vector3.up, angle);
-            } else {
-                door1.RotateAround(door1.Find("Hinge").position, Vector3.up, angle);
-                door2.RotateAround(door2.Find("Hinge").position, -Vector3.up, angle);
+        if (_opening)
+        {
+            if (_openInOppositeDirection)
+            {
+                _door1.RotateAround(_door1.Find("Hinge").position, -Vector3.up, angle);
+                _door2.RotateAround(_door2.Find("Hinge").position, Vector3.up, angle);
             }
-            rotation += angle;
-            if (rotation >= 75.0f) {
-                open = true;
-                opening = false;
+            else
+            {
+                _door1.RotateAround(_door1.Find("Hinge").position, Vector3.up, angle);
+                _door2.RotateAround(_door2.Find("Hinge").position, -Vector3.up, angle);
+            }
+            _rotation += angle;
+            if (_rotation >= 75.0f)
+            {
+                _open = true;
+                _opening = false;
             }
         }
     }
 
-    public void Open(bool oppositeDirection) {
-        if (!open) opening = true;
-        openInOppositeDirection = oppositeDirection;
+    public void Open(bool oppositeDirection)
+    {
+        if (!_open) _opening = true;
+        _openInOppositeDirection = oppositeDirection;
     }
 }

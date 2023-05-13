@@ -1,35 +1,35 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Pathfinding : MonoBehaviour {
+public class Pathfinding : MonoBehaviour
+{
 
-    private bool isPathfiding;
-    private NavMeshAgent navMeshAgent;
-    private NavMeshPath navMeshPath;
+    public bool IsPathfinding { get; set; }
+    public Transform Target { get; set; }
 
-    private Transform target;
+    private NavMeshAgent _navMeshAgent;
+    private NavMeshPath _navMeshPath;
 
-    void Start() {
-        isPathfiding = false;
-        navMeshAgent = GetComponent<NavMeshAgent>();
-        navMeshPath = new NavMeshPath();
+    void Start()
+    {
+        IsPathfinding = false;
+
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+        _navMeshPath = new();
     }
 
-    void Update() {
-        if (isPathfiding) {
-            navMeshAgent.CalculatePath(target.position, navMeshPath);
-            navMeshAgent.SetPath(navMeshPath);
-        } else {
-            navMeshAgent.CalculatePath(transform.position, navMeshPath);
-            navMeshAgent.SetPath(navMeshPath);
+    void Update()
+    {
+        if (IsPathfinding)
+        {
+            _navMeshAgent.CalculatePath(Target.position, _navMeshPath);
         }
+        else
+        {
+            _navMeshAgent.CalculatePath(transform.position, _navMeshPath);
+        }
+
+        _navMeshAgent.SetPath(_navMeshPath);
     }
 
-    public void SetIsPathfinding(bool value) {
-        isPathfiding = value;
-    }
-
-    public void SetTarget(Transform transform) {
-        target = transform;
-    }
 }

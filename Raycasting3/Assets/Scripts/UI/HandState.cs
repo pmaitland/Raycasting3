@@ -1,4 +1,5 @@
-public enum HandState {
+public enum HandState
+{
     NORMAL,
     PREPARED,
     CASTING,

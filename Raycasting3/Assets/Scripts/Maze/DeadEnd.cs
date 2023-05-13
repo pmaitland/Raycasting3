@@ -1,45 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DeadEnd : MonoBehaviour {
+public class DeadEnd : MonoBehaviour
+{
 
-    public Texture2D carpetN;
-    public Texture2D carpetE;
-    public Texture2D carpetS;
-    public Texture2D carpetW;
+    public Texture2D CarpetN;
+    public Texture2D CarpetE;
+    public Texture2D CarpetS;
+    public Texture2D CarpetW;
 
-    Transform carpet;
-    Transform floor;
+    private Transform _carpet;
+    private Transform _floor;
 
-    void Awake() {
-        carpet = transform.Find("Maze Pieces").Find("Carpet");
-        floor = transform.Find("Maze Pieces").Find("Floor");
+    void Awake()
+    {
+        _carpet = transform.Find("Maze Pieces").Find("Carpet");
+        _floor = transform.Find("Maze Pieces").Find("Floor");
     }
 
-    public void SetDirectionNorth() {
-        if (carpet != null) { carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetN; }
+    public void SetDirectionNorth()
+    {
+        if (_carpet != null) { _carpet.GetComponent<MeshRenderer>().material.mainTexture = CarpetN; }
         Rotate(180);
     }
 
-    public void SetDirectionEast() {
-        if (carpet != null) { carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetE; }
+    public void SetDirectionEast()
+    {
+        if (_carpet != null) { _carpet.GetComponent<MeshRenderer>().material.mainTexture = CarpetE; }
         Rotate(270);
     }
 
-    public void SetDirectionSouth() {
-        if (carpet != null) { carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetS; }
+    public void SetDirectionSouth()
+    {
+        if (_carpet != null) { _carpet.GetComponent<MeshRenderer>().material.mainTexture = CarpetS; }
     }
 
-    public void SetDirectionWest() {
-        if (carpet != null) { carpet.GetComponent<MeshRenderer>().material.mainTexture = carpetW; }
+    public void SetDirectionWest()
+    {
+        if (_carpet != null) { _carpet.GetComponent<MeshRenderer>().material.mainTexture = CarpetW; }
         Rotate(90);
     }
 
-    private void Rotate(float amount) {
+    private void Rotate(float amount)
+    {
         transform.Rotate(0, amount, 0);
-        carpet?.Rotate(0, 0, amount);
-        floor.Rotate(0, 0, amount);
+        _carpet.Rotate(0, 0, amount);
+        _floor.Rotate(0, 0, amount);
     }
 
 }

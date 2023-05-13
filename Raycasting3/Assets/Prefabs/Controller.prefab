@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97621ea728ae3df6c9c2969193c7d9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 8867510874428536555, guid: 4e0c1b2ed58c8258fac6d39702e22d97, type: 3}
-  dungeonMazePrefab: {fileID: 1979202703222069088, guid: 51ab47a5b7b6fb523bf37ee04d2f007e, type: 3}
-  castleMazePrefab: {fileID: 1979202703222069088, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
-  canvasPrefab: {fileID: 6448241201967594724, guid: 080eb58a19efe614b98da1f0a81ff9c4, type: 3}
-  showMinimap: 0
+  PlayerPrefab: {fileID: 8867510874428536555, guid: 4e0c1b2ed58c8258fac6d39702e22d97, type: 3}
+  DungeonMazePrefab: {fileID: 1979202703222069088, guid: 51ab47a5b7b6fb523bf37ee04d2f007e, type: 3}
+  CastleMazePrefab: {fileID: 1979202703222069088, guid: 65949f5d6f44bb0a0b2362d06d0954c0, type: 3}
+  CanvasPrefab: {fileID: 6448241201967594724, guid: 080eb58a19efe614b98da1f0a81ff9c4, type: 3}
+  ShowMinimap: 0
